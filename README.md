@@ -43,3 +43,6 @@ La interfaz gráfica deberá de proporcionar una implementación de la utilidad
 nft para su uso amigable y por tanto su curva de aprendizaje sera menor,
 esto incluye que pueda explorar todas las posibilidades de la utilidad
 nft, mejorar tiempos de configuración, etc.
+
+
+BLOG: http://caballeroalba.cf/wordpress/
