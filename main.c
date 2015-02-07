@@ -35,7 +35,7 @@ char *choices[] = {  //opciones
 			"Create Rule",
 			"Export rules",
 			"Import rules",
-			"Exit",
+			"Exit", 
 		  };
 int n_choices = sizeof(choices) / sizeof(char *); //numero de opciones
 
@@ -66,16 +66,17 @@ int main(){
 	switch(salida){
 
 		case 1://createtable
-			createTable ();
+			createTable();
 			break;
 		case 2://createChain ()
-			createChain ();
+			createChain();
 			break;
 		case 3: //createRule
+			createRule();
 			break;
-		case 4:
+		case 4: //export rules
 			break;
-		case 5:
+		case 5://import rules
 			break;
 		case 6://exit
 			clear();
@@ -83,11 +84,6 @@ int main(){
 			exit(EXIT_SUCCESS);
 
 	}
-
-
-
-
-
 
 	
 	clear();
