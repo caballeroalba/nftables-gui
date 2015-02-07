@@ -10,7 +10,7 @@ de sus reglas.
 En pocas palabras:
 
     Esta disponible desde el kernel 3.13 en adelante
-    Trae una la nueva utilidad nft con una sintaxis diferente a la de iptables.
+    Trae  la nueva utilidad nft con una sintaxis diferente a la de iptables.
     Tiene compatibilidad con las instrucciones de iptables.
     Infraestructura genérica de conjuntos que permite construir mapas entre
     asignaciones y acciones para mejorar las búsquedas.
@@ -31,7 +31,7 @@ En pocas palabras:
         el espacio lógico de usuario.
         Interfaz unificada para reemplazar las utilidades iptables/ip6tables/arptables/ebtables
 
-La solución aporta consistirá en una interfaz gráfica escrita en c y usando
+La solución aportada consistirá en una interfaz gráfica escrita en c y usando
 ncurses para poder manejar nftables y que de esta manera sea mas fácil
 su uso.
 
