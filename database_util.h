@@ -28,7 +28,7 @@ char * getTables();
 char * getTables(){
      sqlite3 *db;
     sqlite3_stmt *res;
-    
+    char *result[100];
     int rc = sqlite3_open("nftables", &db);
     
     if (rc != SQLITE_OK) {
@@ -55,12 +55,13 @@ char * getTables(){
         printf("%s|", sqlite3_column_text(res, 0));
         printf("%s|", sqlite3_column_text(res, 1));
         printf("%s|", sqlite3_column_text(res, 2));
+        result[0]=sqlite3_column_text(res,1);
 
     }
     
     sqlite3_finalize(res);
     sqlite3_close(db);
     
-    return 0;
+    return result;
 
 }

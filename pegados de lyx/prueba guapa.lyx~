@@ -1,0 +1,2221 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language spanish
+\language_package none
+\inputencoding default
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing double
+\use_hyperref true
+\pdf_title "Iptables vs Nftables"
+\pdf_author "José María Caballero Alba"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks true
+\pdf_pdfborder false
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\boxbgcolor #0000ff
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Iptables vs Nftables.
+\end_layout
+
+\begin_layout Author
+José María Caballero Alba
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\newpage 
+\begin_layout Section
+Prologo
+\end_layout
+
+\begin_layout Standard
+Es interesante comparar el uso de iptables de manera practica y compararlo
+ con lo que seria la traducción a nftables, tenemos que tener en cuenta
+ que algunas opciones de iptables no están disponibles en nftables por estar
+ aún en desarrollo y viceversa.
+\end_layout
+
+ \newpage  \begin_layout Section
+Diferencias principales
+\end_layout
+
+\begin_layout Itemize
+La primera y mas distinguible es la sintaxis, en iptables, las flags van
+ precedidas de dos guiones o uno (-p tcp) en nftables usa una sintaxis mas
+ limpia, inspirada en tcpdump.
+\end_layout
+
+\begin_layout Itemize
+Las tablas y las cadenas son totalmente configurables en nftables, contrariament
+e a iptables, que solo ofrece un set definido de tablas y cadenas, nftables
+ permite crear cadenas y tablas propias con sus correspondientes configuraciones
+ en función de lo que necesites.
+\end_layout
+
+\begin_layout Itemize
+No hay distinción entre objetivos y targets, en nftables tenemos expresiones
+ que son instrucciones para construir nuestras reglas.
+ Esto es muy diferente en iptables que requiere sintaxis de objetivos y
+ targets para usar protocolos.
+\end_layout
+
+\begin_layout Itemize
+Se pueden especificar varias acciones en una sola linea en nftables, con
+ iptables solo podemos especificar una.
+\end_layout
+
+\begin_layout Itemize
+Los contadores en iptables son establecidos de manera fija para cada tabla
+ y reglas, en nftables se puede establecer de manera opciones estos contadores.
+\end_layout
+
+\begin_layout Itemize
+Infraestructura de manera genérica en lo sets en nftables, esto permite
+ configuraciones avanzadas como diccionarios, mapas.
+\end_layout
+
+\begin_layout Itemize
+Actualizar el kernel es una tarea que consume mucho tiempo, especialmente
+ si quieres mantener mas de un firewall en tu red.
+ Los distribuidores normalmente usan versiones antiguas del kernel de linux
+ por razones de estabilidad.
+ Con la nueva maquina de estados de nftables no es necesario actualizar
+ el kernel para un nuevo protocolo, simplemente es necesario actualizar
+ la utilidad nft.
+\end_layout
+
+\begin_layout Itemize
+No es necesario el uso de guiones (-) o dobles guiones (--) para el uso
+ de las banderas.
+\end_layout
+
+ \newpage  \begin_layout Section
+Configurando tablas 
+\end_layout
+
+\begin_layout Subsection
+Creando tablas Iptables
+\end_layout
+
+\begin_layout Standard
+Iptables cuenta con 5 tablas (raw, filter, nat, mangle, security) que son
+ zonas en las que una cadena de puede aplicar.
+\end_layout
+
+\begin_layout Standard
+Estas tablas son por defecto, que ya vienen con una serie de cadenas por
+ defecto (input, output, postrouting, prerouting etc).
+ Estas vienen sin reglas.
+\end_layout
+
+\begin_layout Standard
+Para configurar las tablas tenemos el siguiente formato:
+\end_layout
+
+\begin_layout Standard
+iptables -t [tabla] [-AIRELNPDZ] [CADENA] [PARAMETROS] [-j ACCION]
+\end_layout
+
+\begin_layout Standard
+En iptables para poder configurar un tabla, tenemos que usar por obligación
+ una de las cadenas, ya que no nos deja atacar una tabla solamente.
+\end_layout
+
+\begin_layout Standard
+Para hacer un ejemplo sencillo:
+\end_layout
+
+\begin_layout Itemize
+iptables -t filter -P INPUT -j drop
+\end_layout
+
+\begin_layout Standard
+Esto estará aplicando la politica por defecto de rechazar los paquetes de
+ la cadena input.
+\end_layout
+
+\begin_layout Standard
+Debemos de tener en cuenta, que para configurar una tabla en iptables no
+ obliga configurar también al menos una de las cadenas de esa tabla.
+\end_layout
+
+\begin_layout Subsection
+Creando tablas Nftables
+\end_layout
+
+\begin_layout Standard
+En nftables seguimos contando con las mismas tablas que en iptables, que
+ siguen siendo las zonas en las que podemos crear cadenas y después crear
+ reglas en ellas.
+ La diferencia principal y mas notable respecto a iptables que podemos crear
+ nuestras tablas y además no nos obliga a configurar una cadena a la hora
+ de crearla.
+ Para configurar una tabla en nftables tenemos el siguiente formato:
+\end_layout
+
+\begin_layout Standard
+nft create table [ip] nombre_tabla
+\end_layout
+
+\begin_layout Standard
+Como vemos tenemos un formato mas sencillo que además podemos crear la tabla
+ solamente sin configurar nada y decidir si pertenece ( o no) a la familia
+ ip.
+\end_layout
+
+\begin_layout Standard
+Un ejemplo muy sencillo de crear una tabla:
+\end_layout
+
+\begin_layout Itemize
+nft create table filter
+\end_layout
+
+\begin_layout Standard
+Esto creará la tabla de tipo ip (por defecto, no lo hemos especificado)
+ filter, la cual no contiene cadenas.
+ Solo contiene la definición de la tabla en si misma.
+\end_layout
+
+\begin_layout Subsection
+Listando tablas en Iptables
+\end_layout
+
+\begin_layout Standard
+En iptables podemos mostrar listar las tablas, para especificar una en concreto
+ podemos usar el parametro -t tabla.
+ Para mostrar la tabla (junto con sus cadenas y sus reglas, no solo los
+ nombres de las tablas) basta con:
+\end_layout
+
+\begin_layout Itemize
+iptables -L
+\end_layout
+
+\begin_layout Standard
+Esto no mostrara el contenido de la tabla, con sus cadenas y sus reglas,
+ no nos esta 
+\begin_inset Quotes eld
+\end_inset
+
+listando
+\begin_inset Quotes erd
+\end_inset
+
+ las tablas.
+ Al no usar el parametro -t, se muestra por defecto la tabla filter.
+\end_layout
+
+\begin_layout Subsection
+Listando tablas en Nftables
+\end_layout
+
+\begin_layout Standard
+Al contrario que en iptables, nftables si que nos deja listar las tablas
+ y no nos obliga a ver su contenido.
+ Para listar las tablas simplemente podemos hacer esto:
+\end_layout
+
+\begin_layout Itemize
+nft list tables
+\end_layout
+
+\begin_layout Standard
+Debemos fijarnos que tables, termina en s, es decir plural, por lo tanto
+ nos esta listando los nombres de las tablas.
+\end_layout
+
+\begin_layout Standard
+Por el contrario, si queremos listar solo una tabla y ya si que nos enseña
+ el contendido de esta tabla con sus cadenas y reglas, bastaría con:
+\end_layout
+
+\begin_layout Itemize
+nft list table nombre_tabla
+\end_layout
+
+\begin_layout Standard
+Esto no mostraría exactamente el mismo contendido que en iptables.
+ 
+\end_layout
+
+\begin_layout Standard
+Ej de capturas de pantalla:
+\end_layout
+
+\begin_layout Standard
+iptables -t filter -L:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado2.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+nft list tables:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado3.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Como vemos, en nftables tenemos la opción de listar solamente las tablas
+ y de listar al modo de iptables para una tabla en concreto.
+\end_layout
+
+\begin_layout Subsection
+Borrando tablas en iptables
+\end_layout
+
+\begin_layout Standard
+En iptables no podemos borrar una tabla, podemos vaciar o sus cadenas, o
+ eliminar las reglas, pero las tablas siguen existiendo.
+\end_layout
+
+\begin_layout Subsection
+Borrando tablas nftables
+\end_layout
+
+\begin_layout Standard
+En nftables si que se nos permite borrar una tabla, con esto borraríamos
+ la tabla, sus cadenas y sus reglas.
+ El formato a usar seria el siguiente:
+\end_layout
+
+\begin_layout Itemize
+nft delete table nombre_tabla
+\end_layout
+
+\begin_layout Standard
+Y no es necesario nada mas, con esto podemos borrar una tabla en nftables,
+ cosa que con iptables no podíamos.
+\end_layout
+
+\begin_layout Subsection
+Vaciado de tables en iptables
+\end_layout
+
+\begin_layout Standard
+En iptables para vaciar (flush) las tablas (no podemos borrar las cadenas,
+ solo podemos vaciarlas) de manera general podriamos hacer:
+\end_layout
+
+\begin_layout Itemize
+iptables -t filter --flush
+\end_layout
+
+\begin_layout Standard
+Esto nos vaciaría todas las todas las cadenas de la tabla filter.
+ Si omitimos el parametro -t, nos vaciaria todas las cadenas de todas las
+ tablas.
+\end_layout
+
+\begin_layout Subsection
+Vaciado de tablas en nftables.
+\end_layout
+
+\begin_layout Standard
+En nftables si que podemos vaciar tablas de manera completa, es decir, podemos
+ elimintar todas la reglas y las cadenas que las contienen:
+\end_layout
+
+\begin_layout Itemize
+nft flush table nombre_tabla
+\end_layout
+
+\begin_layout Standard
+Es nos eliminaría las cadenas y las reglas de la tabla especificada.
+\end_layout
+
+ \newpage  \begin_layout Section
+Configurando cadenas
+\end_layout
+
+\begin_layout Subsection
+Añadiendo cadenas en Iptables
+\end_layout
+
+\begin_layout Standard
+En iptables ya tenemos por defecto cadenas asociadas a nuestras tablas,
+ aunque se pueden añadir cadenas personalizadas, por ej, por defecto la
+ tabla filter tiene las cadenas de serie input outputy forward, así que
+ si queremos añadir una cadena nueva a la tabla filter podemos hacerlo con
+ la opcion -N de esta manera:
+\end_layout
+
+\begin_layout Itemize
+iptables [-t tabla] -N nombre_cadena
+\end_layout
+
+\begin_layout Standard
+Para la tabla filter:
+\end_layout
+
+\begin_layout Itemize
+iptables -t filter -N nueva_cadena 
+\end_layout
+
+\begin_layout Standard
+O también:
+\end_layout
+
+\begin_layout Itemize
+iptables -N nueva_cadena
+\end_layout
+
+\begin_layout Standard
+Recordemos que en iptables la tabla por defecto es filter
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado4.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Añadiendo tablas en nftables
+\end_layout
+
+\begin_layout Standard
+En nftables no tenemos cadenas por defecto dentro de nuestras tablas, pero
+ tenemos la posibilidad de añadir las cadena de tipo base (input, output,
+ forward, postrouting, prerouting) o crear cadenas personalizadas, con el
+ siguiente formato:
+\end_layout
+
+\begin_layout Itemize
+nft add chain ip nombre_tabla nombre_cadena {type filter hook [cadena_base]
+ priority 0 
+\backslash
+; }
+\end_layout
+
+\begin_layout Standard
+Y un ejemplo:
+\end_layout
+
+\begin_layout Itemize
+nft add chain ip filter postrouting { type filter hook postrouting priority
+ 0 
+\backslash
+; }
+\end_layout
+
+\begin_layout Standard
+Esto no crearía la cadena de tipo base postrouting dentro de la tabla filter,
+ si queremos tener cadenas personalizadas, simplemente hacemos:
+\end_layout
+
+\begin_layout Itemize
+nft add chain nombre_tabla nombre_cadena
+\end_layout
+
+\begin_layout Standard
+Ejemplo:
+\end_layout
+
+\begin_layout Itemize
+nft add chain filter input
+\end_layout
+
+\begin_layout Standard
+Esto no crea una cadena personalizada dentro de la tabla filter.
+ Lo podemos apreciar en la siguiente captura:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado5.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Borrando cadenas en iptables
+\end_layout
+
+\begin_layout Standard
+En iptables no podemos borrar las cadenas por defecto pero si las personalizadas
+, tenemos el siguiente formato:
+\end_layout
+
+\begin_layout Itemize
+iptables [-t tabla] -X nombre_cadena
+\end_layout
+
+\begin_layout Standard
+Si seguimos con el ej anterior:
+\end_layout
+
+\begin_layout Itemize
+iptables -X nueva_cadena
+\end_layout
+
+\begin_layout Standard
+Esto nos eliminara la cadena nueva_cadena de la tabla filter (por defecto)
+ y las reglas contenidas en ella.
+\end_layout
+
+\begin_layout Subsection
+Borrando cadenas en nftables
+\end_layout
+
+\begin_layout Standard
+En nftables por el contrario podemos borrar tanto cadenas base como no base,
+ solo necesitamos el nombre de la cadena, no nos importa si es de un tipo
+ o otro, tenemos el siguiente formato:
+\end_layout
+
+\begin_layout Itemize
+nft delete chain nombre_tabla nombre_cadena
+\end_layout
+
+\begin_layout Standard
+Y un ejemplo:
+\end_layout
+
+\begin_layout Itemize
+nft delete chain filter output
+\end_layout
+
+\begin_layout Standard
+El único requisito que nos impone nftables para poder borrar una cadena
+ es que no este vacía, si no, nos dará el siguiente error:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado6.png
+	scale 80
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Vaciando cadenas en iptables
+\end_layout
+
+\begin_layout Standard
+En iptables podemos vaciar cadenas por defecto o personalizadas con siguiente
+ formato:
+\end_layout
+
+\begin_layout Subsection
+Vaciando cadenas en nftables
+\end_layout
+
+\begin_layout Standard
+Para vaciar una cadena base o personalizada (nos da igual) basta con:
+\end_layout
+
+\begin_layout Itemize
+nft flush chain nombre_tabla nombre_cadena
+\end_layout
+
+\begin_layout Standard
+Y un ejemplo:
+\end_layout
+
+\begin_layout Itemize
+nft flush chain filter input
+\end_layout
+
+\begin_layout Standard
+Esto no vaciará las reglas que están en la cadena input 
+\end_layout
+
+ \newpage  \begin_layout Section
+Configurando reglas
+\end_layout
+
+\begin_layout Subsection
+Añadiendo reglas en iptables
+\end_layout
+
+\begin_layout Standard
+En iptables podemos añadir reglas usando el siguiente formato:
+\end_layout
+
+\begin_layout Itemize
+iptables [-t tabla] -A nombre_cadena [-i -o --sport --dport -p -j ] [drop
+ reject accept masquerade dnat snat]
+\end_layout
+
+\begin_layout Standard
+Los parámetros están simplificados solo algunos de los mas usuales, se pueden
+ ver todo usando man iptables
+\end_layout
+
+\begin_layout Standard
+Y un ejemplo:
+\end_layout
+
+\begin_layout Itemize
+iptables -A INPUT -p tcp --dport 22 -j DROP
+\end_layout
+
+\begin_layout Standard
+Estamos haciendo en esta ultima regla, que en la tabla filter (por defecto)
+ en la cadena INPUT, los paquetes que usen tcp por el puerto 22 (ssh) sean
+ rechazados.
+\end_layout
+
+\begin_layout Subsection
+Añadiendo reglas en nftables
+\end_layout
+
+\begin_layout Standard
+En nftables podemos ver a la hora de añadir reglas que es mucho mas comprensible
+ para el usuario.
+ El formato para añadir una regla es:
+\end_layout
+
+\begin_layout Itemize
+nft add rule nombre_tabla nombre_cadena [tcp upd ip] [daddr saddr dport
+ sport] [drop accept reject counter]
+\end_layout
+
+\begin_layout Standard
+Los parámetros están simplificados, solo están algunos de los mas usuales,
+ se ver todas las opciones posibles en man nft
+\end_layout
+
+\begin_layout Standard
+Si quisiéramos usar el ejemplo anterior de iptables, bastaría con esto:
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter input tcp dport 22 drop
+\end_layout
+
+\begin_layout Standard
+Podemos apreciar que nftables ofrece una interfaz mas clara en la creación
+ de reglas respecto de iptables.
+\end_layout
+
+\begin_layout Subsection
+Eliminando reglas en iptables
+\end_layout
+
+\begin_layout Standard
+Para eliminar reglas en iptables podemos hacerlo listando las reglas y viendo
+ su numero, usando el parametro --line-number 
+\end_layout
+
+\begin_layout Itemize
+iptables -L --line number
+\end_layout
+
+\begin_layout Standard
+Teniendo como resultado esto:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado7.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Una vez identificada la regla a eliminar, solamente necesitamos su numero
+ para eliminarla usando el parametro -D y la cadena donde esta la regla,
+ en el caso anterior:
+\end_layout
+
+\begin_layout Itemize
+iptables -D INPUT 1
+\end_layout
+
+\begin_layout Standard
+Para eliminar todas las reglas de una cadena (flush) podemos hacer uso del
+ parametro --flush indicando la cadena
+\end_layout
+
+\begin_layout Itemize
+iptables --flush INPUT
+\end_layout
+
+\begin_layout Subsection
+Eliminando reglas en nftables
+\end_layout
+
+\begin_layout Standard
+Para eliminar una regla en nftables lo podemos hacer de manera similar a
+ como lo hacemos en iptables, listando las reglas de una tabla especifica
+ (en nuestro caso filter) con el parámetro -a para que nos muestre el numero
+ de las reglas dentro de la tabla.
+\end_layout
+
+\begin_layout Itemize
+nft list table filter -a
+\end_layout
+
+\begin_layout Standard
+Dando como resultado esto:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado8.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De esta manera, identificamos la regla que queremos eliminar mediante su
+ handle, para ejecutar a continuación la orden de eliminación con el siguiente
+ formato:
+\end_layout
+
+\begin_layout Itemize
+nft delete rule nombre_tabla nombre_cadena handle numero_de_regla
+\end_layout
+
+\begin_layout Standard
+Para nuestro caso:
+\end_layout
+
+\begin_layout Itemize
+nft delete rule filter input handle 2.
+\end_layout
+
+\begin_layout Standard
+Para borrar todas las reglas de una cadena (flush) 
+\end_layout
+
+\begin_layout Itemize
+nft flush chain filter input
+\end_layout
+
+ \newpage  \begin_layout Section
+Reemplazo atómico de reglas
+\end_layout
+
+\begin_layout Subsection
+Reemplazo atómico de reglas en iptables
+\end_layout
+
+\begin_layout Standard
+En iptables podemos hacer un cambio atómico de la reglas haciendo uso de
+ un fichero de texto donde tengamos almacenadas las reglas y usando las
+ utilidades iptables-save y iptables-restore.
+\end_layout
+
+\begin_layout Standard
+Para guardar las reglas actuales:
+\end_layout
+
+\begin_layout Itemize
+iptables-save [-c] [-t tabla] > archivo.txt
+\end_layout
+
+\begin_layout Standard
+La opción c nos permite guardar también los contadores, y -t la tabla (por
+ defecto filter)
+\end_layout
+
+\begin_layout Standard
+Una vez tenemos nuestro fichero archivo.txt podemos restaurarlo en un futuro
+ usando iptables-restore:
+\end_layout
+
+\begin_layout Itemize
+iptables-restore [-c] [-n] < archivo.txt
+\end_layout
+
+\begin_layout Standard
+La opción -c nos permite restablecer los contadores de bytes actuales a
+ los del fichero y la opción -n nos permite no reescribir las reglas existentes
+ en las tablas.
+\end_layout
+
+\begin_layout Subsubsection
+Reemplazo atómico de reglas en nftables
+\end_layout
+
+\begin_layout Standard
+En nftables también es posible hacer un reemplazo atómico de reglas, para
+ ello podemos guardar las reglas actuales al estilo de iptables guardándolas
+ en un fichero de texto:
+\end_layout
+
+\begin_layout Itemize
+nft list table nombre_tabla > archivo.txt
+\end_layout
+
+\begin_layout Standard
+Esto nos guardará las reglas presentes en la tabla indicando al fichero
+ archivo.txt.
+ Cuando queramos restaurarlas simplemente hacemos:
+\end_layout
+
+\begin_layout Itemize
+nft -f archivo.txt
+\end_layout
+
+\begin_layout Subsubsection
+Uso de scripts en el cambio de reglas
+\end_layout
+
+\begin_layout Standard
+Dado que iptables y nftables usan un cambio atómico de reglas, no se recomienda
+ el uso de scripts que tengan una serie de ordenes para hacer vaciado (flush)
+ de reglas actuales, y acto seguido ingresen las nuevas reglas dentro de
+ iptables/nftables.
+ De esta manera no se está ejecutando un cambio atómico y por lo tanto cabe
+ la posibilidad de que en este cambio no atómico se puedan filtrar o filtrar
+ paquetes que no corresponden a nuestras reglas dentro del firewall.
+ 
+\end_layout
+
+ \newpage  \begin_layout Section
+Reporte de errores desde la linea de comandos
+\end_layout
+
+\begin_layout Subsection
+Reporte de errores desde la linea de comandos en iptables
+\end_layout
+
+\begin_layout Standard
+Cuando tenemos algún tipo de error en iptables ya sea una tabla/cadena no
+ encontrada o un error en el argumento introducido, iptables nos reporta
+ el error correspondiente, por ej:
+\end_layout
+
+\begin_layout Itemize
+iptables -A CADENA_ERRONEA DROP
+\end_layout
+
+\begin_layout Standard
+Obtendremos la respuesta siguiente:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado9.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Como vemos, reporta el error al argumento DROP que no a la cadena, si quitamos
+ el drop de la orden:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado10.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ahora si que reconoce la cadena errónea, por tanto puede dar lugar a errores
+ de compresión por parte del usuario, si además incluimos varios fallos
+ como: 
+\end_layout
+
+\begin_layout Itemize
+iptables -t tabla_falsa -A cadena_falsa drop
+\end_layout
+
+\begin_layout Standard
+Obtendremos:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado11.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Como podemos observar, se han introducido 2 fallos pero muestra el error
+ en el drop, cuando los errores se encuentran en los nombres de la tabla
+ y cadena.
+\end_layout
+
+\begin_layout Standard
+Esto pude ser confuso, veremos en el siguiente apartado que con nftables
+ esta solventado este comportamiento.
+\end_layout
+
+\begin_layout Subsection
+Reporte de errores desde la linea de comandos en nftables
+\end_layout
+
+\begin_layout Standard
+En nftables también tenemos el soporte para los errores introducidos desde
+ la linea de comandos, si tomamos los mismo ejemplos del apartado anterior
+ tendríamos:
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter cadena_falsa drop
+\end_layout
+
+\begin_layout Standard
+Obtenemos lo siguiente:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado12.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Como vemos, nos da un error general, si seguimos con el ejemplo anterior,
+ si quitamos el argumento drop:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado14.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Nos señala que tenemos un error en la sintaxis y nos señala donde esta el
+ error, esto nos da una idea general del error mejor que en iptables.
+\end_layout
+
+\begin_layout Standard
+Seguimos con los ejemplos anteriores, si usamos una tabla falsa:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado15.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Nos da un error general.
+ COMPLETAR CON MAS INFORMACIÓN PREGUNTAR 
+\end_layout
+
+ \newpage  \begin_layout Section
+Posibles acciones sobre los paquetes
+\end_layout
+
+\begin_layout Subsection
+Posibles acciones sobres los paquetes en iptables
+\end_layout
+
+\begin_layout Subsubsection
+Aceptando y rechazando paquetes
+\end_layout
+
+\begin_layout Subsubsection
+Saltando a cadenas
+\end_layout
+
+\begin_layout Standard
+En iptables podemos hacer el salto de paquetes a cadenas propias , por ejemplo,
+ podemos crear previamente la cadena propia:
+\end_layout
+
+\begin_layout Itemize
+iptables -N cadena_propia
+\end_layout
+
+\begin_layout Standard
+Una vez creada, podemos añadir reglas a esta cadena para después saltar
+ ella desde las cadenas base de la siguiente manera:
+\end_layout
+
+\begin_layout Itemize
+iptables -A INPUT -p tcp -j cadena_propia
+\end_layout
+
+\begin_layout Standard
+Esto hará que los paquetes que vengan a nuestro sistema (cadena INPUT) por
+ el protocolo tcp serán direccionados hacia nuestra cadena propia.
+\end_layout
+
+\begin_layout Subsubsection
+Log de paquetes
+\end_layout
+
+\begin_layout Standard
+En iptables podemos hacer un log de los paquetes que pasan por nuestro firewall,
+ basta con usar el parametro LOG, por ejemplo, si queremos que nuestro sistema
+ registre las conexiones ssh a nuestro sistema, podemos usar:
+\end_layout
+
+\begin_layout Itemize
+iptables -A INPUT -p tcp -m tcp --dport 22 -j LOG --log-prefix 'acceso a
+ ssh desde fuera ' --log-level 4
+\end_layout
+
+\begin_layout Standard
+Donde:
+\end_layout
+
+\begin_layout Itemize
+-p indica el protocolo 
+\end_layout
+
+\begin_layout Itemize
+-m indica que se marquen los paquetes con la marca tcp
+\end_layout
+
+\begin_layout Itemize
+-dport es el puerto destino 
+\end_layout
+
+\begin_layout Itemize
+-j la acción a realizar, en este caso el log del paquete
+\end_layout
+
+\begin_layout Itemize
+--log-prefix indica que se usará el prefijo entrecomillado
+\end_layout
+
+\begin_layout Itemize
+--log-level 4 activará syslog solo cuando el mensaje sea de tipo waring
+ (4)
+\end_layout
+
+\begin_layout Standard
+De esta manera, si hacemos un intento de conexión a nuestro host por ssh
+ y vemos el archivo log (/var/log/syslog) veremos lo siguiente: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado16.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De esta manera podemos hacer un log preciso y monitorizar los accesos a
+ un servidor por ej, para servicios críticos en este cmo serian ssh, mysql,
+ rsync, ftp, etc.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+NAT
+\end_layout
+
+\begin_layout Standard
+Para usar nat en iptables, necesitamos usar la tabla nat (por defecto usamos
+ filter) y antes que nada, ya que vamos a usar nat y por tanto un comportamiento
+ de router, debemos activar el bit de ip_forward:
+\end_layout
+
+\begin_layout Itemize
+echo 1 > /proc/sys/net/ipv4/ip_forward
+\end_layout
+
+\begin_layout Enumerate
+SOURCE NAT
+\end_layout
+
+\begin_layout Standard
+Al usar nat en POSTROUTING estamos cambiando las direcciones origen de los
+ paquetes y estos, en el caso de que haya una comunicación con algún host
+ externo a nuestra red , los paquetes de respuesta deben de llegar de nuevo
+ al host original, así que debemos de volver a traducir la dirección de
+ destino hacia ese host, esto es automático en iptables.
+\end_layout
+
+\begin_layout Standard
+Para ahcer SOURCE NAT (dinamico) con la red que normalmente usamos, por
+ ejemplo 192.168.1.0/24
+\end_layout
+
+\begin_layout Itemize
+iptables -t nat -A POSTROUTING -s 192.168.3.0/24 -o eth0 -j MASQUERADE 
+\end_layout
+
+\begin_layout Standard
+Donde:
+\end_layout
+
+\begin_layout Itemize
+-A POSTROUTING añade la regla a la cadena POSTROUTING
+\end_layout
+
+\begin_layout Itemize
+-s indica la red en notación barra de la red que queremos hacer nat
+\end_layout
+
+\begin_layout Itemize
+-o eth0 la interfaz de salida de los paquetes
+\end_layout
+
+\begin_layout Itemize
+-j MASQUERADE la acción en este caso, indica que los paquetes de salida,
+ tendrán como ip de origen la de nuestro host (el que hace nat)
+\end_layout
+
+\begin_layout Enumerate
+DESTINATION NAT
+\end_layout
+
+\begin_layout Standard
+DESTINATION NAT se usa para modificar la dirección de destino de un paquete
+ que llega a nuestro sistema, por ejemplo, si estamos usando nat, los dispositiv
+os de nuestra red no son visibles, solo el host que usa nat, es el visible
+ desde internet, por tanto, si hay un servidor web en nuestra, debemos de
+ redirigir los paquetes que vengan por el puerto 80 a este host, esto sería
+ de la siguiente manera:
+\end_layout
+
+\begin_layout Itemize
+iptables -t nat -A PREROUTING -p tcp --dport 80 -i eth0 -j DNAT --to 192.168.1.5
+\end_layout
+
+\begin_layout Standard
+Donde:
+\end_layout
+
+\begin_layout Itemize
+-A PREROUTING indica que se añadirá a la cadena PREROUTING
+\end_layout
+
+\begin_layout Itemize
+-p tcp el protocolo usado
+\end_layout
+
+\begin_layout Itemize
+--dport 80 el puerto de destino (destinantion port)
+\end_layout
+
+\begin_layout Itemize
+-i eth0 la interfaz de entrada el paquete 
+\end_layout
+
+\begin_layout Itemize
+-j DNAT --to la acción sobre el paquete, en este caso, cambiar el destino
+ a 192.168.1.5
+\end_layout
+
+\begin_layout Standard
+De esta manera estamos alterando el paquete modificando su destino, por
+ estamos implementando dnat sobre nuestro firewall a los paquetes que vengan
+ por el puerto 80 desde fuera de nuestra red.
+\end_layout
+
+\begin_layout Subsubsection
+Marcas sobre los paquetes
+\end_layout
+
+\begin_layout Standard
+Una funcionalidad de iptables es la posibilidad de marcar los paquetes con
+ un numero, se implementa usando el parametro --set-mark, por ej podríamos
+ marcar los paquetes que salgan por el puerto 80 para ver que paginas visitan
+ los usuarios de nuestra red:
+\end_layout
+
+\begin_layout Itemize
+iptables -A PREROUTING -i eth0 -t mangle -p tcp --dport 80 -j MARK --set-mark
+ 1
+\end_layout
+
+\begin_layout Standard
+Donde:
+\end_layout
+
+\begin_layout Itemize
+-t mangle se refiere a la tabla mangle
+\end_layout
+
+\begin_layout Itemize
+-j MARK --ser-mark es la acción en este caso, marcar el paquete con un 1
+ 
+\end_layout
+
+\begin_layout Quotation
+Información obtenida de http://tldp.org/HOWTO/Adv-Routing-HOWTO/lartc.netfilter.htm
+l
+\end_layout
+
+\begin_layout Subsubsection
+Queueing de paquetes
+\end_layout
+
+\begin_layout Standard
+Queue es una acción especial de iptables que pasa al paquete en una cola
+ destinada al procesamiento en espacio de usuario.
+ Para que esto sea útil, es necesario otros 2 componentes adicionales:
+\end_layout
+
+\begin_layout Itemize
+Un controlador de cola, que lleva la mecánica real de paso de paquetes entre
+ el núcleo y el espacio de usuario.
+\end_layout
+
+\begin_layout Itemize
+Un proceso en espacio de usuario que recibe, posiblemente manipula, y dicta
+ veredicto sobre los paquetes.
+\end_layout
+
+\begin_layout Standard
+Un ejemplo de como usar iptables para poner en cola los paquetes para su
+ proceso en espacio de usuario:
+\end_layout
+
+\begin_layout Itemize
+modprobe iptable_filter
+\end_layout
+
+\begin_layout Itemize
+modprobe ip_queue (anticuado, ahora se debe usar nfnetlink_queue)
+\end_layout
+
+\begin_layout Itemize
+iptables -A OUTPUT -p icmp -j QUEUE
+\end_layout
+
+\begin_layout Standard
+Con esta regla, los paquetes ICMP generados de forma local (como los que
+ crea, digamos, ping), se pasan al módulo ip_queue, que entonces intenta
+ pasarlos a una aplicación en espacio de usuario.
+ Si no hay una aplicación esperando por ellos, entonces se descartan.
+\end_layout
+
+\begin_layout Standard
+Se puede comprobar el estado de ip_queue mediante:
+\end_layout
+
+\begin_layout Itemize
+/proc/net/ip_queue (anticuado, sustituir ip_queue por nfnetlink_queue)
+\end_layout
+
+\begin_layout Quotation
+Nota: la información sobre el queue en iptables, se ha sacado (y actualizado)
+ en 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.netfilter.org/documentation/HOWTO/es/packet-filtering-HOWTO-7.html
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Posibles acciones sobre los paquetes en nftables
+\end_layout
+
+\begin_layout Subsubsection
+Aceptando y rechazando paquetes
+\end_layout
+
+\begin_layout Standard
+Suponiendo que ya tengamos (como lo visto en los ejemplos anteriores) una
+ cadena y una tabla, para aceptar los paquetes de una cadena especifica
+ podemos hacer:
+\end_layout
+
+\begin_layout Itemize
+nft add rule nombre_tabla nombre_cadena [operadores] accept
+\end_layout
+
+\begin_layout Standard
+Y un ejemplo especifico, por ejemplo aceptar el uso de ftp (hacía nuestro
+ host):
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter input tcp dport 21 accept
+\end_layout
+
+\begin_layout Standard
+Y lo tendríamos de esta manera:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado17.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Para rechazar paquetes haríamos exactamente lo mismo pero cambiando accet
+ por drop:
+\end_layout
+
+\begin_layout Itemize
+nft add rule nomber_tabla nombre_cadena [operadores] drop
+\end_layout
+
+\begin_layout Subsubsection
+Saltando a cadenas
+\end_layout
+
+\begin_layout Standard
+De manera similar a iptables, también podemos tener cadenas personalizadas,
+ una vez tengamos creado alguna, podemos redirigir los paquetes que venga
+ por una cadena base (por ej input) a esta cadena para tratarlos ahí.
+ El formato a seguir es el siguiente:
+\end_layout
+
+\begin_layout Itemize
+nft add rule nombre_tabla nombre_cadena [operadores] jump cadena_personalizada
+\end_layout
+
+\begin_layout Standard
+y un ejemplo:
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter input tcp dport 9999 jump prueba_cadena_personal
+\end_layout
+
+\begin_layout Standard
+Nos quedaría lo siguiente:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado18.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Log de paquetes
+\end_layout
+
+\begin_layout Standard
+Para poder hacer un log de paquetes completo en nftables, necesitamos un
+ mayor o igual al 3.17, si se usa un kernel menor, se puede usar el siguiente
+ comando para permitir el log:
+\end_layout
+
+\begin_layout Itemize
+modprobe ipt_LOG
+\end_layout
+
+\begin_layout Standard
+Para usar el log de paquetes hacemos:
+\end_layout
+
+\begin_layout Itemize
+nft add rule nombre_tabla nombre_cadena [operadores] log
+\end_layout
+
+\begin_layout Standard
+Y el mismo ejemplo que usamos en iptables para el loggin de conexiones ssh
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter input tcp dport 22 ct state new log prefix 
+\backslash
+"Nueva conexion ssh 
+\backslash
+" accept
+\end_layout
+
+\begin_layout Standard
+Donde:
+\end_layout
+
+\begin_layout Itemize
+ct state para indicar el estado en el que debe de estar la conexion (new,
+ established, related, etc)
+\end_layout
+
+\begin_layout Itemize
+new el estado propiamente
+\end_layout
+
+\begin_layout Itemize
+log prefix Le estamos indicando que en el log se pondra el prefijo que Nueva
+ conexion ssh
+\end_layout
+
+\begin_layout Standard
+Si miramos el log en /var/log/syslog al hacer una conexión ssh a nuestro
+ propio sistema tendremos el siguiente resultado:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado19.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Esta captura está recortada.
+\end_layout
+
+\begin_layout Subsubsection
+NAT
+\end_layout
+
+\begin_layout Standard
+Como en iptables, nftables también puede hacer nat y de manera mas simple
+ por su sintaxis, de nuevo, distinguimos entre SNAT (source nat) y DNAT
+ (destination nat)
+\end_layout
+
+\begin_layout Enumerate
+SNAT
+\end_layout
+
+\begin_layout Standard
+Para hacer SNAT y querer usar nuestro host como si un router se tratara,
+ debemos de activar el bit de ip_forward como hicimos en el ejemplo de iptables:
+\end_layout
+
+\begin_layout Itemize
+echo 1 > /proc/sys/net/ipv4/ip_forward
+\end_layout
+
+\begin_layout Standard
+Una vez hecho esto podemos empezar a establecer SNAT con los siguientes
+ pasos:
+\end_layout
+
+\begin_layout Itemize
+nft add table nat
+\end_layout
+
+\begin_layout Itemize
+nft add chain nat prerouting { type nat hook prerouting priority 0 
+\backslash
+; }
+\end_layout
+
+\begin_layout Itemize
+nft add chain nat postrouting { type nat hook postrouting priority 0 
+\backslash
+; }
+\end_layout
+
+\begin_layout Standard
+Con esto hemos creado la tabla nat con las cadenas base prerouting y postrouting
+ (creamos las 2 para el ejemplo de snat y dnat, aunque no es necesario si
+ solo se implementa uno de los casos).
+ 
+\end_layout
+
+\begin_layout Standard
+Siguiendo el ejemplo que hicimos en iptables, para hacer nat (snat o dnat)
+ de una red seguimos este formato:
+\end_layout
+
+\begin_layout Itemize
+nft add rule nat [postrouing| prerouting] ip [saddr|daddr] [red notación
+ barra|ip ] oif [interfaz de red] [snat|ndat] [ip]
+\end_layout
+
+\begin_layout Standard
+Y el ejemplo practico de hacer snat 
+\end_layout
+
+\begin_layout Itemize
+nft add rule nat postrouting ip saddr 192.168.1.0/24 oif wlan0 snat 8.8.8.8
+\end_layout
+
+\begin_layout Standard
+Donde:
+\end_layout
+
+\begin_layout Itemize
+saddr indica la ip o la red de la que proceden los paquetes
+\end_layout
+
+\begin_layout Itemize
+oif define la interfaz por la que se recogen los paquetes, en este caso
+ wlan0
+\end_layout
+
+\begin_layout Itemize
+snat indica la ip que tendrán los paquetes como origen al salir de la red
+\end_layout
+
+\begin_layout Standard
+De esta manera, si nuestro host es un router que esta conectado a la red
+ indicada los host que tengan configurada como gateway nuestro host, cambiará
+ el la ip de origen a 8.8.8.8 de los paquetes que salgan de nuestra red.
+\end_layout
+
+\begin_layout Enumerate
+DNAT
+\end_layout
+
+\begin_layout Standard
+Para hacer dnat, si tenemos algún servidor web en nuestra red y queremos
+ que sea accesible desde el exterior si se esta usando nat, debemos de seguir
+ el mismo formato que en el anterior caso, y bastaría con lo siguiente:
+\end_layout
+
+\begin_layout Itemize
+nft add rule nat prerouting iif wlan0 tcp dport 80 dnat 192.168.1.3
+\end_layout
+
+\begin_layout Standard
+Donde:
+\end_layout
+
+\begin_layout Itemize
+iif indica la interfaz por donde vendrán los paquetes, en este caso wlan0
+\end_layout
+
+\begin_layout Itemize
+tcp dport 80 el puerto y protocolo por donde vendrán los paquetes.
+\end_layout
+
+\begin_layout Itemize
+dnat hace el traslado de ip destino, cambiaría la ip de nuestro host (el
+ router) por 192.168.1.3 (la del servidor web)
+\end_layout
+
+\begin_layout Standard
+De esta manera, se podrá acceder al servidor web desde el exterior de nuestra
+ red.
+ Cabe decir que nftables nos permite hacer también un set de puertos para
+ un mismo destino, por ej:
+\end_layout
+
+\begin_layout Itemize
+nft add rule nat prerouting iif wlan0 tcp dport {80, 443} dnat 192.168.1.3
+\end_layout
+
+\begin_layout Standard
+De esta manera estamos redirigiendo tantos los paquetes que vengan por el
+ puerto 80 y el 443.
+ 
+\end_layout
+
+\begin_layout Enumerate
+NAT FLAGS 
+\end_layout
+
+\begin_layout Standard
+Como extra a iptables, nftables implementa a partir del kernel 3.18 el mapeo
+ de puertos aleatorios, además de incluir también que se mantengan estos
+ números de puertos para cada conexión.
+ Los parámetros son:
+\end_layout
+
+\begin_layout Itemize
+random: Puertos origen aleatorios.
+\end_layout
+
+\begin_layout Itemize
+random-fully: Puertos (origen y destino) aleatorios.
+\end_layout
+
+\begin_layout Itemize
+persistent: Mantiene los puertos para el origen y destino para cada conexión.
+\end_layout
+
+\begin_layout Standard
+Para el ejemplo anterior, lo usaríamos de la siguiente manera:
+\end_layout
+
+\begin_layout Itemize
+nft add rule nat postrouting masquerade random,persistent
+\end_layout
+
+\begin_layout Itemize
+nft add rule nat postrouting ip saddr 192.168.1.0/24 oif wlan0 snat 8.8.8.8 random-ful
+ly
+\end_layout
+
+\begin_layout Quotation
+Nota: Los ejemplos sobre nat han sido inspirados según el manual de nftables
+ disponible en: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://wiki.nftables.org/wiki-nftables/index.php/Performing_Network_Address_Transla
+tion_%28NAT%29
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Marcas sobre los paquetes
+\end_layout
+
+\begin_layout Standard
+Como en iptables, nftables permite marcar los paquetes con números usando
+ la opción set mark, para repetir el ejemplo usado en el apartado de iptables
+ en la cual marcamos los paquetes que sean por el puerto 80 para saber que
+ paginas web se visitaban en nuestra red , debemos de seguir el siguiente
+ formato:
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter output tcp dport 80 mark set 9999 
+\end_layout
+
+\begin_layout Subsection
+Queueing de paquetes
+\end_layout
+
+\begin_layout Standard
+Como en iptables, podemos hacer queueing de paquetes en nftables para encolarlos
+ hacia el espacio de usuario, esta característica esta disponible desde
+ el kernel 3.14 y es necesario tener la librería libnetfilter_queue (disponible
+ en algunos repositorios oficiales o en el git 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+https://git.netfilter.org/libnetfilter_queue/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Para hacerlo seguimos el siguiente formato:
+\end_layout
+
+\begin_layout Itemize
+nft add nombre_tabla nombre_cadena [operadores] queue [ num valor]
+\end_layout
+
+\begin_layout Standard
+Si no añadimos un numero, el valor por defecto sera 0.
+\end_layout
+
+\begin_layout Standard
+Ejemplo practico:
+\end_layout
+
+\begin_layout Itemize
+nft add filter input counter queue num 3
+\end_layout
+
+\begin_layout Standard
+Con esto ya estamos marcando los paquetes que vayan a nuestro host, si generamos
+ un poco de trafico, podemos verlo en accion:
+\end_layout
+
+\begin_layout Standard
+Debemos de tener en cuenta de que si no hay ningún programa escuchando a
+ queue, los paquetes serán rechazados.
+ COMPLETAR.
+\end_layout
+
+ \newpage  \begin_layout Section
+Estructuras de datos avanzadas en nftables
+\end_layout
+
+\begin_layout Standard
+Nftables permite el uso de estructuras de datos avanzadas para la mejora
+ de rendimiento en la clasificación de paquetes, esta es una característica
+ no disponible en iptables, esto incluye:
+\end_layout
+
+\begin_layout Itemize
+Sets
+\end_layout
+
+\begin_layout Itemize
+Diccionarios
+\end_layout
+
+\begin_layout Itemize
+Intervalos 
+\end_layout
+
+\begin_layout Itemize
+Mapas
+\end_layout
+
+\begin_layout Subsection
+Sets
+\end_layout
+
+\begin_layout Standard
+En nftables viene incluida una infraestructura genérica de conjuntos que
+ permite usar todos selectores soportados para construir sets.
+ Con esta infraestructura es posible representar diccionarios y mapas.
+\end_layout
+
+\begin_layout Subsubsection
+Sets anonimos 
+\end_layout
+
+\begin_layout Standard
+Los sets anonimos son aquellos que son:
+\end_layout
+
+\begin_layout Itemize
+Los atados a una reglas, si una regla es eliminada, el set también lo es.
+\end_layout
+
+\begin_layout Itemize
+Los que no tienen un nombre propio, el kernel les asigna uno automáticamente
+\end_layout
+
+\begin_layout Itemize
+No actualizables, no se pueden añadir o quitar elementos cuando son atados
+ a una regla.
+\end_layout
+
+\begin_layout Standard
+La siguiente regla representa un set anonimo:
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter output tcp dport { 80, 443 } counter
+\end_layout
+
+\begin_layout Standard
+Donde {80,443 } representa al set anonimo.
+\end_layout
+
+\begin_layout Subsubsection
+Named sets
+\end_layout
+
+\begin_layout Standard
+Se pueden crean set con un nombre asociado y añadirlos a una tabla ya creada
+ por ej:
+\end_layout
+
+\begin_layout Itemize
+nft add set nombre_tabla nombre_set {type [ipv4_addr | ipv6_addr | ether_addr
+ | inet_proto | inet_service | mark]}
+\end_layout
+
+\begin_layout Standard
+Y un ejemplo:
+\end_layout
+
+\begin_layout Itemize
+nft add set filter ip_list { type ipv4_addr 
+\backslash
+; }
+\end_layout
+
+\begin_layout Standard
+De esta manera hemos añadido un set de direcciones ipv4 a la tabla filter:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado20.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ahora podemos añadir elementos de manera única:
+\end_layout
+
+\begin_layout Itemize
+nft add element filter ip_list {192.168.1.5}
+\end_layout
+
+\begin_layout Standard
+O usando un set anonimo:
+\end_layout
+
+\begin_layout Itemize
+nft add element filter ip_list { 192.168.1.6, 192.168.1.7}
+\end_layout
+
+\begin_layout Standard
+Si comprobamos:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado21.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ahora podemos enlazar este set en una regla, por ejemplo añadir un contador
+ a los paquetes que son tienen como destino las ips del set:
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter input ip daddr @ip_list counter 
+\end_layout
+
+\begin_layout Standard
+Mirando la tabla, vemos enlazado el set en la cadena input:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename pegado22.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Además a los named set, se pueden añadir o quitar elementos, cosa que no
+ podemos hacer en los set anónimos.
+\end_layout
+
+\begin_layout Standard
+Para comprobar la diferencia real con iptables, podemos ver este ej hecho
+ por Eric leblond en este articulo 
+\begin_inset CommandInset href
+LatexCommand href
+name "why you love nftables"
+target "https://home.regit.org/2014/01/why-you-will-love-nftables/"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Tenemos la siguientes acciones en nftables:
+\end_layout
+
+\begin_layout Itemize
+ip6tables -A INPUT -p tcp -m multiport --dports 22,80,443 -j ACCEPT 
+\end_layout
+
+\begin_layout Itemize
+ip6tables -A INPUT -p icmpv6 --icmpv6-type neighbor-solicitation -j ACCEPT
+ 
+\end_layout
+
+\begin_layout Itemize
+ip6tables -A INPUT -p icmpv6 --icmpv6-type echo-request -j ACCEPT
+\end_layout
+
+\begin_layout Itemize
+ip6tables -A INPUT -p icmpv6 --icmpv6-type router-advertisement -j ACCEPT
+\end_layout
+
+\begin_layout Itemize
+ip6tables -A INPUT -p icmpv6 --icmpv6-type neighbor-advertisement -j ACCEPT
+\end_layout
+
+\begin_layout Standard
+Y se pueden expresar en nftables en solo 2 operaciones:
+\end_layout
+
+\begin_layout Itemize
+nft add rule ip6 filter input tcp dport {telnet, http, https} accept
+\end_layout
+
+\begin_layout Itemize
+nft add rule ip6 filter input icmpv6 type { nd-neighbor-solicit, echo-request,
+ nd-router-advert, nd-neighbor-advert } accept
+\end_layout
+
+\begin_layout Standard
+¿Se aprecia la diferencia? 
+\end_layout
+
+\begin_layout Subsubsection
+Listando sets
+\end_layout
+
+\begin_layout Standard
+Usando el siguiente formato se pueden listar sets:
+\end_layout
+
+\begin_layout Itemize
+nft list set nombre_tabla nombre_set
+\end_layout
+
+\begin_layout Subsection
+Diccionarios 
+\end_layout
+
+\begin_layout Standard
+Los diccionarios o verdict maps es una funcionalidad destacable en nftables.
+ Permiten relacionar una acción a un elemento.
+ Internamente usan un set generico.
+\end_layout
+
+\begin_layout Subsubsection
+Diccionarios anónimos
+\end_layout
+
+\begin_layout Standard
+Suponiendo que tenemos varias cadena personalizadas podemos ver como podemos
+ podemos crear en una linea varias acciones, el formato para hacer un diccionari
+o anónimo es:
+\end_layout
+
+\begin_layout Itemize
+nft add rule nombre_tabla nombre_cadena ip protocol vmap { [protocolo1 jump
+ cadena1],[proto2 jump cadena2] ...}
+\end_layout
+
+\begin_layout Standard
+De esta manera estamos creando en una linea n saltos que serán en las cadenas
+ personalizadas según su protocolo
+\end_layout
+
+\begin_layout Standard
+Un ejemplo sacado la wiki de 
+\begin_inset CommandInset href
+LatexCommand href
+name "nftables"
+target "http://wiki.nftables.org/wiki-nftables/index.php/Dictionaries"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Itemize
+nft add rule ip filter input ip protocol vmap { tcp : jump tcp-chain, udp
+ : jump udp-chain , icmp : jump icmp-chain }
+\end_layout
+
+\begin_layout Standard
+En este ejemplo se crea el mapa y se asocian los protocolos tcp, udp y icmp
+ a distintas cadenas.
+\end_layout
+
+\begin_layout Subsubsection
+Diccionarios con nombre
+\end_layout
+
+\begin_layout Standard
+Podemos crear diccionarios con nombre siguiendo el formato siguiente:
+\end_layout
+
+\begin_layout Itemize
+nft add map nombre_tabla nombre_diccionario { type [tipo] : verdict
+\backslash
+; }
+\end_layout
+
+\begin_layout Standard
+Un ejemplo:
+\end_layout
+
+\begin_layout Itemize
+nft add map filter diccionario { type ipv4_addr : verdict
+\backslash
+; }
+\end_layout
+
+\begin_layout Standard
+Y podemos añadir elementos del tipo del que sea el diccionario:
+\end_layout
+
+\begin_layout Itemize
+nft add element filter diccionario { 192.168.1.3 : accept, 192.168.1.5 drop }
+\end_layout
+
+\begin_layout Standard
+Una vez hecho esto, podemos usar el diccionario las acciones asociadas a
+ sus elementos:
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter ouput daddr vmap @diccionario
+\end_layout
+
+\begin_layout Standard
+Realmente en esta regla se estaría provocando lo siguiente:
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter output daddr 192.168.1.3 accept
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter output daddr 192.168.1.5 drop
+\end_layout
+
+\begin_layout Subsubsection
+Intervalos 
+\end_layout
+
+\begin_layout Standard
+Nftables permite el uso de expresiones con intervalos, los rangos se leen
+ como valor_minimo-valor_maximo, los intervalos sirven tanto para ips como
+ para puertos, algunos ejemplo:
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter output ip daddr 8.8.8.4-8.8.8.8 drop
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter output tcp ports 50-60 drop
+\end_layout
+
+\begin_layout Standard
+COMPLETAR SON SETS Y DICCIONARIOS
+\end_layout
+
+\begin_layout Subsubsection
+Mapas
+\end_layout
+
+ \newpage  \begin_layout Section
+Ejemplo de uso practico con nftables
+\end_layout
+
+\begin_layout Standard
+Para terminar podemos exponer un uso practico de un practico de nftables
+ en una red, el problema es:
+\end_layout
+
+\begin_layout Enumerate
+Tenemos una empresa, en la cual tenemos 3 subredes: 192.168.1.0/24, 192.168.2.0/24
+ y 192.168.3.0/24
+\end_layout
+
+\begin_layout Enumerate
+Para la red 192.168.1.0/24 tenemos los requisitos siguientes:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Esta compuesta por 2 servidores, uno web (192.168.1.2)y otro ftp (192.168.12),
+ en los cuales se debe implementar nat
+\end_layout
+
+\begin_layout Enumerate
+Los servidores SOLO deben de escuchar/responder peticiones, jamas hacerlas
+ hacia el exterior
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Para red 192.168.2.0/24 tenemos los siguientes requisitos:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Esta formada por trabajadores de la empresa, por tanto pueden acceder hacia
+ el exterior
+\end_layout
+
+\begin_layout Enumerate
+No se permite el uso de ciertas paginas web (facebook y twitter)
+\end_layout
+
+\begin_layout Enumerate
+No pueden recibir peticiones del exterior.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Para la red 192.168.3.0/24 tenemos los siguientes requisitos:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Esta formada por equipos en pruebas, por tanto solo pueden tener acceso
+ entre ellos y nunca pueden recibir peticiones desde el exterior ni tampoco
+ acceder a este.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Suponiendo que tenemos un equipo que hace router, y este esta conectado
+ a las 3 redes y a internet, podemos configurar nftables de la siguiente
+ manera para solventar los requisitos siguientes:
+\end_layout
+
+\begin_layout Standard
+Para la red 192.168.1.0/24:
+\end_layout
+
+\begin_layout Itemize
+nft add rule nat prerouting ip daddr 192.168.1.0/24 tcp dport 80 dnat 192.168.1.2
+\end_layout
+
+\begin_layout Itemize
+nft add rule nat prerouting ip daddr 192.168.1.0/24 tcp dport 21 dnat 192.168.1.3
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter input ip saddr 192.168.1.0/24 ct state new drop 
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter input ip saddr 192.168.1.0/24 ct state established accept
+ 
+\end_layout
+
+\begin_layout Standard
+Para la red 192.168.2.0/24:
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter input ip saddr 192.168.2.0/24 ct state new ct state established
+ accept *
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter input ip saddr 192.168.2.0/24 ct state establised accept
+ *
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter input ip daddr 192.168.2.0/24 ct state new drop
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter input ip saddr 192.168.2.0/24 ip daddr 8.8.8.8 drop (suponiendo
+ facebook.es -> 8.8.8.8)
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter input ip saddr 192.168.1.0/24 ip daddr 8.8.8.4 drop (suponiendo
+ twitter.es -> 8.8.8.4)
+\end_layout
+
+\begin_layout Standard
+Para la red 192.168.3.0/24
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter input ip saddr 192.168.3.0/24 drop
+\end_layout
+
+\begin_layout Itemize
+nft add rule filter input ip daddr 192.168.3.0/24 drop
+\end_layout
+
+\end_body
+\end_document

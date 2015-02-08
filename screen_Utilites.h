@@ -117,15 +117,25 @@ void createChain(){
 	int num= sizeof(choices) / sizeof(char *);
 	WINDOW *menuwin;
 	menuwin = newwin(num+10, 30, 5, 5);
-	
-	
+	char *tablas[100];
+	WINDOW *menu2;
 	keypad(menuwin, TRUE);
 	refresh();
 	int salida=print_menu (menuwin, 1, choices, num);
     
     switch(salida){
         case 1: //input
-            //debemos de llamar 
+            //debemos de llamar a las tablas que hay existentes
+        	 
+        	 
+        	 
+        	 menu2=newwin(num+10,30,5,5);
+        	 keypad(menu2,TRUE);
+        	 refresh();
+        	 tablas[]=getTables();
+        	 int num2= sizeof(tablas) / sizeof(char *);
+        	  salida=print_menu (menuwin, 1,tablas , num2);
+
             break;
         case 2: //output
             //
