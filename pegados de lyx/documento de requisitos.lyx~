@@ -403,8 +403,21 @@ RN-005 CREAR UNA REGLA:
 RN-006 BORRAR UN REGLA:
 \end_layout
 
+\begin_layout Subsection
+Requisitos funcionales
+\end_layout
+
+\begin_layout Standard
+\begin_inset space \space{}
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 
+\series bold
+RF-001 
 \end_layout
 
 \end_body

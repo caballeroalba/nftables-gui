@@ -417,7 +417,10 @@ Requisitos funcionales
 \begin_layout Standard
 
 \series bold
-RF-001 
+RF-001: 
+\series default
+El sistema deberá permitir que una tabla, cadena o regla pueda ser añadida
+ o modificada en cualquier momento respetando las reglas de negocio.
 \end_layout
 
 \end_body
