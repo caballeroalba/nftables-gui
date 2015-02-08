@@ -132,7 +132,7 @@ void createChain(){
         	 menu2=newwin(num+10,30,5,5);
         	 keypad(menu2,TRUE);
         	 refresh();
-        	 tablas[]=getTables();
+        	 *tablas=getTables();
         	 int num2= sizeof(tablas) / sizeof(char *);
         	  salida=print_menu (menuwin, 1,tablas , num2);
 

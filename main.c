@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include "screen_Utilites.h"
 #include <stdlib.h>
+#include <sqlite3.h>
 
 #define WIDTH 30
 #define HEIGHT 10 
