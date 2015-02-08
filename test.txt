@@ -1,0 +1,3 @@
+<cmdline>:1:1-22: Error: Could not add table: Operation not permitted
+create table jlsjskjls
+^^^^^^^^^^^^^^^^^^^^^^
