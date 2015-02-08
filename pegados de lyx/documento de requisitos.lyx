@@ -254,5 +254,171 @@ Una cadena es un objeto que puede (como en iptables) contener un conjunto
 OSTROUTE y CUSTOM.
 \end_layout
 
+\begin_layout Standard
+
+\series bold
+Regla: 
+\series default
+Una regla es una serie de ordenes de filtrado sobre un determinado tipo
+ de paquete.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Puerto:
+\series default
+ Un puerto es un numero identificativo por el cual operan los distintos
+ protocolos de red, algunos famosos son: 80 (http) 443 (https), 21(ftp),
+ 22(ssh).
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Ip:
+\series default
+ Una ip es una dirección de 32 bits divididos en bloques de 8 bits del tipo:
+ xxx.xxx.xxx.xxx.
+\end_layout
+
+\begin_layout Standard
+COMPLETAR AÑADIENDO CUANDO SALGAN
+\end_layout
+
+\begin_layout Section
+Especificación de requisitos
+\end_layout
+
+\begin_layout Subsection
+Requisitos generales
+\end_layout
+
+\begin_layout Standard
+El sistema software puede ser utilizado por cualquier usuario con permisos
+ de administrador y deberá almacenar en una base de datos toda la información
+ relevante para el sistema, siendo esto: tablas, cadenas, reglas.
+ Por otra parte el sistema deberá permitir que una tabla, cadena o regla
+ pueda ser añadida, modificada o eliminada en cualquier momento pudiendo
+ hacerlo cualquier usuario con permisos.
+\end_layout
+
+\begin_layout Subsection
+Requisitos de información
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+RI-001 TABLA: 
+\series default
+El sistema deberá almacenar la información correspondiente a una tabla,
+ en concreto: nombre de la tabla, familia de la tabla (ip, ip6, arp, nat,
+ raw, etc) conjunto de cadenas que tiene (si las tiene) y las reglas asociadas
+ a estas.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+RI-002 CADENA: 
+\series default
+El sistema deberá almacenar la información correspondiente a una cadena,
+ en concreto: nombre la cadena, tipo de cadena (INPUT, OUTPUT, PREROUTE,
+ POSTROUTING, CUSTOM) y las reglas asociadas a esta.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+RI-003 REGLA: 
+\series default
+El sistema deberá almacenar la información correspondiente a una regla,
+ en concreto: acción de la regla (drop,accept, reject, redirect) el puerto
+ origen y destino (si los hubiera) dirección ip y destino (si los hubiera)
+ red (si la hubiera) protoco, estado de la conexion, etc.
+\end_layout
+
+\begin_layout Subsection
+Reglas de negocio
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+RN-001 CREAR UNA TABLA: 
+\series default
+No se permitirá crear una tabla con un nombre que ya exista o de una familia
+ distinta a las establecidas por el sistema (ip,ip6,nat,raw,arp).
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+RN-002 BORRAR UNA TABLA: 
+\series default
+No se permitirá borrar una tabla que contenga cadenas con reglas (si las
+ cadenas están vacías si se podrá borrar la tabla).
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+RN-003 CREAR UNA CADENA: 
+\series default
+No se podrá crear una cadena con un nombre que ya exista.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+RN-004 BORRAR UNA CADENA: 
+\series default
+Se podrá borrar una cadena siempre que no contenga reglas.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+RN-005 CREAR UNA REGLA: 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+RN-006 BORRAR UN REGLA:
+\end_layout
+
+\begin_layout Subsection
+Requisitos funcionales
+\end_layout
+
+\begin_layout Standard
+\begin_inset space \space{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+RF-001 
+\end_layout
+
 \end_body
 \end_document
