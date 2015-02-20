@@ -1,3 +1,3 @@
-<cmdline>:1:1-15: Error: Could not add table: Operation not permitted
-create table ss
-^^^^^^^^^^^^^^^
+<cmdline>:1:16-16: Error: syntax error, unexpected junk, expecting end of file or newline or semicolon
+create table  GÆ
+               ^

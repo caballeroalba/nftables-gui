@@ -62,6 +62,6 @@ char * getTables(){
     sqlite3_finalize(res);
     sqlite3_close(db);
     
-    return result;
+    return &result;
 
 }
