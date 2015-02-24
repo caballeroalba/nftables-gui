@@ -1143,5 +1143,594 @@ Grafo de dependencias
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Casos de uso
+\end_layout
+
+\begin_layout Standard
+A continuación se describen los casos de uso según las funcionalidades detectada
+s en los requisitos funcionales
+\end_layout
+
+\begin_layout Description
+UC001: Creación de una tabla
+\end_layout
+
+\begin_layout Description
+Version: 1
+\end_layout
+
+\begin_layout Description
+Autor: José Maria Caballero Alba
+\end_layout
+
+\begin_layout Description
+Dependencias: 
+\end_layout
+
+\begin_layout Description
+Descripción: El sistema deberá permitir al actor crear una tabla mediante
+ una interfaz amigable interactuando con el sistema.
+\end_layout
+
+\begin_layout Description
+Precondición: Que la tabla no este creada previamente.
+\end_layout
+
+\begin_layout Description
+Secuencia 
+\series bold
+normal:
+\end_layout
+
+\begin_layout Itemize
+Paso 1: El actor solicita al sistema crear una tabla.
+\end_layout
+
+\begin_layout Itemize
+Paso 2: El sistema le muestra una lista de las distintas familias con las
+ que puede crear la tabla.
+\end_layout
+
+\begin_layout Itemize
+Paso 3: El actor selecciona una de las familias disponibles.
+\end_layout
+
+\begin_layout Itemize
+Paso 4: El sistema le muestra un formulario para introducir el nombre de
+ la tabla.
+\end_layout
+
+\begin_layout Itemize
+Paso 5: El actor introduce el nombre de la tabla.
+\end_layout
+
+\begin_layout Itemize
+Paso 6: El sistema crea la tabla.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Postcondición: 
+\series default
+El sistema crea la tabla con el nombre y la familia especificada
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Excepciones: 
+\end_layout
+
+\begin_layout Itemize
+Paso 5: Si el actor introduce un nombre de tabla ya en uso, se le informa
+ de ello y, a continuación este caso de uso queda sin efecto.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Importancia: 
+\series default
+Alta
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Urgencia: 
+\series default
+Media
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Estado: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+UC002: Creación de una cadena.
+\end_layout
+
+\begin_layout Description
+Version: 1
+\end_layout
+
+\begin_layout Description
+Autor: José Maria Caballero Alba
+\end_layout
+
+\begin_layout Description
+Dependencias: 
+\end_layout
+
+\begin_layout Description
+Descripción: El sistema deberá permitir al actor crear una cadena mediante
+ una interfaz amigable interactuando con el sistema.
+\end_layout
+
+\begin_layout Description
+Precondición: Que la cadena no este creada previamente en la tabla que se
+ seleccione.
+\end_layout
+
+\begin_layout Description
+Secuencia 
+\series bold
+normal:
+\end_layout
+
+\begin_layout Itemize
+Paso 1: El actor solicita al sistema crear una cadena.
+\end_layout
+
+\begin_layout Itemize
+Paso 2: El sistema le muestra una lista de las distintas familias con las
+ que puede crear la tabla.
+\end_layout
+
+\begin_layout Itemize
+Paso 3: El actor selecciona una de las familias disponibles.
+\end_layout
+
+\begin_layout Itemize
+Paso 4.
+ El sistema le muestra una lista de las tablas ya creadas para seleccionar
+ una de ellas.
+\end_layout
+
+\begin_layout Itemize
+Paso 5: El actor selecciona una de ellas.
+\end_layout
+
+\begin_layout Itemize
+Paso 6: El sistema le muestra un formulario para introducir el nombre de
+ la tabla.
+\end_layout
+
+\begin_layout Itemize
+Paso 7: El actor introduce el nombre de la cadena.
+\end_layout
+
+\begin_layout Itemize
+Paso 8: El sistema crea la cadena.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Postcondición: 
+\series default
+El sistema crea la cadena con el nombre y la familia especificada en la
+ tabla seleccionada.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Excepciones: 
+\end_layout
+
+\begin_layout Itemize
+Paso 6: Si el actor introduce un nombre de tabla ya en uso, se le informa
+ de ello y, a continuación este caso de uso queda sin efecto.
+\end_layout
+
+\begin_layout Itemize
+Paso 4: Si no hay ninguna tabla creada, se le informa al actor de ello,
+ dando la posibilidad de crearla para poder introducir la cadena en ella
+ y, a continuación, este caso de uso queda sin efecto.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Importancia: 
+\series default
+Alta
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Urgencia: 
+\series default
+Media
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Estado: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+UC003: Creación de una regla.
+\end_layout
+
+\begin_layout Description
+Version: 1
+\end_layout
+
+\begin_layout Description
+Autor: José Maria Caballero Alba
+\end_layout
+
+\begin_layout Description
+Dependencias: 
+\end_layout
+
+\begin_layout Description
+Descripción: El sistema deberá permitir al actor crear una regla mediante
+ una interfaz amigable interactuando con el sistema.
+\end_layout
+
+\begin_layout Description
+Precondición: Que la regla no este creada previamente en la tabla y cadena
+ que se seleccione.
+\end_layout
+
+\begin_layout Description
+Secuencia 
+\series bold
+normal:
+\end_layout
+
+\begin_layout Itemize
+Paso 1: El actor solicita al sistema crear una regla.
+\end_layout
+
+\begin_layout Itemize
+Paso 2: El sistema le muestra una lista de las distintas familias con las
+ que puede crear la regla.
+\end_layout
+
+\begin_layout Itemize
+Paso 3: El actor selecciona una de las familias disponibles.
+\end_layout
+
+\begin_layout Itemize
+Paso 4.
+ El sistema le muestra una lista de las tablas ya creadas para seleccionar
+ una de ellas.
+\end_layout
+
+\begin_layout Itemize
+Paso 5: El actor selecciona una de ellas.
+\end_layout
+
+\begin_layout Itemize
+Paso 6: El sistema le muestra una lista de las cadenas creadas en la tabla
+ seleccionada.
+\end_layout
+
+\begin_layout Itemize
+Paso 7: El actor selecciona una de las cadenas mostradas por el sistema.
+\end_layout
+
+\begin_layout Itemize
+Paso 8: El sistema le muestra un formulario para introducir el nombre de
+ la regla.
+\end_layout
+
+\begin_layout Itemize
+Paso 9: El actor introduce el nombre de la regla.
+\end_layout
+
+\begin_layout Itemize
+Paso 10: El sistema crea la regla.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Postcondición: 
+\series default
+El sistema crea la cadena con el nombre y la familia especificada en la
+ tabla seleccionada.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Excepciones: 
+\end_layout
+
+\begin_layout Itemize
+Paso 9: Si el actor introduce un nombre de regla ya en uso, se le informa
+ de ello y, a continuación este caso de uso queda sin efecto.
+\end_layout
+
+\begin_layout Itemize
+Paso 4: Si no hay ninguna tabla creada, se le informa al actor de ello,
+ dando la posibilidad de crearla para poder introducir la regla en ella
+ y, a continuación, este caso de uso queda sin efecto.
+\end_layout
+
+\begin_layout Itemize
+Paso 6: Si no hay ninguna cadena creada, se le informa al actor de ello,
+ dando la posibilidad de crearla para poder introducir la regla en ella
+ y, a continuación, este caso de uso queda sin efecto.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Importancia: 
+\series default
+Alta
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Urgencia: 
+\series default
+Media
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Estado: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+UC004: Exportar reglas json/xml
+\end_layout
+
+\begin_layout Description
+Version: 1
+\end_layout
+
+\begin_layout Description
+Autor: José Maria Caballero Alba
+\end_layout
+
+\begin_layout Description
+Dependencias: 
+\end_layout
+
+\begin_layout Description
+Descripción: El sistema deberá permitir al actor exportar reglas mediante
+ una interfaz amigable interactuando con el sistema.
+\end_layout
+
+\begin_layout Description
+Precondición: Que existan reglas.
+\end_layout
+
+\begin_layout Description
+Secuencia 
+\series bold
+normal:
+\end_layout
+
+\begin_layout Itemize
+Paso 1: El actor solicita al exportar reglas
+\end_layout
+
+\begin_layout Itemize
+Paso 2: El sistema le muestra una lista de las distintas reglas.
+\end_layout
+
+\begin_layout Itemize
+Paso 3: El actor selecciona una/varias/ reglas 
+\end_layout
+
+\begin_layout Itemize
+Paso 4.
+ El sistema confirma las reglas seleccionadas y pide la ruta de salida del
+ fichero json/xml
+\end_layout
+
+\begin_layout Itemize
+Paso 5: El actor introduce la ruta
+\end_layout
+
+\begin_layout Itemize
+Paso 6: El sistema exporta el fichero a la ruta introducida por el usuario.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Postcondición: 
+\series default
+El sistema crea el fichero de configuración con las reglas seleccionadas
+ por el usuario.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Excepciones: 
+\end_layout
+
+\begin_layout Itemize
+Paso 2: Si no existen reglas, el sistema informa al usuario de ello y, a
+ continuación, este caso de uso queda sin efecto.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Importancia: 
+\series default
+Alta
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Urgencia: 
+\series default
+Media
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Estado: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+UC005: Importar reglas json/xml
+\end_layout
+
+\begin_layout Description
+Version: 1
+\end_layout
+
+\begin_layout Description
+Autor: José Maria Caballero Alba
+\end_layout
+
+\begin_layout Description
+Dependencias: 
+\end_layout
+
+\begin_layout Description
+Descripción: El sistema deberá permitir al actor importar reglas mediante
+ una interfaz amigable interactuando con el sistema.
+\end_layout
+
+\begin_layout Description
+Precondición: Ninguna.
+\end_layout
+
+\begin_layout Description
+Secuencia 
+\series bold
+normal:
+\end_layout
+
+\begin_layout Itemize
+Paso 1: El actor solicita al importar reglas
+\end_layout
+
+\begin_layout Itemize
+Paso 2: El sistema le solicita al usuario la ruta con el fichero de configuració
+n json/xml
+\end_layout
+
+\begin_layout Itemize
+Paso 3: El actor introduce la ruta
+\end_layout
+
+\begin_layout Itemize
+Paso 4.
+ El sistema confirma las reglas seleccionadas y procede a cargarlas.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Postcondición: 
+\series default
+El sistema importar el fichero de configuración con las reglas que contenga.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Excepciones: 
+\end_layout
+
+\begin_layout Itemize
+Paso 4: Si existe algún error en las reglas, el sistema informa al usuario
+ de ello y, a continuación, este caso de uso queda sin efecto.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Importancia: 
+\series default
+Alta
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Urgencia: 
+\series default
+Media
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Estado: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
 \end_body
 \end_document
