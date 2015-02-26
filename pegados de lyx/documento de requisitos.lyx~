@@ -1257,6 +1257,13 @@ Media
 Estado: 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
 \begin_layout Description
 UC002: Creación de una cadena.
 \end_layout
@@ -1373,6 +1380,13 @@ Media
 Estado: 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
 \begin_layout Description
 UC003: Creación de una regla.
 \end_layout
@@ -1447,7 +1461,18 @@ Paso 9: El actor introduce el nombre de la regla.
 \end_layout
 
 \begin_layout Itemize
-Paso 10: El sistema crea la regla.
+Paso 10: El sistema le pregunta por los parámetros de filtrado (puerto destino,
+ puerto origen, red o redes origen y destino asociadas a la regla, interfaz,
+ protocolo, ip origen, ip destino)
+\end_layout
+
+\begin_layout Itemize
+Paso 11: El usuario introduce los parámetros de filtrado.
+\end_layout
+
+\begin_layout Itemize
+Paso 12: El sistema crea la regla.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -1455,8 +1480,8 @@ Paso 10: El sistema crea la regla.
 \series bold
 Postcondición: 
 \series default
-El sistema crea la cadena con el nombre y la familia especificada en la
- tabla seleccionada.
+El sistema crea la cadena con el nombre, familia y reglas de filtrado especifica
+das en la tabla seleccionada.
 \end_layout
 
 \begin_layout Standard
@@ -1502,6 +1527,13 @@ Media
 
 \series bold
 Estado: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
 \end_layout
 
 \begin_layout Description
@@ -1603,6 +1635,13 @@ Media
 Estado: 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
 \begin_layout Description
 UC005: Importar reglas json/xml
 \end_layout
@@ -1694,7 +1733,337 @@ Estado:
 \end_layout
 
 \begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
 
+
+\end_layout
+
+\begin_layout Description
+UC006: Borrar una tabla
+\end_layout
+
+\begin_layout Description
+Version: 1
+\end_layout
+
+\begin_layout Description
+Autor: José Maria Caballero Alba
+\end_layout
+
+\begin_layout Description
+Dependencias: 
+\end_layout
+
+\begin_layout Description
+Descripción: El sistema deberá permitir al actor borrar una tabla usando
+ una interfaz amigable interactuando con el sistema.
+\end_layout
+
+\begin_layout Description
+Precondición: Tablas creadas previamente.
+\end_layout
+
+\begin_layout Description
+Secuencia 
+\series bold
+normal:
+\end_layout
+
+\begin_layout Itemize
+Paso 1: El actor solicita al sistema borrar una tabla.
+\end_layout
+
+\begin_layout Itemize
+Paso 2: El sistema le muestra la lista de tablas actuales que hay en el
+ sistema.
+\end_layout
+
+\begin_layout Itemize
+Paso 3: El actor selecciona la tabla a borrar
+\end_layout
+
+\begin_layout Itemize
+Paso 4.
+ El sistema confirma el borrado de la tabla seleccionada.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Postcondición: 
+\series default
+El sistema debe borrar la tabla seleccionada por el actor.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Excepciones: 
+\end_layout
+
+\begin_layout Itemize
+Paso 2: Si no existe ninguna tabla, el sistema informa al actor de ello
+ y, a continuación, este caso de uso queda sin efecto.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Importancia: 
+\series default
+Alta
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Urgencia: 
+\series default
+Media
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Estado: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+UC007: Borrar una cadena.
+\end_layout
+
+\begin_layout Description
+Version: 1
+\end_layout
+
+\begin_layout Description
+Autor: José Maria Caballero Alba
+\end_layout
+
+\begin_layout Description
+Dependencias: 
+\end_layout
+
+\begin_layout Description
+Descripción: El sistema deberá permitir al actor borrar una cadena usando
+ una interfaz amigable interactuando con el sistema.
+\end_layout
+
+\begin_layout Description
+Precondición: Cadenas creadas previamente.
+\end_layout
+
+\begin_layout Description
+Secuencia 
+\series bold
+normal:
+\end_layout
+
+\begin_layout Itemize
+Paso 1: El actor solicita al sistema borrar una tabla.
+\end_layout
+
+\begin_layout Itemize
+Paso 2: El sistema le muestra la lista de tablas actuales que hay en el
+ sistema.
+\end_layout
+
+\begin_layout Itemize
+Paso 3: El actor selecciona la tabla que contiene la regla a borrar.
+\end_layout
+
+\begin_layout Itemize
+Paso 4.
+ El sistema muestra una lista de las cadenas que contienen la tabla seleccionada.
+\end_layout
+
+\begin_layout Itemize
+Paso 5.
+ El actor selecciona una de las cadenas disponibles para borrar.
+\end_layout
+
+\begin_layout Itemize
+Paso 6.
+ El sistema borra la cadena seleccionada por el usuario.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Postcondición: 
+\series default
+El sistema debe borrar la cadena seleccionada por el actor.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Excepciones: 
+\end_layout
+
+\begin_layout Itemize
+Paso 2: Si no existe ninguna tabla, el sistema informa al actor de ello
+ y, a continuación, este caso de uso queda sin efecto.
+\end_layout
+
+\begin_layout Itemize
+Paso 4.
+ Si no existe ninguna cadena, el sistema informa al actor de ello y, a continuac
+ión, este caso de uso queda sin efecto.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Importancia: 
+\series default
+Alta
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Urgencia: 
+\series default
+Media
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Estado: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+UC008: Borrar una regla.
+\end_layout
+
+\begin_layout Description
+Version: 1
+\end_layout
+
+\begin_layout Description
+Autor: José Maria Caballero Alba
+\end_layout
+
+\begin_layout Description
+Dependencias: 
+\end_layout
+
+\begin_layout Description
+Descripción: El sistema deberá permitir al actor borrar una regla usando
+ una interfaz amigable interactuando con el sistema.
+\end_layout
+
+\begin_layout Description
+Precondición: Reglas creadas previamente.
+\end_layout
+
+\begin_layout Description
+Secuencia 
+\series bold
+normal:
+\end_layout
+
+\begin_layout Itemize
+Paso 1: El actor solicita al sistema borrar una tabla.
+\end_layout
+
+\begin_layout Itemize
+Paso 2: El sistema le muestra la lista de tablas actuales que hay en el
+ sistema.
+\end_layout
+
+\begin_layout Itemize
+Paso 3: El actor selecciona la tabla que contiene la regla a borrar.
+\end_layout
+
+\begin_layout Itemize
+Paso 4: El sistema muestra una lista de las cadenas que contienen la tabla
+ seleccionada.
+\end_layout
+
+\begin_layout Itemize
+Paso 5: El actor selecciona una de las cadenas disponibles para borrar.
+\end_layout
+
+\begin_layout Itemize
+Paso 6: El sistema muestra una lista de las reglas disponibles en la cadena
+ seleccionada.
+\end_layout
+
+\begin_layout Itemize
+Paso 7: El usuario selecciona una de las reglas disponibles.
+\end_layout
+
+\begin_layout Itemize
+Paso 6: El sistema borra la regla seleccionada por el usuario.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Postcondición: 
+\series default
+El sistema debe borrar la cadena seleccionada por el actor.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Excepciones: 
+\end_layout
+
+\begin_layout Itemize
+Paso 2: Si no existe ninguna tabla, el sistema informa al actor de ello
+ y, a continuación, este caso de uso queda sin efecto.
+\end_layout
+
+\begin_layout Itemize
+Paso 4: Si no existe ninguna cadena, el sistema informa al actor de ello
+ y, a continuación, este caso de uso queda sin efecto.
+\end_layout
+
+\begin_layout Itemize
+Paso 6: Si no existe ninguna regla, el sistema informa al actor de ello
+ y, a continuación, este caso de uso queda sin efecto.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Importancia: 
+\series default
+Alta
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Urgencia: 
+\series default
+Media
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Estado: 
 \end_layout
 
 \end_body
