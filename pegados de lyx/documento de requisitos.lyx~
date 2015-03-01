@@ -108,6 +108,17 @@ Introducción
 El software nftables-gui pretende modelar la interfaz gráfica de nftables
  de manera que sea mas fácil su uso y menos dura la implementación de cambiar
  iptables por nftables.
+ Esto consistirá en un software usando el lenguaje programación c usando
+ la librería ncurses para la interfaz gráfica y form para los formularios.
+ 
+\end_layout
+
+\begin_layout Standard
+El problema que vamos a tratar es facilitar al usuario el uso de nftables,
+ tanto para usuarios principales como para usuario expertos, aumentando
+ su productividad a la hora de poder configurar correctamente un firewall
+ en una red.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -165,7 +176,8 @@ Creación de una tabla:
 
 \begin_deeper
 \begin_layout Itemize
-Crear una tabla dentro del sistema de nftables.
+Crear una tabla dentro del sistema de nftables especificando la familia
+ o si es una tabla personalizada (custom).
 \end_layout
 
 \end_deeper
@@ -185,7 +197,8 @@ Creación de una cadena:
 
 \begin_deeper
 \begin_layout Itemize
-Crear una cadena dentro del sistema de nftables.
+Crear una cadena dentro del sistema de nftables especificando la tabla a
+ la que pertenece y el tipo de hook que usará.
 \end_layout
 
 \end_deeper
@@ -205,7 +218,9 @@ Creación de una regla:
 
 \begin_deeper
 \begin_layout Itemize
-Crear una regla dentro del sistema de nftables.
+Crear una regla dentro del sistema de nftables especificando la tabla y
+ cadena a la que pertenece y los distintos parámetros de filtrados que usará
+ la regla.
 \end_layout
 
 \end_deeper
@@ -226,7 +241,7 @@ Exportar reglas en xml o json:
 \begin_deeper
 \begin_layout Itemize
 Se pretende exportar hacia un fichero externo un conjunto de reglas hacia
- nftables
+ nftables usando una estructura json o xml.
 \end_layout
 
 \end_deeper
@@ -237,7 +252,7 @@ Importar reglas en xml o json:
 \begin_deeper
 \begin_layout Itemize
 Se pretende importar un conjunto de reglas hacia nftables mediante un fichero
- externo.
+ externousando una estructura json o xml.
 \end_layout
 
 \end_deeper
@@ -262,7 +277,7 @@ A continuación se procede a explicar los términos usados en este documento:
 Tabla: 
 \series default
 Una tabla es objeto que contiene un conjunto de cadenas, pueden ser de tipo
- ip,ip6,arp y nat.
+ ip,ip6,arp y nat o custom.
 \end_layout
 
 \begin_layout Standard
@@ -271,8 +286,8 @@ Una tabla es objeto que contiene un conjunto de cadenas, pueden ser de tipo
 Cadena: 
 \series default
 Una cadena es un objeto que puede (como en iptables) contener un conjunto
- de reglas, puede ser de de los siguientes tipos (hook): INPUT,OUTPUT,PREROUTE,P
-OSTROUTE y CUSTOM.
+ de reglas, puede ser de de los siguientes tipos (hook): INPUT, OUTPUT,
+ PREROUTE, POSTROUTE y CUSTOM.
 \end_layout
 
 \begin_layout Standard
@@ -281,7 +296,8 @@ OSTROUTE y CUSTOM.
 Regla: 
 \series default
 Una regla es una serie de ordenes de filtrado sobre un determinado tipo
- de paquete.
+ de paquete, como pudieran ser el rango de puertos, redes, ip, tipo de estado,
+ etc.
 \end_layout
 
 \begin_layout Standard
@@ -297,14 +313,118 @@ Puerto:
 \begin_layout Standard
 
 \series bold
-Ip:
+Ipv4:
 \series default
- Una ip es una dirección de 32 bits divididos en bloques de 8 bits del tipo:
- xxx.xxx.xxx.xxx.
+ Una ip de tipo ipv4 es una dirección de 32 bits divididos en bloques de
+ 8 bits del tipo: xxx.xxx.xxx.xxx.
 \end_layout
 
 \begin_layout Standard
-COMPLETAR AÑADIENDO CUANDO SALGAN
+
+\series bold
+Ipv6: 
+\series default
+Una ip de tipo ipv6 es una dirección de 128bits divididos en bloques de
+ 32 bits del tipo FFFF:FFFF:FFFF:FFFF:FFFF:FFFFF:FFFFF:FFFF (formato hexadecimal
+).
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Interfaz: 
+\series default
+Una interfaz es un dispositivo de red, en nuestro caso, serán las distintas
+ interfaces que puedan tener los dispositivos que usen este sotfware.
+ Un ejemplo sería la interfaz de red inalámbrica wlanX.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Estado de la conexión: 
+\series default
+El estado de una conexión indica si la conexión es nueva (primer paquete,
+ NEW), esta establecidas (segundo o mas paquetes, ESTABLISHED), relacionada
+ ( RELATED), o invalida (INVALID).
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Red: 
+\series default
+Una red es un conjunto de ordenadores conectados entre ellos.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Acción sobre un paquete: 
+\series default
+Una acción sobre un paquete indica que se hará con el paquete es cuestión,
+ las opciones posibles son aceptar (ACCEPT) , tirar (DROP), denegar (REJECT),
+ saltar (JUMP), encolar (QUEUE), contar (COUNT), log del paquete y hacer
+ la nat.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Nat:
+\series default
+ Hacer nat sobre un paquete consiste en traducir la dirección ip de origen
+ (SNAT) o de destino (DNAT) del paquete.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Handle: 
+\series default
+El handle es un identificador numérico único que distingue a las reglas
+ dentro de nftables.
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Planificación
+\end_layout
+
+\begin_layout Standard
+Las tareas a realizar a lo largo de este proyecto consistirán en primer
+ lugar en concretar con el profesor las especificaciones del proyecto en
+ cuestión, posteriormente definir los diferentes tipos de requisitos y el
+ modelo conceptual (diagrama de clases, matriz de trazabilidad...) y por último
+ realizar y desarrollar tanto el modelo de dominio como el modelo tecnológico.
+\end_layout
+
+\begin_layout Standard
+Se usara la herramienta redmine para la gestión de las tareas y generación
+ del diagrama de gantt, se usará como repositorio github y git como sistema
+ de control de versiones, además para las pruebas de integración continua
+ se usará jenkins.
+ También se usará sonaQube para el análisis de código.
+\end_layout
+
+\begin_layout Standard
+
 \end_layout
 
 \begin_layout Standard
@@ -520,10 +640,6 @@ status open
 
 \end_layout
 
-\begin_layout Subsection
-Matriz de trazabilidad 
-\end_layout
-
 \begin_layout Standard
 \begin_inset Phantom VPhantom
 status open
@@ -535,6 +651,10 @@ status open
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Matriz de trazabilidad 
 \end_layout
 
 \begin_layout Standard
@@ -1463,7 +1583,7 @@ Paso 9: El actor introduce el nombre de la regla.
 \begin_layout Itemize
 Paso 10: El sistema le pregunta por los parámetros de filtrado (puerto destino,
  puerto origen, red o redes origen y destino asociadas a la regla, interfaz,
- protocolo, ip origen, ip destino)
+ protocolo, ip origen, ip destino y el tipo de acción a realizar).
 \end_layout
 
 \begin_layout Itemize
@@ -1881,18 +2001,16 @@ Paso 3: El actor selecciona la tabla que contiene la regla a borrar.
 \end_layout
 
 \begin_layout Itemize
-Paso 4.
- El sistema muestra una lista de las cadenas que contienen la tabla seleccionada.
+Paso 4: El sistema muestra una lista de las cadenas que contienen la tabla
+ seleccionada.
 \end_layout
 
 \begin_layout Itemize
-Paso 5.
- El actor selecciona una de las cadenas disponibles para borrar.
+Paso 5: El actor selecciona una de las cadenas disponibles para borrar.
 \end_layout
 
 \begin_layout Itemize
-Paso 6.
- El sistema borra la cadena seleccionada por el usuario.
+Paso 6: El sistema borra la cadena seleccionada por el usuario.
 \end_layout
 
 \begin_layout Standard
