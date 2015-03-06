@@ -29,7 +29,7 @@
 int main(){
 
 	/* def de las estructuras principales */
-	struct table *tablas[99]; //array de 99 tablas
+	struct table *tablas[99]; //array de punteros de 99 tablas
 	
 	
 	/* TODO */
@@ -43,7 +43,7 @@ int main(){
 
 		/* buscamos las cadenas de las tablas */
 		int i;
-		printf("el ahora es %d\n ",sizeof(struct table)/sizeof(tablas));
+		//printf("el ahora es %s\n ",sizeof(struct table)/sizeof(tablas));
 		for (i=0; i<=sizeof(struct table)/sizeof(tablas);i++){
             
 			tablas[i]->chains[i]=malloc (sizeof (struct chain));
