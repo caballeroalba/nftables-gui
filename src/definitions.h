@@ -17,7 +17,7 @@
  */
 
 
-struct table
+struct table 
 {
 	char tableName[50];
 	char family[50];
