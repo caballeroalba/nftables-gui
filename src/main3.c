@@ -30,22 +30,21 @@ int main(){
 
 	/* def de las estructuras principales */
 	struct table *tablas[99]; //array de 99 tablas
-	tablas[0]=malloc(sizeof(struct table));
+	
 	
 	/* TODO */
 
 	verify_tables(tablas);
-    printf("lo que se ha recivido ess: %s\n",tablas[0]->tableName);
 
 	if(tablas==NULL){
-		printf("no hay cadenas\n");
+		
 		/* no hay tablas creadas */
 	}else{
 
 		/* buscamos las cadenas de las tablas */
 		int i;
-
-		for (i=0; i<sizeof(struct table)/sizeof(tablas);i++){
+		printf("el ahora es %d\n ",sizeof(struct table)/sizeof(tablas));
+		for (i=0; i<=sizeof(struct table)/sizeof(tablas);i++){
             
 			tablas[i]->chains[i]=malloc (sizeof (struct chain));
 			
@@ -84,9 +83,10 @@ int verify_tables(struct table *tablas[99]){
 	while(fgets(output, sizeof(output), fp) !=NULL){
 		printf("%s",output);
 		struct table tabla1;
+		tablas[i]=malloc(sizeof(struct table));
        // tabla1=malloc (sizeof(struct table));
 		printf("antes del strcpy\n");
-		strcpy(tablas[0]->tableName,output);
+		strcpy(tablas[i]->tableName,output);
 		printf("antes de la asignacion\n");
 		//tablas[i]=tabla1;		
         printf("desppues de haberlo asignado su nombre es: %s\n",tablas[i]->tableName);
