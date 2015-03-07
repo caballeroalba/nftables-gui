@@ -30,7 +30,7 @@ struct chain
 	char chainName[50];
 	char hook[10];
 	struct rule *rules[99];
-	struct table tabla;
+	struct table *tabla;
 
 };
 

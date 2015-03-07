@@ -3,7 +3,7 @@
  *
  *       Filename:  main3.c
  *
- *    Description:  
+ *    Description:
  *
  *        Version:  1.0
  *        Created:  03/03/15 10:37:52
@@ -11,7 +11,7 @@
  *       Compiler:  gcc
  *
  *         Author:  Jose Maria Caballero Alba (caballeroalba), caballeroalba@gmail.com
- *        Company:  
+ *        Company:
  *
  * =====================================================================================
  */
@@ -30,14 +30,14 @@ int main(){
 
 	/* def de las estructuras principales */
 	struct table *tablas[99]; //array de punteros de 99 tablas
-	
-	
+
+
 	/* TODO */
 
 	verify_tables(tablas);
 
 	if(tablas==NULL){
-		
+
 		/* no hay tablas creadas */
 	}else{
 
@@ -45,19 +45,18 @@ int main(){
 		int i;
 		//printf("el ahora es %s\n ",sizeof(struct table)/sizeof(tablas));
 		for (i=0; i<=sizeof(struct table)/sizeof(tablas);i++){
-            
+
 			tablas[i]->chains[i]=malloc (sizeof (struct chain));
-			
+	        tablas[i]->chains[i]->tabla=tablas[i];
 			if(strstr(tablas[i]->tableName, "table") != NULL){
-		        printf("tabla numero %d nombre: %s\n",i,tablas[i]->tableName);
-                  
 				add_Chains_To_Table(tablas[i]);
-			    printf("su primera cadena es %s\n",tablas[i]->chains[0]->chainName);
+                add_Rules_To_Chain(tablas[i]->chains[i]);
 			}
 		}
 
-	}	
-	//free(tablas);
+	}
+
+    add_Rules_To_Chain(tablas[0]->chains[0]);
 }
 
 
@@ -81,15 +80,10 @@ int verify_tables(struct table *tablas[99]){
 	/* leemos y guardamos la salida */
 	int i=0;
 	while(fgets(output, sizeof(output), fp) !=NULL){
-		printf("%s",output);
+
 		struct table tabla1;
 		tablas[i]=malloc(sizeof(struct table));
-       // tabla1=malloc (sizeof(struct table));
-		printf("antes del strcpy\n");
-		strcpy(tablas[i]->tableName,output);
-		printf("antes de la asignacion\n");
-		//tablas[i]=tabla1;		
-        printf("desppues de haberlo asignado su nombre es: %s\n",tablas[i]->tableName);
+    	strcpy(tablas[i]->tableName,output);
 		i++;
 	}
 	pclose(fp);
@@ -98,40 +92,52 @@ int verify_tables(struct table *tablas[99]){
 
 }
 
+/* add chains to a determinate table pointer */
 int add_Chains_To_Table(struct table *tabla){
-    
+
 	FILE *fp;
 	int status;
 	char output[50];
 	char command[50]="nft list  ";
 	strcat(command,tabla->tableName);
-    printf("el comando a ejecutar es %s\n",command); 
-	
+
+
 	/* abrimos */
 	fp=popen(command, "r");
 	if(fp==NULL){
 		printf("failed to run nft utility\n");
 		exit;
 	}
-    
+
 	int i=0;
-	while(fgets(output, sizeof(output), fp) !=NULL){	
-		
-		//struct chain *chain1= malloc (sizeof(struct chain));
-		//struct chain * chain1=(struct chain *) malloc (sizeof (struct chain));
+	while(fgets(output, sizeof(output), fp) !=NULL){
+
+
 		if(strstr(output,"chain")!=NULL){
-			//strcpy(chain1->chainName,output);
-			//tabla.chains[i]=chain1;
-			//tabla.chains[i]=malloc (sizeof (struct chain));
-            printf("antes de copiar iter %d\n",i);
+	        int b;
+            for (b=0;b<sizeof(output);b++){
+                if(output[b]=='{'){
+                    output[b]='\0';
+                }
+            }
             tabla->chains[i]=malloc (sizeof(struct chain));
 			strcpy(tabla->chains[i]->chainName,output);
-			printf("cadena encontrada: %s\n",output);
-			printf("valor en el struct: %s\n",tabla->chains[i]->chainName);
 			i++;
 		}
-		
+
 	}
 	pclose(fp);
 	return 0;
+}
+
+
+int add_Rules_To_Chain(struct chain *cadena){
+    printf("hola2%s\n",cadena->tabla->tableName);
+    FILE *fp;
+    char output[50];
+    char command[50]="nft list table  ";
+    strcat(command,cadena->tabla->tableName);
+    printf("el comando a ejecutar desde add_Rules_To_Chain  es: %s\n",command);
+
+    return 0;
 }
