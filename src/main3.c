@@ -137,7 +137,7 @@ int add_Rules_To_Chain(struct chain *cadena){
     char output[50];
     char command[50]="nft list table  ";
     strcat(command,cadena->tabla->tableName);
-    printf("el comando a ejecutar desde add_Rules_To_Chain  es: %s\n",command);
+    printf("   comando a ejecutar desde add_Rules_To_Chain  es: %s\n",command);
 
     return 0;
 }
