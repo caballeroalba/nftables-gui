@@ -6,8 +6,8 @@ struct rule {
 	const char  *rule_name;
 	const char	*action;
   const char  *proto;
-  const int srcport;
-  const int dstport;
+  int         srcport;
+  int         dstport;
   const char *ipsrc;
   const char *ipdst;
   const char *srcnetwork;
@@ -24,8 +24,8 @@ struct rule *nftables_gui_rule_alloc(void)
 
 void nftables_gui_rule_free(struct rule *r)
 {
-	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_MARCA))
-		xfree(r->rulename);
+	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_RULE_NAME))
+		xfree(r->rule_name);
 
 	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_ACTION))
 		xfree(r->action);
@@ -33,11 +33,11 @@ void nftables_gui_rule_free(struct rule *r)
 	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_PROTO))
 		xfree(r->proto);	
 	
-	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_SRCPORT))
-		xfree(r->srcport);	
+	//if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_SRCPORT))
+	//	xfree(r->srcport);	
 
-        if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_DSTPORT))
-		xfree(r->dstport);
+ //if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_DSTPORT))
+	//	xfree(r->dstport);
 		
 	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_IPSRC))
 		xfree(r->ipsrc);
@@ -48,16 +48,14 @@ void nftables_gui_rule_free(struct rule *r)
 	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_SRCNETWORK))
 		xfree(r->srcnetwork);
 		
-	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_DSTNERTWORK))
+	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_DSTNETWORK))
 		xfree(r->dstnetwork);
 		
 	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_INTERFACE))
 		xfree(r->interface);
 		
-	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_ACTION))
-		xfree(r->action);
 
-	xfree(c);
+	xfree(r);
 }
 
 bool nftables_gui_rule_attr_is_set(const struct rule *r, uint16_t attr)
@@ -92,13 +90,13 @@ void nftables_gui_rule_attr_unset(struct rule *r, uint16_t attr)
 	case NFTABLES_GUI_RULE_ATTR_SRCPORT:
 		if (r->srcport) {
 			xfree(r->srcport);
-			r->srcport = NULL;
+			r->srcport = 0;
 		}
 		break;
 	case NFTABLES_GUI_RULE_ATTR_DSTPORT:
 		if (r->dstport) {
 			xfree(r->dstport);
-			r->dstport = NULL;
+			r->dstport = 0;
 		}
 		break;
 	case NFTABLES_GUI_RULE_ATTR_IPSRC:
@@ -119,7 +117,7 @@ void nftables_gui_rule_attr_unset(struct rule *r, uint16_t attr)
 			r->srcnetwork = NULL;
 		}
 		break;
-	case NFTABLES_GUI_RULE_ATTR_DSTNERTWORK:
+	case NFTABLES_GUI_RULE_ATTR_DSTNETWORK:
 		if (r->dstnetwork) {
 			xfree(r->dstnetwork);
 			r->dstnetwork = NULL;
@@ -169,13 +167,13 @@ void nftables_gui_rule_set_data(struct rule *r, uint16_t attr, const void *data,
 		if (r->srcport)
 			xfree(r->srcport);
 
-		r->srcport = strdup(data);
+		r->srcport = *((int *)data);
 		break;
 	case NFTABLES_GUI_RULE_ATTR_DSTPORT:
 		if (r->dstport)
 			xfree(r->dstport);
 
-		r->dstport = strdup(data);
+		r->dstport = *((int *)data);
 		break;
 	case NFTABLES_GUI_RULE_ATTR_IPSRC:
 		if (r->ipsrc)
@@ -195,7 +193,7 @@ void nftables_gui_rule_set_data(struct rule *r, uint16_t attr, const void *data,
 
 		r->srcnetwork = strdup(data);
 		break;
-	case NFTABLES_GUI_RULE_ATTR_DSTNERTWORK:
+	case NFTABLES_GUI_RULE_ATTR_DSTNETWORK:
 		if (r->dstnetwork)
 			xfree(r->dstnetwork);
 
@@ -220,6 +218,11 @@ void nftables_gui_rule_attr_set_u32(struct rule *r, uint16_t attr, uint32_t data
 	nftables_gui_rule_set_data(r, attr, &data, sizeof(uint32_t));
 }
 
+void nftables_gui_rule_attr_set_port(struct rule *r, uint16_t attr, int data)
+{
+  nftables_gui_rule_set_data(r, attr, &data, sizeof(int));
+}
+
 void nftables_gui_rule_attr_set_str(struct rule *r, uint16_t attr, const char *data)
 {
 	nftables_gui_rule_set_data(r, attr, data, 0);
@@ -238,16 +241,16 @@ const void *nftables_gui_rule_attr_get_data(struct rule *r, uint16_t attr)
 	case NFTABLES_GUI_RULE_ATTR_PROTO:
 		return r->proto;
 	case NFTABLES_GUI_RULE_ATTR_SRCPORT:
-		return r->srcport;
+		return &r->srcport;
 	case NFTABLES_GUI_RULE_ATTR_DSTPORT:
-		return r->dstport;
+		return &r->dstport;
 	case NFTABLES_GUI_RULE_ATTR_IPSRC:
 		return r->ipsrc;
 	case NFTABLES_GUI_RULE_ATTR_IPDST:
 		return r->ipdst;
 	case NFTABLES_GUI_RULE_ATTR_SRCNETWORK:
 		return r->srcnetwork;
-	case NFTABLES_GUI_RULE_ATTR_DSTNERTWORK:
+	case NFTABLES_GUI_RULE_ATTR_DSTNETWORK:
 		return r->dstnetwork;
 	case NFTABLES_GUI_RULE_ATTR_INTERFACE:
 		return r->interface;
@@ -270,8 +273,7 @@ const char *nftables_gui_rule_attr_get_str(struct rule *r, uint16_t attr)
 
 int nftables_gui_rule_snprintf(char *buf, size_t size, struct rule *r)
 {
-	return snprintf(buf, size, "Rule %s action %s ipsrc %d ipdst %d proto %d srcport %s dstport %s ipsrc %d
-	                ipdst %d srcnetwork %d dstnetwork %d interface %d",
+	return snprintf(buf, size, "Rule %s action %s ipsrc %s ipdst %s proto %s srcport %d dstport %d ipsrc %s ipdst %s srcnetwork %s dstnetwork %s interface %s",
 			r->rule_name, r->action, r->ipsrc , r->ipdst, r->proto, r->srcport, r->dstport
 			, r->ipsrc, r->ipdst, r->srcnetwork, r->dstnetwork, r->interface);
 }

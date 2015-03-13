@@ -1,4 +1,4 @@
-nclude <stdio.h>
+#include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -13,12 +13,9 @@ enum {
     NFTABLES_GUI_RULE_ATTR_IPDST,
     NFTABLES_GUI_RULE_ATTR_SRCNETWORK,
     NFTABLES_GUI_RULE_ATTR_DSTNETWORK,
-    NFTABLES_GUI_RULE_ATTR_INTERFACE
-    NFTTABLES_GUI_RULE_ATTR_ID,
+    NFTABLES_GUI_RULE_ATTR_INTERFACE,
+    NFTABLES_GUI_RULE_ATTR_ID,
     __NFTABLES_GUI_RULE_ATTR_MAX
-    
-    
-    
 };
 
 #define NFTABLES_GUI_RULE_ATTR_MAX (__NFTABLES_GUI_RULE_ATTR_MAX - 1)
@@ -38,6 +35,7 @@ void nftables_gui_rule_attr_set_data(struct rule *c, uint16_t attr, const void *
                  uint32_t data_len);
 void nftables_gui_rule_attr_set_u32(struct rule *c, uint16_t attr, uint32_t data);
 void nftables_gui_rule_attr_set_str(struct rule *c, uint16_t attr, const char *data);
+void nftables_gui_rule_attr_set_port(struct rule *c, uint16_t attr, int data);
 
 const void *nftables_gui_rule_attr_get_data(struct rule *c, uint16_t attr);
 uint32_t nftables_gui_rule_attr_get_u32(struct rule *c, uint16_t attr);
