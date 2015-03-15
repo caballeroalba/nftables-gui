@@ -1,21 +1,8 @@
 #include "rule.h"
 #include <string.h>
 
-struct rule {
-	uint32_t	id;
-	const char  *rule_name;
-	const char	*action;
-  const char  *proto;
-  int         srcport;
-  int         dstport;
-  const char *ipsrc;
-  const char *ipdst;
-  const char *srcnetwork;
-  const char *dstnetwork;
-  const char *interface;
 
-	uint32_t	flags;
-};
+
 
 struct rule *nftables_gui_rule_alloc(void)
 {
@@ -33,10 +20,10 @@ void nftables_gui_rule_free(struct rule *r)
 	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_PROTO))
 		xfree(r->proto);	
 	
-	//if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_SRCPORT))
-	//	xfree(r->srcport);	
+	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_SRCPORT))
+		//xfree(r->srcport);
 
- //if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_DSTPORT))
+        if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_DSTPORT))
 	//	xfree(r->dstport);
 		
 	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_IPSRC))

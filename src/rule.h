@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "list.h"
 
 enum {
     NFTABLES_GUI_RULE_ATTR_RULE_NAME,
@@ -22,7 +23,22 @@ enum {
 
 #define xfree(ptr)      free((void *)ptr);
 
-struct rule;
+struct rule {
+	struct list_head head;
+  uint32_t	id;
+	const char  *rule_name;
+	const char	*action;
+  const char  *proto;
+  int         srcport;
+  int         dstport;
+  const char *ipsrc;
+  const char *ipdst;
+  const char *srcnetwork;
+  const char *dstnetwork;
+  const char *interface;
+
+	uint32_t	flags;
+};
 
 struct rule *nftables_gui_rule_alloc(void);
 void nftables_gui_rule_free(struct rule *);
