@@ -2,14 +2,6 @@
 #include <string.h>
 
 
-struct chain {
-  struct list_head rules;
-  const char *chain_name;
-  const char *hook;
-  uint32_t num_rules;
-
-  uint32_t flags;
-};
 
 
 struct chain *nftables_gui_chain_alloc(void)
@@ -27,7 +19,7 @@ struct chain *nftables_gui_chain_alloc(void)
 
 void nftables_gui_chain_free(struct chain *c)
 {
-	int i;
+
 	struct rule *r, *tmp;
 
 	if (c->flags & (1 << NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME))
@@ -110,9 +102,9 @@ void nftables_gui_chain_attr_set_str(struct chain *con,
 }
 
 void nftables_gui_chain_attr_set_rule(struct chain *con,
-					  uint16_t attr, struct rule *data)
+					  uint16_t attr, struct rule *r)
 {
-	nftables_gui_chain_set_data(con, attr, data);
+	nftables_gui_chain_set_data(con, attr, r);
 }
 
 const void *nftables_gui_chain_attr_get_data(struct chain *c,
@@ -158,7 +150,7 @@ const char *nftables_gui_chain_attr_get_str(struct chain *con,
 	return nftables_gui_chain_attr_get_data(con, attr, 0);
 }
 
-struct rule *nftables_gui_chain_attr_get_coche(struct chain *con,
+struct rule *nftables_gui_chain_attr_get_rule(struct chain *con,
 					         uint16_t attr, uint32_t pos)
 {
 	return (struct rule *)nftables_gui_chain_attr_get_data(con, attr,

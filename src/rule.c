@@ -76,13 +76,13 @@ void nftables_gui_rule_attr_unset(struct rule *r, uint16_t attr)
 		break;
 	case NFTABLES_GUI_RULE_ATTR_SRCPORT:
 		if (r->srcport) {
-			xfree(r->srcport);
+			//xfree(r->srcport);
 			r->srcport = 0;
 		}
 		break;
 	case NFTABLES_GUI_RULE_ATTR_DSTPORT:
 		if (r->dstport) {
-			xfree(r->dstport);
+			//xfree(r->dstport);
 			r->dstport = 0;
 		}
 		break;

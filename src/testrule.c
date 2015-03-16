@@ -1,6 +1,4 @@
-#include "chain.h"
-
-
+#include "table.h"
 
 int main(void)
 {
@@ -12,11 +10,18 @@ int main(void)
   nftables_gui_rule_attr_set_port(r1,NFTABLES_GUI_RULE_ATTR_SRCPORT,5);
   nftables_gui_rule_snprintf(info,sizeof(info),r1);
   printf("%s\n",info);
+  
   struct chain *c;
   c=nftables_gui_chain_alloc();
   nftables_gui_chain_attr_set_rule(c,NFTABLES_GUI_CHAIN_ATTR_RULE,r1);
-//  nftables_gui_rule_free(r1);
   nftables_gui_chain_snprintf(info,sizeof(info),c);
   printf("%s\n",info);
+ 
+  struct table *t;
+  t=nftables_gui_table_alloc();
+  nftables_gui_table_attr_set_chain(t,NFTABLES_GUI_TABLE_ATTR_CHAIN,c);
+  nftables_gui_table_snprintf(info,sizeof(info),t);
+  printf("%s\n",info);
+  nftables_gui_chain_free(c);
   return 0;
 }
