@@ -163,8 +163,8 @@ int nftables_gui_table_snprintf(char *buf, size_t size,
 	struct chain *c;
 
 	ret += snprintf(buf, size,
-			"el table propiedad de %s, tiene %d y son:\n",
-			con->table_name, con->num_chains);
+			"table %s type %s has %d chains:\n",
+			con->table_name,con->family, con->num_chains);
 
 	list_for_each_entry(c, &con->chains, head) {
 		ret += nftables_gui_chain_snprintf(buf + ret, size - ret, c);

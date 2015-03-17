@@ -16,7 +16,7 @@ enum {
 #define xfree(ptr)    free((void *)ptr);
 
 struct table {
-  
+  struct list_head head;
   struct list_head chains;
   const char *table_name;
   const char *family;

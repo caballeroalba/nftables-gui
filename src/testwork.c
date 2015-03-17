@@ -3,46 +3,58 @@
 #include "screen_work_flow.h"
 
 /* prototipes*/
-void create_table(struct table *t1);
+void create_table(struct table *t);
 void list_tables();
 
 int main(void)
 {
-  struct table *t1;
-  char *choices[10]={
+  struct list_head table_list; 
+  INIT_LIST_HEAD(&table_list);
+  char *choices[3]={
     "Create table",
     "List tables"
-    };
+  };
 
-  int result=print_menu(1,choices,2,"prueba","Welcome to nftables-gui,"
+
+  while (1)
+  {
+    int result=print_menu(1,choices,2,"prueba","Welcome to nftables-gui,"
       "please select a option");
-  if(result==1)
-  {
-    t1=nftables_gui_table_alloc();
-    create_table(t1);
-  }else if(result==2)
-  {
-    list_tables();
+    if(result==1)
+    {
+     struct table *t1;
+     t1=nftables_gui_table_alloc();
+     t1=nftables_gui_table_alloc();
+     create_table(t1);
+     //list_add(&t1->head,&table_list);
+    }else if(result==2)
+    {
+      list_tables();
+    } 
   }
-  
-  char info[250];
-  nftables_gui_table_snprintf(info,sizeof(info),t1);
-  printf("%s\n",info);
-
 
 }
 
-void list_tables(){
+void list_tables(struct list_head *list){
+//  char *choices[99];
+  struct table *t,*tmp;
+  int i=0;
+  list_for_each_entry_safe(t,tmp,list,head){
+   // printf("%s\n",nftables_gui_table_attr_get_str(t,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME));
+    //choices[i]=t->table_name;
+  printf("hola\n");
+  }
+  return;
 }
 
 void create_table(struct table *t1)
 {
- // t1=nftables_gui_table_alloc();
+ 
   char *tables_name[4]={
     "IP",
     "ARP",
-    "INET",
-    "NAT"
+    "IP6",
+    "BRIDGE"
   };
   int result;
   result=print_menu(1,tables_name,4,"prueba","select a familty");
@@ -72,11 +84,33 @@ void create_table(struct table *t1)
       nftables_gui_table_snprintf(info,sizeof(info),t1);
       printf("%s\n",info);
       break;
+    case 3:  /* inet family */
+       nftables_gui_table_attr_set_str(t1,NFTABLES_GUI_TABLE_ATTR_FAMILY,"INET");
+      //create the table with family arp and get the name of table
+      opts[0]="Table name";
+      form_create(1,opts,opts_value);
+      nftables_gui_table_attr_set_str(t1,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
+                                        opts_value[0]);
+      nftables_gui_table_snprintf(info,sizeof(info),t1);
+      printf("%s\n",info);
+      break;
+    case 4:  /*nat family */
+       nftables_gui_table_attr_set_str(t1,NFTABLES_GUI_TABLE_ATTR_FAMILY,"NAT");
+      //create the table with family arp and get the name of table
+      opts[0]="Table name";
+      form_create(1,opts,opts_value);
+      nftables_gui_table_attr_set_str(t1,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
+                                        opts_value[0]);
+      nftables_gui_table_snprintf(info,sizeof(info),t1);
+      printf("%s\n",info);
+      break;
+
+
 
 
 
   }
 
-
+  
 
 }
