@@ -124,6 +124,7 @@ void form_create(int n, char *opts[], char *opts_values[])
   for(i=0; i<n; i++){
 	  set_field_back(field[i], A_UNDERLINE); 	/* Print a line for the option 	*/
 	  field_opts_off(field[i], O_AUTOSKIP);  	/* Don't go to next field when this */
+    field_opts_on(field[i], O_EDIT);
   }
     
     /* Field is filled up 		*/
@@ -154,6 +155,8 @@ void form_create(int n, char *opts[], char *opts_values[])
 				form_driver(my_form, REQ_PREV_FIELD);
 				form_driver(my_form, REQ_END_LINE);
 				break;
+      case KEY_BACKSPACE:
+        form_driver(my_form,REQ_DEL_PREV);
 			default:
 				/* If this is a normal character, it gets */
 				/* Printed				  */	
