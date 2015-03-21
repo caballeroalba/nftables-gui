@@ -8,7 +8,7 @@ struct chain *nftables_gui_chain_alloc(void)
 {
 	struct chain *c;
 
-	c = malloc(sizeof(struct chain));
+	c = calloc(1,sizeof(struct chain));
 	if (c ==  NULL)
 		return NULL;
 

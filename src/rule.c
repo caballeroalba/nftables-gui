@@ -6,7 +6,7 @@
 
 struct rule *nftables_gui_rule_alloc(void)
 {
-	return (struct rule *)malloc(sizeof(struct rule));
+	return (struct rule *)calloc(1,sizeof(struct rule));
 }
 
 void nftables_gui_rule_free(struct rule *r)
