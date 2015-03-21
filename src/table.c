@@ -7,7 +7,7 @@ struct table *nftables_gui_table_alloc(void)
 {
 	struct table *c;
 
-	c = malloc(sizeof(struct table));
+	c = calloc(1,sizeof(struct table));
 	if (c ==  NULL)
 		return NULL;
 
@@ -18,14 +18,14 @@ struct table *nftables_gui_table_alloc(void)
 
 void nftables_gui_table_free(struct table *c)
 {
-	
+
 	struct chain *r, *tmp;
-  
+
 	if (c->flags & (1 << NFTABLES_GUI_TABLE_ATTR_TABLE_NAME))
 		xfree(c->table_name);
 
-  if(c->flags & ( 1 << NFTABLES_GUI_TABLE_ATTR_FAMILY))
-    xfree(c->family);
+  	if(c->flags & ( 1 << NFTABLES_GUI_TABLE_ATTR_FAMILY))
+    		xfree(c->family);
 
 	list_for_each_entry_safe(r, tmp, &c->chains, head) {
 		list_del(&r->head);

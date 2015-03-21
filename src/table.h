@@ -48,3 +48,4 @@ struct chain *nftables_gui_table_attr_get_chain(struct table *t,
                                                      uint16_t attr, uint32_t pos);
 
 int nftables_gui_table_snprintf(char *buf, size_t size, struct table *t);
+
