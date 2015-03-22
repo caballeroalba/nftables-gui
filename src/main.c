@@ -4,13 +4,21 @@
 #include "list.h"
 /* prototipes*/
 void create_table(struct table *t);
-void list_tables(struct list_head list);
+//void list_tables(struct table_list *list);
 
+struct table_list {
+    struct list_head list;
+};
+
+void list_tables(struct table_list *list);
 
 int main(void)
 {
-	struct list_head table_list;
-	INIT_LIST_HEAD(&table_list);
+    struct table_list *lista;
+    lista=calloc(1,sizeof(struct table_list));
+    if(lista==NULL)
+        return -1;
+    INIT_LIST_HEAD(&lista->list);
 	char *choices[2]={
 		"Create table",
 		"List tables"
@@ -26,34 +34,31 @@ int main(void)
    		 {
 
     	 		t1=nftables_gui_table_alloc();
+                
 			printf("direccion %p\n", t1);
    			//  memset(t1,0,(sizeof(struct table)));
      			create_table(t1);
 			if(t1!=NULL)
-	        		list_add(&t1->head,&table_list);
+	        		list_add(&t1->head,&lista->list);
 			printf("prueba2\n");
    		 }else if(result==2)
 	    	 {
 			 printf("prueba3\n");
-     			 list_tables(table_list);
+     			 list_tables(lista);
 	    	 }
  	 }
 
 }
 
-void list_tables(struct list_head list){
-//  char *choices[99];
-	  struct table *t,*tmp;
+void list_tables(struct table_list *list){
 
-	  list_for_each_entry_safe(t,tmp,&list, head){
-	    if(t==NULL || tmp==NULL)
-	      break;
-	  	printf("mostar la lista\n");
-   	    printf("%s\n",nftables_gui_table_attr_get_str(t,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME));
+	  struct table *cur,*tmp;
 
-
-
- 	  }
+	  list_for_each_entry_safe(cur,tmp,&list->list,head){
+          
+          printf("%s\n",nftables_gui_table_attr_get_str(cur,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME));      
+   
+	  }
 
 }
 
@@ -61,19 +66,20 @@ void create_table(struct table *t1)
 {
 
 	  char *tables_name[4]={
-   		 "IP",
-	         "ARP",
-	         "IP6",
+   	        "IP",
+	        "ARP",
+	        "IP6",
     		"BRIDGE"
   	  };
   	 int result;
 
   	 result=print_menu(1,tables_name,4,"prueba","select a familty");
+     char *opts[5];
+     char *opts_value[5];
   	 switch(result){
 
-	 	char *opts[5];
-	 	char *opts_value[5];
-    		char info[250];
+	 	    
+    	    
     		case 1:
 
 			nftables_gui_table_attr_set_str(t1,NFTABLES_GUI_TABLE_ATTR_FAMILY,"IP");
@@ -111,12 +117,10 @@ void create_table(struct table *t1)
 							opts_value[0]);
 
 		      break;
-
-
-
-
-
   }
+
+     
+    
 
 
 

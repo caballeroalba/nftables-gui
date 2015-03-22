@@ -90,7 +90,7 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 	
 	clrtoeol();
 	refresh();// aqui en funcion de la choice hacemos las cosas necesarias
-  
+    delwin(menu_win);  
   endwin();
 	
 	return choice;
