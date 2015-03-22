@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <form.h>
 #include <string.h>
+#include <menu.h>
 
 #define WIDTH 30
 #define HEIGHT 10
@@ -22,7 +23,7 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
   clear();
   start_color();
   assume_default_colors(COLOR_WHITE,COLOR_BLUE);
-  menu_win=newwin(HEIGHT,WIDTH,startx, starty);
+  menu_win=newwin(HEIGHT,WIDTH+n_choices,startx, starty);
   mvprintw(0,0,title);
   refresh();
   keypad(menu_win,TRUE);
@@ -57,7 +58,7 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 		        switch(c)
 		        {	case KEY_UP: //flecha arriba
 				        if(highlight == 1) // comprobamos que si highlight es 1 (primera posicion) lo dejamos igual (es decirlo, lo seleccionamos como high)
-					        highlight = n_choices; // lo dejamos a 1 (n_choises era 0)
+					        highlight = n_choices; // lo dejamos a 1 (n_choices era 0)
 				        else
 					        --highlight; // si no es uno, subimos de posicion
 				        break;
@@ -67,7 +68,7 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 					
 				        else 
 					        ++highlight;
-				
+				        
 				
 				        break;
 			        case 10:
@@ -114,8 +115,8 @@ void form_create(int n, char *opts[], char *opts_values[])
   int i;
   for (i=0; i<n; i++){
 	  if(i==0)
-      field[i] = new_field(1, 30, 4, 25, 0, 0);
-    field[i]=new_field(1,30,4+i,25,0,0);
+      field[i] = new_field(1, 10, 4, 25, 0, 0);
+    field[i]=new_field(1,10,4+i,25,0,0);
   }
   
 	field[n] = NULL;
