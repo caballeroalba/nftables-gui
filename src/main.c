@@ -2,6 +2,8 @@
 #include "table.h"
 #include "screen_work_flow.h"
 #include "list.h"
+#include <string.h>
+
 /* prototipes*/
 void create_table(struct table *t);
 //void list_tables(struct table_list *list);
@@ -12,6 +14,8 @@ struct table_list {
 };
 
 void list_tables(struct table_list *list);
+void list_table_details(int ntable,struct table_list *list);
+struct table * get_table(int ntable);
 
 int main(void)
 {
@@ -69,7 +73,48 @@ void list_tables(struct table_list *list){
         opts[i]=strdup(nftables_gui_table_attr_get_str(cur,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME));    
         i++;
 	  }
-    print_menu(1,opts,list->elements,"","Select a table for details");
+    int result=print_menu(1,opts,list->elements,"","Select a table for details");
+    if(result==0){
+        return;
+    }else{
+        list_table_details(result,list);
+    }
+
+}
+
+
+struct table * get_table(int ntable){
+    return NULL;    
+}
+
+void list_table_details(int ntable,struct table_list *list)
+{
+    char *opts[]={
+        "List chains",
+        "Create chain",
+        "Delete this table"
+    };
+    printf("el numero de tabla seleccionada es: %d\n",ntable);
+    struct table *c;
+    int i=1;
+    list_for_each_entry(c, &list->list, head) {
+        printf("he entrado en el forearch\n");
+        if (i == ntable)
+            break;
+        i++;
+    }
+    if(c==NULL)
+        return;
+    printf("el nombre la tabla seleccionada es: %s\n",nftables_gui_table_attr_get_str(c,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME)); 
+    char message[50];
+    char *message1="You are in ";
+    char *message2=" table, please select a option";
+    const char *table_name;
+    table_name=nftables_gui_table_attr_get_str(c,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME);
+    strcpy(message,message1);
+    strcat(message,table_name);
+    strcat(message,message2);
+    int result=print_menu(1,opts,3,"",message);
 
 }
 

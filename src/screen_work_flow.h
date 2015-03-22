@@ -1,7 +1,8 @@
 #include <ncurses.h>
 #include <form.h>
-#include <string.h>
 #include <menu.h>
+#include <string.h>
+
 
 #define WIDTH 30
 #define HEIGHT 10
@@ -13,7 +14,7 @@
 int print_menu(int highlight, char *choices[],int n_choices, char *message, char *title)
 {
     //tarea: modificar metodo para que solo necesite el array de las opciones, que el solo imprima y detecte el menu
-	int x,y,i;
+  int x,y,i;
   int startx,starty=0;
   WINDOW *menu_win;
   startx=(40-WIDTH) / 2;
@@ -24,6 +25,7 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
   start_color();
   assume_default_colors(COLOR_WHITE,COLOR_BLUE);
   menu_win=newwin(HEIGHT,WIDTH+n_choices,startx, starty);
+ 
   mvprintw(0,0,title);
   refresh();
   keypad(menu_win,TRUE);
