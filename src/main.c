@@ -15,6 +15,11 @@ struct table_list {
 
 void list_tables(struct table_list *list);
 void list_table_details(int ntable,struct table_list *list);
+void list_chain_details(int ntable,struct table_list *list);
+void list_chains(int ntable,struct table_list *list);
+void create_chain(int ntable,struct table_list *list);
+void delete_chain(int ntable, struct table_list *list);
+void delete_table(int ntable, struct table_list *list);
 struct table * get_table(int ntable);
 
 int main(void)
@@ -66,7 +71,7 @@ void list_tables(struct table_list *list){
 
     if(list->elements==0)
         return;
-    printf("los elementos de la lista son: %d\n",list->elements);
+
 	list_for_each_entry_safe(cur,tmp,&list->list,head){
         
         printf("%s\n",nftables_gui_table_attr_get_str(cur,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME));      
@@ -92,20 +97,21 @@ void list_table_details(int ntable,struct table_list *list)
     char *opts[]={
         "List chains",
         "Create chain",
-        "Delete this table"
+        "Delete this table",
+        "Back"
     };
-    printf("el numero de tabla seleccionada es: %d\n",ntable);
+    
     struct table *c;
     int i=1;
     list_for_each_entry(c, &list->list, head) {
-        printf("he entrado en el forearch\n");
+        
         if (i == ntable)
             break;
         i++;
     }
     if(c==NULL)
         return;
-    printf("el nombre la tabla seleccionada es: %s\n",nftables_gui_table_attr_get_str(c,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME)); 
+     
     char message[50];
     char *message1="You are in ";
     char *message2=" table, please select a option";
@@ -114,8 +120,109 @@ void list_table_details(int ntable,struct table_list *list)
     strcpy(message,message1);
     strcat(message,table_name);
     strcat(message,message2);
-    int result=print_menu(1,opts,3,"",message);
+    int result=print_menu(1,opts,4,"",message);
+     
+    if(result==0)
+        return;
+    switch(result){
+        
+        case 1:
+            list_chains(ntable,list);
+            break;
+        case 2:
+            create_chain(ntable,list);
+            break;
+        case 3: 
+            delete_table(ntable,list);
+            break;
+        case 4:
+            /* Back, volvemos al menu de lista de tablas */
+            list_tables(list);
+            break;
+    }
 
+}
+
+void create_chain(int ntable, struct table_list *list){
+    struct table *cur,*tmp;
+    char *opts[2]={
+        "Chain name",
+        "hook"
+    };
+    char *opts_value[2];
+    int i=1;
+    
+    if(list->elements==0)
+        return;
+    list_for_each_entry_safe(cur,tmp,&list->list,head){
+        if(i==ntable)
+            break;
+        i++;
+    }
+   form_create(2,opts,opts_value);
+   struct chain *chain;
+   chain=nftables_gui_chain_alloc();
+   nftables_gui_chain_attr_set_str(chain,NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME,opts_value[0]);
+   printf("el nombre de la tabla es %s\n",cur->table_name);
+   printf("el nombre de la cadena es: %s\n",nftables_gui_chain_attr_get_str(chain,NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME));
+   nftables_gui_table_attr_set_chain(cur,NFTABLES_GUI_TABLE_ATTR_CHAIN,chain);
+
+}
+
+void list_chains(int ntable, struct table_list *list){
+    printf("estoy en list chains\n");    
+    struct table *cur,*tmp;
+    char *opts[99];
+    int i=1;
+    int number_of_chains;
+    if(list->elements==0)
+        return;
+
+	list_for_each_entry_safe(cur,tmp,&list->list,head){
+        if(i==ntable)
+            break;
+        i++;
+    }
+    
+    if(cur->num_chains==0)
+        return;
+    
+    int b;
+        
+     for(b=0;b<cur->num_chains;b++){
+    
+        struct chain *chain;
+        chain=nftables_gui_table_attr_get_chain(cur,NFTABLES_GUI_TABLE_ATTR_CHAIN,b);
+        if(chain==NULL)
+         return;
+        opts[b]=strdup(nftables_gui_chain_attr_get_str(chain,NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME));
+        
+	}
+    const char *table_name=nftables_gui_table_attr_get_str(cur,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME);
+    char message[80];
+    char *message1="You are in ";
+    strcpy(message,message1);
+    strcat(message,table_name);
+    char *message2=" table chains list,\n select a chain for details ";
+    strcat(message,message2);
+    
+
+    int result=print_menu(1,opts,cur->num_chains,"",message);
+    if(result==0){
+        return;
+    }else{
+        list_chain_details(result,list);
+    }
+
+}
+
+
+void delete_table(int ntable, struct table_list *list){
+    return;
+}
+
+void list_chain_details(int ntable, struct table_list *list){
+    return;
 }
 
 void create_table(struct table *t1)

@@ -12,7 +12,7 @@ struct table *nftables_gui_table_alloc(void)
 		return NULL;
 
 	INIT_LIST_HEAD(&c->chains);
-
+    c->flags |= (1 << NFTABLES_GUI_TABLE_ATTR_NUM_CHAINS);
 	return c;
 }
 
