@@ -10,6 +10,7 @@ nftables instalado en el sistema http://wiki.nftables.org/wiki-nftables/index.ph
 Una vez hecho, basta con ejecutar los siguentes comandos
 
 ./configure
+
 make
 
 Esto generará el ejecutable nftables-gui el cual necesita permisos de root para poder ejecutarse
