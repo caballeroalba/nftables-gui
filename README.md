@@ -1,5 +1,5 @@
 # nftables-gui
-Nftables-gui es una interfaz gráfica para nftables* escrita en c usando ncurses para facilitar el uso de la herramienta nft.
+Nftables-gui es una interfaz gráfica para nftables** escrita en c usando ncurses para facilitar el uso de la herramienta nft.
 
 
 Para poder compilar es necesario tener los siguientes requisitos :
@@ -27,4 +27,4 @@ Esto generará el ejecutable nftables-gui el cual necesita permisos de root para
 
 BLOG: http://caballeroalba.cf/wordpress/
 
-* http://www.netfilter.org/projects/nftables/index.html
+** http://www.netfilter.org/projects/nftables/index.html
