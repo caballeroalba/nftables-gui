@@ -43,23 +43,19 @@ int main(void)
 			int result=print_menu(1,choices,2,"prueba","Welcome to nftables-gui,"
 						"please select a option");
 			if(result==1)
-		 {
+		         {
 
-				t1=nftables_gui_table_alloc();
-				
-			printf("direccion %p\n", t1);
-			//	memset(t1,0,(sizeof(struct table)));
-				create_table(t1);
-			if(t1!=NULL){
-					list_add(&t1->head,&lista->list);
-					lista->elements++;
-			}
-			printf("prueba2\n");
-		 }else if(result==2)
-			 {
-			 printf("prueba3\n");
-				 list_tables(lista);
-			 }
+				    t1=nftables_gui_table_alloc();
+                    create_table(t1);
+                    if(t1!=NULL){
+					    list_add(&t1->head,&lista->list);
+				    	lista->elements++;
+			        }
+			
+		        }else if(result==2)   
+                    {
+				        list_tables(lista);
+			        }
 	 }
 
 }
@@ -73,16 +69,18 @@ void list_tables(struct table_list *list){
 	if(list->elements==0)
 		return;
 
-	list_for_each_entry_safe(cur,tmp,&list->list,head){
-		
-		printf("%s\n",nftables_gui_table_attr_get_str(cur,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME));		 
-		opts[i]=strdup(nftables_gui_table_attr_get_str(cur,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME));	
+	list_for_each_entry_safe(cur,tmp,&list->list,head)
+    {			 
+	    opts[i]=strdup(nftables_gui_table_attr_get_str(cur,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME));	
 		i++;
-	  }
+	}
+
 	int result=print_menu(1,opts,list->elements,"","Select a table for details");
-	if(result==0){
+    printf("la tabla seleccionada es: %d\n",result);	
+    if(result==0){
 		return;
 	}else{
+        
 		list_table_details(result,list);
 	}
 
@@ -99,7 +97,7 @@ struct table * get_table(int ntable, struct table_list *list){
 		return NULL;
 
 	list_for_each_entry_safe(cur,tmp,&list->list,head){
-		if(i==ntable)
+		if(i==ntable-1)
 			break;
 			  
 			
@@ -121,10 +119,10 @@ void list_table_details(int ntable,struct table_list *list)
 	};
 	
 	struct table *c;
-	int i=1;
+	int i=0;
 	list_for_each_entry(c, &list->list, head) {
 		
-		if (i == ntable)
+		if (i == ntable-1)
 			break;
 		i++;
 	}
@@ -171,13 +169,13 @@ void create_chain(int ntable, struct table_list *list){
 	char *opts_value[2];
 	
 	
-	int i=1;
+	int i=0;
 	
 	if(list->elements==0)
 		return;
 
 	list_for_each_entry_safe(cur,tmp,&list->list,head){
-		if(i==ntable)
+		if(i==ntable-1)
 			break;
 		i++;
 	}
@@ -191,24 +189,22 @@ void create_chain(int ntable, struct table_list *list){
    chain=nftables_gui_chain_alloc();
    nftables_gui_chain_attr_set_str(chain,NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME,opts_value[0]);
    nftables_gui_chain_attr_set_str(chain,NFTABLES_GUI_CHAIN_ATTR_HOOK,opts_value[1]);
-   //printf("el nombre de la tabla es %s\n",t->table_name);
-   printf("el nombre de la cadena es: %s\n",nftables_gui_chain_attr_get_str(chain,NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME));
-   printf("el nombre del hook es : %s\n",nftables_gui_chain_attr_get_str(chain,NFTABLES_GUI_CHAIN_ATTR_HOOK));
    nftables_gui_table_attr_set_chain(cur,NFTABLES_GUI_TABLE_ATTR_CHAIN,chain);
 
 }
 
-void list_chains(int ntable, struct table_list *list){
+void list_chains(int ntable, struct table_list *list)
+{
 	printf("estoy en list chains\n");	 
 	struct table *cur,*tmp;
 	char *opts[99];
-	int i=1;
+	int i=0;
 	
 	if(list->elements==0)
 		return;
 
 	list_for_each_entry_safe(cur,tmp,&list->list,head){
-		if(i==ntable)
+		if(i==ntable-1)
 			break;
 		i++;
 	}
@@ -238,7 +234,7 @@ void list_chains(int ntable, struct table_list *list){
 	
 	printf("el numero de chains es: %d\n",cur->num_chains); 
 	int result=print_menu(1,opts,cur->num_chains,"",message);
-	printf("ne el menu\n");
+	printf("la chain seleccionada por el menu es: %d\n",result);
 	if(result==0){
 		return;
 	}else{
@@ -257,15 +253,16 @@ void delete_table(int ntable, struct table_list *list){
 	list->elements--;
 }
 
-void list_chain_details(int ntable, int nchain, struct table_list *list){
+void list_chain_details(int ntable, int nchain, struct table_list *list)
+{
+    printf("numero de tabla llegada: %d numero de cadena %d\n",ntable,nchain);
 	struct table *t;
-	printf("antesd e pedir la tabla\n");
 	t=get_table(ntable,list);
 	if(t==NULL)
 		return;
 	struct chain *ch;
-	printf("antes de pedir la chain \n");
-	ch=get_chain(t,nchain-1);
+	printf("antes de pedir la chain, la chain llegada es %d \n",nchain);
+	ch=get_chain(t,nchain);
 	printf("despues de pedir la chain tenemos que: %s\n",nftables_gui_chain_attr_get_str(ch,NFTABLES_GUI_CHAIN_ATTR_HOOK));
 	if(ch==NULL)
 		return;
@@ -282,9 +279,9 @@ void list_chain_details(int ntable, int nchain, struct table_list *list){
 	char *message="You are in ";
 	const char* table_name=nftables_gui_table_attr_get_str(t,
 							NFTABLES_GUI_TABLE_ATTR_TABLE_NAME);
-	message=strcat(message,table_name);
+	//message=strcat(message,table_name);
 	char *message2=" chain ";
-	message=strcat(message,strcat(message2,chain_name));
+	//message=strcat(message,strcat(message2,chain_name));
 	int result=print_menu(1,opts,3,"","");
 }
 
@@ -293,8 +290,10 @@ struct chain * get_chain(struct table *t, int nchain){
 	int pos;
 
 	list_for_each_entry(cur,&t->chains,head){
-		 
-		if(pos==nchain)
+        printf("el numero de elementos de la tabla es %d\n",t->num_chains);
+        printf("antes de pedir pollas y la nchain llegada es: %d\n",nchain);
+        printf("la chain es: %s\n", cur->chain_name); 		 
+		if(pos==nchain-1)
 			break;
 		pos++;
 	}
