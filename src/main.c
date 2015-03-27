@@ -269,18 +269,18 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 	const char *hook=nftables_gui_chain_attr_get_str(ch,
 							NFTABLES_GUI_CHAIN_ATTR_HOOK);
 
-	char *opts[3];
+	char *opts[4];
 	opts[1]=strdup(chain_name);
 	opts[2]=strdup(hook);
 	opts[3]="List rules";
-	
+    opts[4]="Back";	
 	char *message="You are in ";
 	const char* table_name=nftables_gui_table_attr_get_str(t,
 							NFTABLES_GUI_TABLE_ATTR_TABLE_NAME);
 	//message=strcat(message,table_name);
 	char *message2=" chain ";
 	//message=strcat(message,strcat(message2,chain_name));
-	int result=print_menu(1,opts,3,"","");
+	int result=print_menu(1,opts,5,"","");
 }
 
 struct chain * get_chain(struct table *t, int nchain){
