@@ -13,7 +13,7 @@ struct chain *nftables_gui_chain_alloc(void)
 		return NULL;
 
 	INIT_LIST_HEAD(&c->rules);
-
+    c->flags |= (1 << NFTABLES_GUI_CHAIN_ATTR_NUM_RULES);
 	return c;
 }
 
