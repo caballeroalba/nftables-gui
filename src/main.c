@@ -36,8 +36,8 @@ int main(void)
 		"List tables"
 	};
 
-	 struct table *t1;
-	//t1=nftables_gui_table_alloc();
+	struct table *t1;
+	
 	while (1)
 	 {
 			int result=print_menu(1,choices,2,"prueba","Welcome to nftables-gui,"
@@ -76,7 +76,7 @@ void list_tables(struct table_list *list){
 	}
 
 	int result=print_menu(1,opts,list->elements,"","Select a table for details");
-    printf("la tabla seleccionada es: %d\n",result);	
+    	
     if(result==0){
 		return;
 	}else{
@@ -195,7 +195,7 @@ void create_chain(int ntable, struct table_list *list){
 
 void list_chains(int ntable, struct table_list *list)
 {
-	printf("estoy en list chains\n");	 
+		 
 	struct table *cur,*tmp;
 	char *opts[99];
 	int i=0;
@@ -232,13 +232,11 @@ void list_chains(int ntable, struct table_list *list)
 	char *message2=" table chains list,\n select a chain for details ";
 	strcat(message,message2);
 	
-	printf("el numero de chains es: %d\n",cur->num_chains); 
 	int result=print_menu(1,opts,cur->num_chains,"",message);
-	printf("la chain seleccionada por el menu es: %d\n",result);
+	
 	if(result==0){
 		return;
 	}else{
-	   printf("el resultado es %d\n", result); 
 	   list_chain_details(ntable,result,list);
 	}
 
@@ -255,15 +253,15 @@ void delete_table(int ntable, struct table_list *list){
 
 void list_chain_details(int ntable, int nchain, struct table_list *list)
 {
-    printf("numero de tabla llegada: %d numero de cadena %d\n",ntable,nchain);
+  
 	struct table *t;
 	t=get_table(ntable,list);
 	if(t==NULL)
 		return;
 	struct chain *ch;
-	printf("antes de pedir la chain, la chain llegada es %d \n",nchain);
+	
 	ch=get_chain(t,nchain);
-	printf("despues de pedir la chain tenemos que: %s\n",nftables_gui_chain_attr_get_str(ch,NFTABLES_GUI_CHAIN_ATTR_HOOK));
+	
 	if(ch==NULL)
 		return;
 	const char *chain_name=nftables_gui_chain_attr_get_str(ch,
@@ -290,9 +288,7 @@ struct chain * get_chain(struct table *t, int nchain){
 	int pos;
 
 	list_for_each_entry(cur,&t->chains,head){
-        printf("el numero de elementos de la tabla es %d\n",t->num_chains);
-        printf("antes de pedir pollas y la nchain llegada es: %d\n",nchain);
-        printf("la chain es: %s\n", cur->chain_name); 		 
+         		 
 		if(pos==nchain-1)
 			break;
 		pos++;
