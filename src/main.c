@@ -26,7 +26,7 @@ struct table * get_table(int ntable, struct table_list *list);
 int main(void)
 {
 	struct table_list *lista;
-	lista=calloc(1,sizeof(struct table_list));
+	lista=calloc(1, sizeof(struct table_list));
 
 	if( lista == NULL)
 		return -1;
@@ -45,20 +45,23 @@ int main(void)
 	 {
 			int result=print_menu(1,choices,2,"prueba","Welcome to nftables-gui,"
 						"please select a option");
-			if(result==1)
-		         {
 
-					t1=nftables_gui_table_alloc();
-					create_table(t1);
-					if(t1!=NULL){
-					    list_add(&t1->head, &lista->list);
-				    	lista->elements++;
-			        }
-			
-		        }else if( result == 2)   
-					{
-				        list_tables(lista);
-			        }
+			if( result == 1){
+
+							t1=nftables_gui_table_alloc();
+							create_table(t1);
+
+							if( t1! = NULL){
+
+								list_add(&t1->head, &lista->list);
+								lista->elements++;
+
+							}
+							
+			}else if( result == 2){
+				list_tables(lista);
+			}
+
 	 }
 
 }
@@ -96,10 +99,11 @@ struct table * get_table(int ntable, struct table_list *list){
 	
 	int i=0;
 
-	if(list->elements==0)
+	if( list->elements == 0)
 		return NULL;
 
-	list_for_each_entry_safe(cur,tmp,&list->list,head){
+	list_for_each_entry_safe(cur, tmp, &list->list, head){
+
 		if( i== ntable-1)
 			break;
 
@@ -108,6 +112,7 @@ struct table * get_table(int ntable, struct table_list *list){
  
 	if( cur == NULL)
 		return NULL;
+
 	return cur;    
 }
 
@@ -137,13 +142,13 @@ void list_table_details(int ntable,struct table_list *list)
 	char *message2=" table, please select a option";
 	const char *table_name;
 
-	table_name=nftables_gui_table_attr_get_str(c,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME);
+	table_name=nftables_gui_table_attr_get_str(c, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME);
 	
 	strcpy(message,message1);
 	strcat(message,table_name);
 	strcat(message,message2);
 	
-	int result=print_menu(1,opts,4,"",message);
+	int result=print_menu(1, opts, 4, "", message);
 	 
 	if( result == 0)
 		return;
@@ -156,7 +161,7 @@ void list_table_details(int ntable,struct table_list *list)
 			create_chain(ntable, list);
 			break;
 		case 3: 
-			delete_table(ntable,list);
+			delete_table(ntable, list);
 			break;
 		case 4:
 			/* Back, volvemos al menu de lista de tablas */
@@ -181,20 +186,20 @@ void create_chain(int ntable, struct table_list *list)
 	if( list->elements == 0)
 		return;
 
-	list_for_each_entry_safe(cur,tmp,&list->list,head){
-		if( i== ntable-1)
+	list_for_each_entry_safe(cur, tmp, &list->list, head){
+		if( i == ntable-1)
 			break;
 		i++;
 	}
 
 
-   form_create(2,opts,opts_value);
+   form_create(2, opts, opts_value);
    struct chain *chain;
 
    chain=nftables_gui_chain_alloc();
-   nftables_gui_chain_attr_set_str(chain,NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME,opts_value[0]);
-   nftables_gui_chain_attr_set_str(chain,NFTABLES_GUI_CHAIN_ATTR_HOOK,opts_value[1]);
-   nftables_gui_table_attr_set_chain(cur,NFTABLES_GUI_TABLE_ATTR_CHAIN,chain);
+   nftables_gui_chain_attr_set_str(chain, NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME, opts_value[0]);
+   nftables_gui_chain_attr_set_str(chain, NFTABLES_GUI_CHAIN_ATTR_HOOK, opts_value[1]);
+   nftables_gui_table_attr_set_chain(cur, NFTABLES_GUI_TABLE_ATTR_CHAIN, chain);
 
    /* return to details of table */
    list_table_details(ntable, list);
@@ -211,7 +216,7 @@ void list_chains(int ntable, struct table_list *list)
 	if( list->elements == 0)
 		return;
 
-	list_for_each_entry_safe(cur,tmp,&list->list,head){
+	list_for_each_entry_safe(cur, tmp, &list->list, head){
 		if( i == ntable-1)
 			break;
 		i++;
@@ -223,20 +228,20 @@ void list_chains(int ntable, struct table_list *list)
 	}
 	int b;
 		
-	 for(b=0; b<cur->num_chains; b++){
+	 for(b=0; b < cur->num_chains; b++){
 	
 		struct chain *chain;
 
-		chain=nftables_gui_table_attr_get_chain(cur,NFTABLES_GUI_TABLE_ATTR_CHAIN,b);
+		chain=nftables_gui_table_attr_get_chain(cur, NFTABLES_GUI_TABLE_ATTR_CHAIN, b);
 
 		if( chain== NULL)
 		 return;
 
-		opts[b]=strdup(nftables_gui_chain_attr_get_str(chain,NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME));
+		opts[b]=strdup(nftables_gui_chain_attr_get_str( chain, NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME));
 		
 	}
 
-	const char *table_name=nftables_gui_table_attr_get_str(cur,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME);
+	const char *table_name=nftables_gui_table_attr_get_str(cur, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME);
 	char message[80];
 	char *message1="You are in ";
 	strcpy(message,message1);
@@ -244,12 +249,12 @@ void list_chains(int ntable, struct table_list *list)
 	char *message2=" table chains list,\n select a chain for details ";
 	strcat(message,message2);
 	
-	int result=print_menu(1,opts,cur->num_chains,"",message);
+	int result=print_menu(1, opts, cur->num_chains, "", message);
 	
 	if( result == 0){
 		return;
 	}else{
-	   list_chain_details(ntable,result,list);
+	   list_chain_details(ntable, result, list);
 	}
 
 }
@@ -259,7 +264,7 @@ void delete_table(int ntable, struct table_list *list){
 		
 	struct table *c;
 
-	c=get_table(ntable,list);
+	c=get_table(ntable, list);
 	list_del(&c->head);
 	list->elements--;
 	nftables_gui_table_free(c);
@@ -270,14 +275,14 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
   
 	struct table *t;
 
-	t=get_table(ntable,list);
+	t=get_table(ntable, list);
 
 	if( t == NULL)
 		return;
 
 	struct chain *ch;
 	
-	ch=get_chain(t,nchain);
+	ch=get_chain(t, nchain);
 	
 	if( ch == NULL)
 		return;
@@ -302,11 +307,11 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 	//message=strcat(message,table_name);
 	char *message2=" chain ";
 	//message=strcat(message,strcat(message2,chain_name));
-	int result=print_menu(1,opts,7,"","");
+	int result=print_menu(1, opts, 7, "", "");
    
 	if( result == 0)
 		return;
-	switch( result) 
+	switch( result ) 
 	{
 
 	}
@@ -316,7 +321,7 @@ struct chain * get_chain(struct table *t, int nchain){
 	struct chain *cur;
 	int pos;
 
-	list_for_each_entry(cur,&t->chains,head){
+	list_for_each_entry(cur, &t->chains, head){
 		 		 
 		if( pos == nchain-1)
 			break;
@@ -338,7 +343,7 @@ void create_table(struct table *t1)
 	  };
 	 int result;
 
-	 result=print_menu(1,tables_name,4,"prueba","select a familty");
+	 result=print_menu(1, tables_name, 4, "", "select a familty");
 	 
 	 char *opts[5];
 	 char *opts_value[5];
@@ -349,48 +354,43 @@ void create_table(struct table *t1)
 			
 			case 1:
 
-			nftables_gui_table_attr_set_str(t1,NFTABLES_GUI_TABLE_ATTR_FAMILY,"IP");
+			nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "IP");
 			//create the table with family ip and get the name of table
 			opts[0]="Table name";
-			form_create(1,opts,opts_value);
-			nftables_gui_table_attr_set_str(t1,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
+			form_create(1, opts, opts_value);
+			nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
 						opts_value[0]);
 			break;
 
 			case 2:  /* arp family */
-			   nftables_gui_table_attr_set_str(t1,NFTABLES_GUI_TABLE_ATTR_FAMILY,"ARP");
+			   nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "ARP");
 			  //create the table with family arp and get the name of table
 			  opts[0]="Table name";
-			  form_create(1,opts,opts_value);
-			  nftables_gui_table_attr_set_str(t1,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
+			  form_create(1, opts, opts_value);
+			  nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
 							opts_value[0]);
 
 			  break;
 
 		case 3:  /* ip6 family */
-			   nftables_gui_table_attr_set_str(t1,NFTABLES_GUI_TABLE_ATTR_FAMILY,"IP6");
+			   nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "IP6");
 			  //create the table with family arp and get the name of table
 			  opts[0]="Table name";
-			  form_create(1,opts,opts_value);
-			  nftables_gui_table_attr_set_str(t1,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
+			  form_create(1, opts, opts_value);
+			  nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
 							opts_value[0]);
 
 			  break;
 
 			case 4:  /* bridge	family */
-			   nftables_gui_table_attr_set_str(t1,NFTABLES_GUI_TABLE_ATTR_FAMILY,"BRIDGE");
+			   nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "BRIDGE");
 			  //create the table with family arp and get the name of table
 			  opts[0]="Table name";
-			  form_create(1,opts,opts_value);
-			  nftables_gui_table_attr_set_str(t1,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
+			  form_create(1, opts, opts_value);
+			  nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
 							opts_value[0]);
 
 			  break;
   }
-
-	 
-	
-
-
 
 }
