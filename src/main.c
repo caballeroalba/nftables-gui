@@ -78,14 +78,21 @@ void list_tables(struct table_list *list){
 		i++;
 	}
 
-	int result=print_menu(1,opts,list->elements,"","Select a table for details");
+ 
+    opts[i]="Back";
+    i++;
+
+	int result=print_menu(1,opts,list->elements+1,"","Select a table for details");
     	
     if(result==0){
 		return;
-	}else{
-        
+	}else if( result <  i ){
+         
 		list_table_details(result,list);
-	}
+	}else{
+       
+        return;      
+    }
 
 }
 
