@@ -48,7 +48,7 @@ int main(void)
 			if(result==1)
 		         {
 
-				    t1=nftables_gui_table_alloc();
+					t1=nftables_gui_table_alloc();
 					create_table(t1);
 					if(t1!=NULL){
 					    list_add(&t1->head, &lista->list);
@@ -83,7 +83,7 @@ void list_tables(struct table_list *list){
 	if(result==0){
 		return;
 	}else{
-		
+	
 		list_table_details(result,list);
 	}
 
@@ -303,7 +303,7 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 	char *message2=" chain ";
 	//message=strcat(message,strcat(message2,chain_name));
 	int result=print_menu(1,opts,7,"","");
-
+   
 	if( result == 0)
 		return;
 	switch( result) 
