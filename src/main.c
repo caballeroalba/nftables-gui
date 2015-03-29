@@ -203,6 +203,9 @@ void create_chain(int ntable, struct table_list *list)
    nftables_gui_chain_attr_set_str(chain,NFTABLES_GUI_CHAIN_ATTR_HOOK,opts_value[1]);
    nftables_gui_table_attr_set_chain(cur,NFTABLES_GUI_TABLE_ATTR_CHAIN,chain);
 
+   /* return to details of table */
+   list_table_details(ntable, list);
+
 }
 
 void list_chains(int ntable, struct table_list *list)
@@ -266,6 +269,7 @@ void delete_table(int ntable, struct table_list *list){
 	c=get_table(ntable,list);
 	list_del(&c->head);
 	list->elements--;
+    nftables_gui_table_free(c);
 }
 
 void list_chain_details(int ntable, int nchain, struct table_list *list)
