@@ -51,7 +51,7 @@ int main(void)
 							t1=nftables_gui_table_alloc();
 							create_table(t1);
 
-							if( t1! = NULL){
+							if( t1!= NULL){
 
 								list_add(&t1->head, &lista->list);
 								lista->elements++;
@@ -298,7 +298,7 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 	opts[2]=strdup(hook);
 	opts[3]="Create rule";
 	opts[4]="List rules";
-    opts[5]="Delete this Chain";
+	opts[5]="Delete this Chain";
 	opts[6]="Back";
 	char *message="You are in ";
 	
@@ -308,11 +308,29 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 	char *message2=" chain ";
 	//message=strcat(message,strcat(message2,chain_name));
 	int result=print_menu(1, opts, 7, "", "");
-   
+	
+	result--;
+	
 	if( result == 0)
 		return;
-	switch( result ) 
-	{
+	switch( result ){
+		
+		case 3:
+			
+			break;
+
+		case 4:
+			
+			break;
+
+		case 5:
+			
+			nftables_gui_table_attr_unset_chain(t, nchain);
+			break;
+
+		case 6:
+
+			break;
 
 	}
 }
