@@ -287,13 +287,14 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 	const char *hook=nftables_gui_chain_attr_get_str(ch,
 							NFTABLES_GUI_CHAIN_ATTR_HOOK);
 
-	char *opts[5];
+	char *opts[6];
 
 	opts[1]=strdup(chain_name);
 	opts[2]=strdup(hook);
 	opts[3]="Create rule";
 	opts[4]="List rules";
-	opts[5]="Back";	
+    opts[5]="Delete this Chain";
+	opts[6]="Back";
 	char *message="You are in ";
 	
 	const char* table_name=nftables_gui_table_attr_get_str(t,
@@ -301,7 +302,7 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 	//message=strcat(message,table_name);
 	char *message2=" chain ";
 	//message=strcat(message,strcat(message2,chain_name));
-	int result=print_menu(1,opts,6,"","");
+	int result=print_menu(1,opts,7,"","");
 
 	if( result == 0)
 		return;
