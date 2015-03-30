@@ -358,6 +358,22 @@ void create_rule(struct chain *ch)
 		return;
 
 	form_create(9, opts, opts_value);
+	
+	r=nftables_gui_rule_alloc();
+	if( r == NULL)
+		return;
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_RULE_NAME, opts_value[1]);
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_ACTION, opts_value[2]);
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_PROTO, opts_value[3]);
+	nftables_gui_rule_attr_set_port(r,NFTABLES_GUI_RULE_ATTR_SRCPORT, *( int *) opts_value[4]);
+	nftables_gui_rule_attr_set_port(r,NFTABLES_GUI_RULE_ATTR_DSTPORT, *( int *) opts_value[5]);	
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_IPSRC, opts_value[6]);
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_IPDST, opts_value[7]);
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_SRCNETWORK, opts[8]);
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_DSTNETWORK, opts[9]);
+
+	nftables_gui_chain_attr_set_rule(ch, NFTABLES_GUI_CHAIN_ATTR_RULE, r);
+
 }
 
 struct chain * get_chain(struct table *t, int nchain){
