@@ -20,6 +20,7 @@ void list_chains(int ntable, struct table_list *list);
 void create_chain(int ntable, struct table_list *list);
 void delete_chain(int ntable, struct table_list *list);
 void delete_table(int ntable, struct table_list *list);
+void create_rule(struct chain *);
 struct chain * get_chain(struct table *t, int nchain);
 struct table * get_table(int ntable, struct table_list *list);
 
@@ -316,7 +317,7 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 	switch( result ){
 		
 		case 3:
-			
+			create_rule(ch);		
 			break;
 
 		case 4:
@@ -333,6 +334,30 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 			break;
 
 	}
+}
+
+
+void create_rule(struct chain *ch)
+{
+	struct rule *r;
+	char *opts[9]={
+		"Rule name:",
+		"Action:",
+		"Protocol:",
+		"Src port:",
+		"Dst port:",
+		"Ip src:",
+		"Ip dst:",
+		"Src network:",
+		"Dst network:"
+	};
+	char *opts_value[9];
+
+
+	if(ch == NULL)
+		return;
+
+	form_create(9, opts, opts_value);
 }
 
 struct chain * get_chain(struct table *t, int nchain){
