@@ -17,6 +17,9 @@ void list_tables(struct table_list *list);
 void list_table_details(int ntable, struct table_list *list);
 void list_chain_details(int ntable, int nchain, struct table_list *list);
 void list_chains(int ntable, struct table_list *list);
+void list_rules(struct chain *ch);
+void list_rule_details(struct chain *ch, int nrule);
+struct rule * get_rule(struct chain *ch, int nrule);
 void create_chain(int ntable, struct table_list *list);
 void delete_chain(int ntable, struct table_list *list);
 void delete_table(int ntable, struct table_list *list);
@@ -113,7 +116,7 @@ struct table * get_table(int ntable, struct table_list *list){
  
 	if( cur == NULL)
 		return NULL;
-
+	printf("el nombre de tabla en get table es %s\n",cur->table_name);
 	return cur;    
 }
 
@@ -195,8 +198,9 @@ void create_chain(int ntable, struct table_list *list)
 
 
    form_create(2, opts, opts_value);
-   struct chain *chain;
-
+   
+	 struct chain *chain;
+	 
    chain=nftables_gui_chain_alloc();
    nftables_gui_chain_attr_set_str(chain, NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME, opts_value[0]);
    nftables_gui_chain_attr_set_str(chain, NFTABLES_GUI_CHAIN_ATTR_HOOK, opts_value[1]);
@@ -228,14 +232,14 @@ void list_chains(int ntable, struct table_list *list)
 		return;
 	}
 	int b;
-		
-	 for(b=0; b < cur->num_chains; b++){
+	struct chain *chain;	
+	for(b=0; b < cur->num_chains; b++){
 	
-		struct chain *chain;
+		
 
 		chain=nftables_gui_table_attr_get_chain(cur, NFTABLES_GUI_TABLE_ATTR_CHAIN, b);
 
-		if( chain== NULL)
+		if( chain == NULL)
 		 return;
 
 		opts[b]=strdup(nftables_gui_chain_attr_get_str( chain, NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME));
@@ -273,7 +277,7 @@ void delete_table(int ntable, struct table_list *list){
 
 void list_chain_details(int ntable, int nchain, struct table_list *list)
 {
-  
+ 	 
 	struct table *t;
 
 	t=get_table(ntable, list);
@@ -282,6 +286,7 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 		return;
 
 	struct chain *ch;
+		
 	
 	ch=get_chain(t, nchain);
 	
@@ -321,6 +326,7 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 			break;
 
 		case 4:
+			list_rules(ch);
 			
 			break;
 
@@ -336,6 +342,84 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 	}
 }
 
+void list_rules(struct chain *ch)
+{
+	struct rule *cur,*tmp;
+	char *opts[99];
+	
+	if(ch->num_rules == 0)
+		return;
+
+	int i=0;
+	
+	list_for_each_entry_safe(cur, tmp, &ch->rules, head){
+
+		opts[i]=strdup(nftables_gui_rule_attr_get_str(cur,
+					NFTABLES_GUI_RULE_ATTR_RULE_NAME));
+		i++;
+	}
+
+	int result=print_menu(1, opts, ch->num_rules,"","");
+
+	if( result== 0)
+		return;
+	
+	if(result > 0){
+		list_rule_details(ch, result);
+	}
+}
+
+void list_rule_details(struct chain *ch, int nrule)
+{
+	printf("la rule llegada es : %d\n", nrule);
+	struct rule *r;
+	if( ch == NULL )
+		return;
+
+	if( nrule == 0 )
+		return;
+
+	r=get_rule(ch, nrule);
+		
+	const char *rule_name=nftables_gui_rule_attr_get_str(r,
+												NFTABLES_GUI_RULE_ATTR_RULE_NAME);
+	char *opts[9];
+	int i=0;
+	for (i = 0; i < 8; i++){
+		if( i == 3 || i == 4){
+			char buf[4];
+			 
+			sprintf(buf, "%d", nftables_gui_rule_attr_get_u32(r,i));
+			opts[i]=buf;
+		}else{
+
+			opts[i]=strdup(nftables_gui_rule_attr_get_str(r,i));
+		}
+	}
+	int result=print_menu(1,opts, 9,"","test");
+
+
+}
+
+struct rule * get_rule(struct chain *ch, int nrule)
+{
+	struct  rule *cur, *tmp;
+	int pos = 0;
+	if( ch == NULL )
+		return;
+	
+	list_for_each_entry_safe(cur, tmp, &ch->rules, head){
+		
+			if( pos == nrule-1)
+				break;
+			pos++;
+	}
+	
+	if(cur == NULL) 
+		return;
+
+	return cur;
+}
 
 void create_rule(struct chain *ch)
 {
@@ -362,31 +446,31 @@ void create_rule(struct chain *ch)
 	r=nftables_gui_rule_alloc();
 	if( r == NULL)
 		return;
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_RULE_NAME, opts_value[1]);
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_ACTION, opts_value[2]);
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_PROTO, opts_value[3]);
-	nftables_gui_rule_attr_set_port(r,NFTABLES_GUI_RULE_ATTR_SRCPORT, *( int *) opts_value[4]);
-	nftables_gui_rule_attr_set_port(r,NFTABLES_GUI_RULE_ATTR_DSTPORT, *( int *) opts_value[5]);	
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_IPSRC, opts_value[6]);
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_IPDST, opts_value[7]);
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_SRCNETWORK, opts[8]);
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_DSTNETWORK, opts[9]);
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_RULE_NAME, opts_value[0]);
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_ACTION, opts_value[1]);
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_PROTO, opts_value[2]);
+	nftables_gui_rule_attr_set_port(r,NFTABLES_GUI_RULE_ATTR_SRCPORT, *( int *) opts_value[3]);
+	nftables_gui_rule_attr_set_port(r,NFTABLES_GUI_RULE_ATTR_DSTPORT, *( int *) opts_value[4]);	
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_IPSRC, opts_value[4]);
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_IPDST, opts_value[6]);
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_SRCNETWORK, opts[7]);
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_DSTNETWORK, opts[8]);
 
 	nftables_gui_chain_attr_set_rule(ch, NFTABLES_GUI_CHAIN_ATTR_RULE, r);
 
 }
 
 struct chain * get_chain(struct table *t, int nchain){
-	struct chain *cur;
-	int pos;
-
-	list_for_each_entry(cur, &t->chains, head){
+	struct chain *cur,*tmp;
+	int pos=0;
+	printf("el numero de chain en get_chain es %d\n", nchain);
+	list_for_each_entry_safe(cur, tmp,  &t->chains, head){
 		 		 
 		if( pos == nchain-1)
 			break;
 		pos++;
 	}
-
+	printf("el nombre de la chain es %s\n", cur->chain_name);
 	return cur;
 }
 
