@@ -355,7 +355,8 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 	int result=print_menu(1, opts, 7, "", buf);
 	
 	result--;
-	
+	int test=0;
+
 	if( result == 0)
 		return;
 	switch( result ){
@@ -371,6 +372,12 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 
 		case 5:
 			
+			
+			snprintf(buf, sizeof(buf), "nft delete chain %s %s",t->table_name, ch->chain_name);	
+
+			test=system(buf);
+			if ( test < 0 )
+				perror("Can't delete this chain");
 			nftables_gui_table_attr_unset_chain(t, nchain);
 			break;
 
@@ -471,6 +478,8 @@ void list_rule_details(struct chain *ch, int nrule)
 		return;
 
 	if(result == 10)
+		
+		
 		nftables_gui_chain_attr_unset_rule(ch, nrule-1);
 	
 	if(result == 11)
