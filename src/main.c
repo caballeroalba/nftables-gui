@@ -250,14 +250,12 @@ void list_chains(int ntable, struct table_list *list)
 	}
 
 	const char *table_name=nftables_gui_table_attr_get_str(cur, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME);
-	char message[80];
-	char *message1="You are in ";
-	strcpy(message,message1);
-	strcat(message,table_name);
-	char *message2=" table chains list,\n select a chain for details ";
-	strcat(message,message2);
-	
-	int result=print_menu(1, opts, cur->num_chains, "", message);
+	char buf[1024];
+
+	snprintf(buf, sizeof(buf), " You are in %s table chain list,\n"
+			"plase select a chain for details", table_name);
+
+	int result=print_menu(1, opts, cur->num_chains, "", buf);
 	
 	if( result == 0){
 		return;
