@@ -23,10 +23,10 @@ struct rule * get_rule(struct chain *ch, int nrule);
 void create_chain(int ntable, struct table_list *list);
 void delete_chain(int ntable, struct table_list *list);
 void delete_table(int ntable, struct table_list *list);
-void create_rule(struct chain *);
+void create_rule(struct table *t, struct chain *ch);
 struct chain * get_chain(struct table *t, int nchain);
 struct table * get_table(int ntable, struct table_list *list);
-
+char *trim (char *s);
 int main(void)
 {
 	struct table_list *lista;
@@ -337,7 +337,7 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 	switch( result ){
 		
 		case 3:
-			create_rule(ch);		
+			create_rule(t, ch);		
 			break;
 
 		case 4:
@@ -386,7 +386,7 @@ void list_rules(struct chain *ch)
 
 void list_rule_details(struct chain *ch, int nrule)
 {
-	printf("la rule llegada es : %d\n", nrule);
+	
 	struct rule *r;
 	if( ch == NULL )
 		return;
@@ -406,6 +406,7 @@ void list_rule_details(struct chain *ch, int nrule)
 												NFTABLES_GUI_RULE_ATTR_SRCPORT);
 	uint32_t dstport = nftables_gui_rule_attr_get_u32(r,
 												NFTABLES_GUI_RULE_ATTR_DSTPORT);
+	/* to develop in the future 
 	const char *ipsrc = nftables_gui_rule_attr_get_str(r,
 												NFTABLES_GUI_RULE_ATTR_IPSRC);
 	const char *ipdst = nftables_gui_rule_attr_get_str(r,
@@ -414,14 +415,14 @@ void list_rule_details(struct chain *ch, int nrule)
 												NFTABLES_GUI_RULE_ATTR_SRCNETWORK);
 	const char *dstnet = nftables_gui_rule_attr_get_str(r,
 												NFTABLES_GUI_RULE_ATTR_DSTNETWORK);
-
-	char *opts[11];
+ */
+	char *opts[7];
 	
 	opts[0]=strdup(rule_name);
 	opts[1]=strdup(action);
 	opts[2]=strdup(proto);
 	char buf[1024];
-	printf("el puerto es %d\n", srcport);
+	
 	snprintf(buf, sizeof(buf), "%d", srcport);
 
 	opts[3]=buf;
@@ -430,16 +431,18 @@ void list_rule_details(struct chain *ch, int nrule)
 	snprintf(buf2, sizeof(buf2), "%d", dstport);
 
 	opts[4]=buf2;
+	/* to develop in the future 
 	opts[5]=strdup(ipsrc);
 	opts[6]=strdup(ipdst);
 	opts[7]=strdup(srcnet);
 	opts[8]=strdup(dstnet);
-	opts[9]="Delete this rule";
-	opts[10]="Back";
+	*/
+	opts[5]="Delete this rule";
+	opts[6]="Back";
 
 
-	int result=print_menu(1,opts, 11,"","test");
-	printf("el result  es: %d\n", result);
+	int result=print_menu(1,opts, 7,"","test");
+	
 	if(result == 0)
 		return;
 
@@ -472,27 +475,22 @@ struct rule * get_rule(struct chain *ch, int nrule)
 	return cur;
 }
 
-void create_rule(struct chain *ch)
+void create_rule(struct table *t, struct chain *ch)
 {
 	struct rule *r;
-	char *opts[9]={
+	char *opts[5]={
 		"Rule name:",
 		"Action:",
 		"Protocol:",
 		"Src port:",
-		"Dst port:",
-		"Ip src:",
-		"Ip dst:",
-		"Src network:",
-		"Dst network:"
+		"Dst port:"
 	};
-	char *opts_value[9];
+	char *opts_value[5];
 
-
-	if(ch == NULL)
+	if( ch == NULL)
 		return;
 
-	form_create(9, opts, opts_value);
+	form_create(5, opts, opts_value);
 	
 	r=nftables_gui_rule_alloc();
 	if( r == NULL)
@@ -502,26 +500,81 @@ void create_rule(struct chain *ch)
 	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_PROTO, opts_value[2]);	
 	nftables_gui_rule_attr_set_port(r,NFTABLES_GUI_RULE_ATTR_SRCPORT, atoi(opts_value[3]));
 	nftables_gui_rule_attr_set_port(r,NFTABLES_GUI_RULE_ATTR_DSTPORT, atoi(opts_value[4]));	
+	
+	/* to develop in the future 
 	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_IPSRC, opts_value[5]);
 	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_IPDST, opts_value[6]);
 	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_SRCNETWORK, opts_value[7]);
 	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_DSTNETWORK, opts_value[8]);
+	*/
 
 	nftables_gui_chain_attr_set_rule(ch, NFTABLES_GUI_CHAIN_ATTR_RULE, r);
+	/* making the rule */
+	
+	char *proto=trim(r->proto);
+	char buf[1024];
+	
+	if ( strlen(proto) == 0 ){
+		
+		snprintf(buf, sizeof(buf), "nft add rule %s %s %s ", t->table_name, ch->chain_name, r->action );
+		
+		int result= system(buf);
 
+		if( result < 0 )
+		perror("Can't add the rule");
+
+		
+	}else if(atoi(opts_value[3]) != 0 ){
+		
+		snprintf(buf, sizeof(buf), " nft add rule %s %s %s sport %d  %s",t->table_name, ch->chain_name, r->proto, r->srcport, r->action );
+		int result= system(buf);
+
+		if( result < 0 )
+			perror("Can't add the rule");
+
+	}
+	
+	if (atoi(opts_value[4]) !=0 ){
+		
+		snprintf(buf, sizeof(buf), " nft add rule %s %s %s dport %d %s", 
+				t->table_name, ch->chain_name, r->proto, r->dstport,
+				r->action);
+		int result= system(buf);
+
+		if( result < 0 )
+			perror("Can't add the rule");
+
+	
+	}
+	if (atoi(opts_value[3]) !=0 && atoi(opts_value[4]) != 0 ){
+
+		snprintf(buf, sizeof(buf), "nft add rule %s %s %s sport %d %s dport %d %s",
+				t->table_name, ch->chain_name, r->proto, r->srcport, r->proto,
+				r->dstport, r->action);
+		int result= system(buf);
+
+		if( result < 0 )
+			perror("Can't add the rule");
+
+	}else{
+		return;
+	
+	}
+
+	
 }
 
 struct chain * get_chain(struct table *t, int nchain){
 	struct chain *cur,*tmp;
 	int pos=0;
-	printf("el numero de chain en get_chain es %d\n", nchain);
+	
 	list_for_each_entry_safe(cur, tmp,  &t->chains, head){
 		 		 
 		if( pos == nchain-1)
 			break;
 		pos++;
 	}
-	printf("el nombre de la chain es %s\n", cur->chain_name);
+	
 	return cur;
 }
 
@@ -593,4 +646,25 @@ void create_table(struct table *t1)
 	 snprintf(buf, sizeof(buf), "nft add table %s %s", t1->family, t1->table_name);
 	 system_result= system(buf);
 
+}
+
+char *trim(char *s)
+{
+	char *start = s;
+
+		  /* Nos comemos los espacios al inicio */
+	 while(*start && isspace(*start))
+		 ++start;
+	 char *i = start;
+	 char *end = start;
+	 /* Nos comemos los espacios al final */
+	 while(*i)
+	 {
+		 if( !isspace(*(i++)) )
+			 end = i;
+	 }
+
+	 /* Escribimos el terminados */
+	 *end = 0;
+	 return start;
 }

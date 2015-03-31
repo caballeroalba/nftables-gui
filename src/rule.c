@@ -22,8 +22,7 @@ void nftables_gui_rule_free(struct rule *r)
 	
 	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_SRCPORT))
 		//xfree(r->srcport);
-
-        if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_DSTPORT))
+	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_DSTPORT))
 	//	xfree(r->dstport);
 		
 	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_IPSRC))
