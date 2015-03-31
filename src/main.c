@@ -511,7 +511,7 @@ void create_rule(struct table *t, struct chain *ch)
 	nftables_gui_chain_attr_set_rule(ch, NFTABLES_GUI_CHAIN_ATTR_RULE, r);
 	/* making the rule */
 	
-	char *proto=trim(r->proto);
+	char *proto=trim(strdup(r->proto));
 	char buf[1024];
 	
 	if ( strlen(proto) == 0 ){
