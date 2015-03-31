@@ -381,22 +381,45 @@ void list_rule_details(struct chain *ch, int nrule)
 
 	r=get_rule(ch, nrule);
 		
-	const char *rule_name=nftables_gui_rule_attr_get_str(r,
-												NFTABLES_GUI_RULE_ATTR_RULE_NAME);
+	const char *rule_name= nftables_gui_rule_attr_get_str(r,
+										 		NFTABLES_GUI_RULE_ATTR_RULE_NAME);
+	const char *action = nftables_gui_rule_attr_get_str(r,
+												NFTABLES_GUI_RULE_ATTR_ACTION);
+	const char *proto = nftables_gui_rule_attr_get_str(r,
+												NFTABLES_GUI_RULE_ATTR_PROTO);
+	int srcport = nftables_gui_rule_attr_get_u32(r,
+												NFTABLES_GUI_RULE_ATTR_SRCPORT);
+	int dstport = nftables_gui_rule_attr_get_u32(r,
+												NFTABLES_GUI_RULE_ATTR_DSTPORT);
+	const char *ipsrc = nftables_gui_rule_attr_get_str(r,
+												NFTABLES_GUI_RULE_ATTR_IPSRC);
+	const char *ipdst = nftables_gui_rule_attr_get_str(r,
+												NFTABLES_GUI_RULE_ATTR_IPDST);
+	const char *srcnet = nftables_gui_rule_attr_get_str(r,
+												NFTABLES_GUI_RULE_ATTR_SRCNETWORK);
+	const char *dstnet = nftables_gui_rule_attr_get_str(r,
+												NFTABLES_GUI_RULE_ATTR_DSTNETWORK);
+
 	char *opts[9];
-	int i=0;
-	for (i = 0; i <= 8; i++){
-		if( i == 3 || i == 4){
-			char buf[1024];
-			 
-			sprintf(buf, "%d", nftables_gui_rule_attr_get_u32(r,i));
-			opts[i]=buf;
+	
+	opts[0]=strdup(rule_name);
+	opts[1]=strdup(action);
+	opts[2]=strdup(proto);
+	char buf[1024];
+	printf("el puerto es %d\n", srcport);
+	snprintf(buf, sizeof(buf), "%d", srcport);
 
-		}else{
+	opts[3]=buf;
+	char buf2[1024];
 
-			opts[i]=strdup(nftables_gui_rule_attr_get_str(r,i));
-		}
-	}
+	snprintf(buf2, sizeof(buf2), "%d", dstport);
+
+	opts[4]=buf;
+	opts[5]=strdup(ipsrc);
+	opts[6]=strdup(ipdst);
+	opts[7]=strdup(srcnet);
+	opts[8]=strdup(dstnet);
+
 	int result=print_menu(1,opts, 9,"","test");
 
 
@@ -452,10 +475,10 @@ void create_rule(struct chain *ch)
 	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_PROTO, opts_value[2]);
 	nftables_gui_rule_attr_set_port(r,NFTABLES_GUI_RULE_ATTR_SRCPORT, *( int *) opts_value[3]);
 	nftables_gui_rule_attr_set_port(r,NFTABLES_GUI_RULE_ATTR_DSTPORT, *( int *) opts_value[4]);	
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_IPSRC, opts_value[4]);
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_IPSRC, opts_value[5]);
 	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_IPDST, opts_value[6]);
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_SRCNETWORK, opts[7]);
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_DSTNETWORK, opts[8]);
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_SRCNETWORK, opts_value[7]);
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_DSTNETWORK, opts_value[8]);
 
 	nftables_gui_chain_attr_set_rule(ch, NFTABLES_GUI_CHAIN_ATTR_RULE, r);
 
