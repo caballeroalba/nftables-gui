@@ -206,6 +206,11 @@ void create_chain(int ntable, struct table_list *list)
    nftables_gui_chain_attr_set_str(chain, NFTABLES_GUI_CHAIN_ATTR_HOOK, opts_value[1]);
    nftables_gui_table_attr_set_chain(cur, NFTABLES_GUI_TABLE_ATTR_CHAIN, chain);
 
+	 /* making the chain */
+	 int system_result=0;
+	 char buf[1024];
+	 snprintf(buf, sizeof(buf), "nft add chain %s %s { type filter hook %s priority 0 \\; }", cur->table_name, opts_value[0], opts_value[1]);
+	 system_result= system(buf);
    /* return to details of table */
    list_table_details(ntable, list);
 
