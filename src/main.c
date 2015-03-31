@@ -390,14 +390,14 @@ void list_rule_details(struct chain *ch, int nrule)
 			char buf[1024];
 			 
 			sprintf(buf, "%d", nftables_gui_rule_attr_get_u32(r,i));
-			opts[i+1]=buf;
+			opts[i]=buf;
 
 		}else{
 
-			opts[i+1]=strdup(nftables_gui_rule_attr_get_str(r,i));
+			opts[i]=strdup(nftables_gui_rule_attr_get_str(r,i));
 		}
 	}
-	int result=print_menu(1,opts, 10,"","test");
+	int result=print_menu(1,opts, 9,"","test");
 
 
 }
