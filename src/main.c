@@ -141,18 +141,16 @@ void list_table_details(int ntable,struct table_list *list)
 	if( c == NULL)
 		return;
 	 
-	char message[50];
-	char *message1="You are in ";
-	char *message2=" table, please select a option";
+	
 	const char *table_name;
-
 	table_name=nftables_gui_table_attr_get_str(c, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME);
 	
-	strcpy(message,message1);
-	strcat(message,table_name);
-	strcat(message,message2);
-	
-	int result=print_menu(1, opts, 4, "", message);
+	char buf[1024];
+
+	snprintf(buf , sizeof(buf), "You are in %s table, please"
+			"select a option" ,table_name );
+
+	int result=print_menu(1, opts, 4, "", buf);
 	 
 	if( result == 0)
 		return;
