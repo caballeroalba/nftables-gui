@@ -422,7 +422,7 @@ void list_rule_details(struct chain *ch, int nrule)
 	opts[6]=strdup(ipdst);
 	opts[7]=strdup(srcnet);
 	opts[8]=strdup(dstnet);
-	opts[9]="Delete this table";
+	opts[9]="Delete this rule";
 	opts[10]="Back";
 
 
