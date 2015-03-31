@@ -206,9 +206,22 @@ void create_chain(int ntable, struct table_list *list)
 		i++;
 	}
 
+	char *hook;
+	char *value;
+	int test=0;
+	while(test == 0){
+		form_create(2, opts, opts_value);
+		hook=(strdup(opts_value[1]));
+		value=trim(hook);
+		if(strcmp(value, "input" ) == 0)
+			test=1;
+		if(strcmp(value, "output" ) == 0)
+			test=1;
+	}
 
-   form_create(2, opts, opts_value);
-   
+
+
+
 	 struct chain *chain;
 	 
    chain=nftables_gui_chain_alloc();
