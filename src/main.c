@@ -533,16 +533,17 @@ void create_table(struct table *t1)
 			
 			case 1:
 
-			nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "IP");
+			nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "ip");
 			//create the table with family ip and get the name of table
 			opts[0]="Table name";
 			form_create(1, opts, opts_value);
 			nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
 						opts_value[0]);
+			
 			break;
 
 			case 2:  /* arp family */
-			   nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "ARP");
+			   nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "arp");
 			  //create the table with family arp and get the name of table
 			  opts[0]="Table name";
 			  form_create(1, opts, opts_value);
@@ -552,7 +553,7 @@ void create_table(struct table *t1)
 			  break;
 
 		case 3:  /* ip6 family */
-			   nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "IP6");
+			   nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "ip6");
 			  //create the table with family arp and get the name of table
 			  opts[0]="Table name";
 			  form_create(1, opts, opts_value);
@@ -562,7 +563,7 @@ void create_table(struct table *t1)
 			  break;
 
 			case 4:  /* bridge	family */
-			   nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "BRIDGE");
+			   nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "bridge");
 			  //create the table with family arp and get the name of table
 			  opts[0]="Table name";
 			  form_create(1, opts, opts_value);
@@ -571,5 +572,10 @@ void create_table(struct table *t1)
 
 			  break;
   }
+	 /*Making the table */
+	 int system_result=0;
+	 char buf[1024];
+	 snprintf(buf, sizeof(buf), "nft add table %s %s", t1->family, t1->table_name);
+	 system_result= system(buf);
 
 }
