@@ -502,8 +502,33 @@ void create_rule(struct table *t, struct chain *ch)
 
 	if( ch == NULL)
 		return;
+	
+	int test = 1;
+	int test2 = 1;
+	
+	while( test == 1 ||  test2 == 1)
+	{
+		form_create(5, opts, opts_value);
+		char *action=trim(strdup(opts_value[1]));
 
-	form_create(5, opts, opts_value);
+		if( strcmp(action, "accept") == 0 )
+			test=0;
+		if( strcmp(action, "reject") == 0 )
+			test=0;
+		if( strcmp(action, "drop") == 0 )
+			test=0;
+
+		char *proto=trim(strdup(opts_value[2]));
+		
+		if( strcmp(proto, "tcp") == 0)
+			test2=0;
+		if( strcmp(proto, "udp") == 0)
+			test2=0;
+		if (strlen(proto) == 0)
+			test2=0;
+		if (strlen(proto) == 0)
+			test2=0;
+	}
 	
 	r=nftables_gui_rule_alloc();
 	if( r == NULL)
