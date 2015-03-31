@@ -3,7 +3,7 @@
 #include "screen_work_flow.h"
 #include "list.h"
 #include <string.h>
-
+#include <inttypes.h>
 /* prototipes*/
 void create_table(struct table *t);
 //void list_tables(struct table_list *list);
@@ -429,7 +429,7 @@ void list_rule_details(struct chain *ch, int nrule)
 
 	snprintf(buf2, sizeof(buf2), "%d", dstport);
 
-	opts[4]=buf;
+	opts[4]=buf2;
 	opts[5]=strdup(ipsrc);
 	opts[6]=strdup(ipdst);
 	opts[7]=strdup(srcnet);

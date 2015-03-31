@@ -7,9 +7,10 @@ int main(void)
 	char info[4000];
 	r1=nftables_gui_rule_alloc();
   nftables_gui_rule_attr_set_str(r1,NFTABLES_GUI_RULE_ATTR_RULE_NAME,"REGLA 1");
-  nftables_gui_rule_attr_set_port(r1,NFTABLES_GUI_RULE_ATTR_SRCPORT,5);
+  nftables_gui_rule_attr_set_u32(r1,NFTABLES_GUI_RULE_ATTR_SRCPORT,5);
   nftables_gui_rule_snprintf(info,sizeof(info),r1);
-  printf("%s\n",info);
+  printf ("la id es %d\n",nftables_gui_rule_attr_get_u32(r1,NFTABLES_GUI_RULE_ATTR_SRCPORT));
+	printf("%s\n",info);
   
   struct chain *c;
   c=nftables_gui_chain_alloc();
