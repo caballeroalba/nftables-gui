@@ -15,9 +15,8 @@ La librería de ncurses (disponible desde los repositorios de tu distribución)
 linux kernel superior al 3.13
 
 
-nftables instalado en el sistema
+nftables instalado en el sistema [2]
 
-http://wiki.nftables.org/wiki-nftables/index.php/Building_and_installing_nftables_from_sources
 
 Una vez hecho, basta con ejecutar los siguentes comandos
 
@@ -44,4 +43,7 @@ Y para restaurar:
 
 
 BLOG: http://caballeroalba.cf/wordpress/
+
 [1] http://www.netfilter.org/projects/nftables/index.html
+
+[2] http://wiki.nftables.org/wiki-nftables/index.php/Building_and_installing_nftables_from_sources
