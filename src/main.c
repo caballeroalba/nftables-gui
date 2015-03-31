@@ -603,7 +603,7 @@ void create_table(struct table *t1)
 	  };
 	 int result;
 
-	 result=print_menu(1, tables_name, 4, "", "select a familty");
+	 result=print_menu(1, tables_name, 4, "", "select a family");
 	 
 	 char *opts[5];
 	 char *opts_value[5];
@@ -617,7 +617,14 @@ void create_table(struct table *t1)
 			nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "ip");
 			//create the table with family ip and get the name of table
 			opts[0]="Table name";
-			form_create(1, opts, opts_value);
+			int test=0;
+			while ( test == 0 )
+			{
+				form_create(1, opts, opts_value);
+				char *name=trim(strdup(opts_value[0]));
+				if( strcmp(name, "") !=0)
+					test=1;
+			}
 			nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
 						opts_value[0]);
 			
@@ -627,7 +634,15 @@ void create_table(struct table *t1)
 			   nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "arp");
 			  //create the table with family arp and get the name of table
 			  opts[0]="Table name";
-			  form_create(1, opts, opts_value);
+				int test1=0;
+				while ( test1 == 0 )
+				{
+					form_create(1, opts, opts_value);
+					char *name=trim(strdup(opts_value[0]));
+					if( strcmp(name, "") !=0)
+						test1=1;
+				}
+			  
 			  nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
 							opts_value[0]);
 
@@ -637,7 +652,14 @@ void create_table(struct table *t1)
 			   nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "ip6");
 			  //create the table with family arp and get the name of table
 			  opts[0]="Table name";
-			  form_create(1, opts, opts_value);
+			  int test2=0;
+				while ( test2 == 0 )
+				{
+					form_create(1, opts, opts_value);
+					char *name=trim(strdup(opts_value[0]));
+					if( strcmp(name, "") !=0)
+						test2=1;
+				}
 			  nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
 							opts_value[0]);
 
@@ -647,7 +669,14 @@ void create_table(struct table *t1)
 			   nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "bridge");
 			  //create the table with family arp and get the name of table
 			  opts[0]="Table name";
-			  form_create(1, opts, opts_value);
+			  int test3=0;
+				while ( test3 == 0 )
+				{
+					form_create(1, opts, opts_value);
+					char *name=trim(strdup(opts_value[0]));
+					if( strcmp(name, "") !=0)
+						test3=1;
+				}
 			  nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
 							opts_value[0]);
 
