@@ -307,14 +307,16 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 	opts[4]="List rules";
 	opts[5]="Delete this Chain";
 	opts[6]="Back";
-	char *message="You are in ";
 	
+
 	const char* table_name=nftables_gui_table_attr_get_str(t,
 							NFTABLES_GUI_TABLE_ATTR_TABLE_NAME);
-	//message=strcat(message,table_name);
-	char *message2=" chain ";
-	//message=strcat(message,strcat(message2,chain_name));
-	int result=print_menu(1, opts, 7, "", "");
+	char buf[1024];
+
+	snprintf(buf, sizeof(buf), "You are in %s table, in "
+			"%s chain, \n please select a option", table_name,
+															ch->chain_name);
+	int result=print_menu(1, opts, 7, "", buf);
 	
 	result--;
 	
