@@ -51,7 +51,7 @@ void nftables_gui_rule_attr_set_data(struct rule *c, uint16_t attr, const void *
                  uint32_t data_len);
 void nftables_gui_rule_attr_set_u32(struct rule *c, uint16_t attr, uint32_t data);
 void nftables_gui_rule_attr_set_str(struct rule *c, uint16_t attr, const char *data);
-void nftables_gui_rule_attr_set_port(struct rule *c, uint16_t attr, int data);
+void nftables_gui_rule_attr_set_port(struct rule *c, uint16_t attr, uint32_t data);
 
 const void *nftables_gui_rule_attr_get_data(struct rule *c, uint16_t attr);
 uint32_t nftables_gui_rule_attr_get_u32(struct rule *c, uint16_t attr);
