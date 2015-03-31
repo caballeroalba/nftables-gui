@@ -385,18 +385,19 @@ void list_rule_details(struct chain *ch, int nrule)
 												NFTABLES_GUI_RULE_ATTR_RULE_NAME);
 	char *opts[9];
 	int i=0;
-	for (i = 0; i < 8; i++){
+	for (i = 0; i <= 8; i++){
 		if( i == 3 || i == 4){
-			char buf[4];
+			char buf[1024];
 			 
 			sprintf(buf, "%d", nftables_gui_rule_attr_get_u32(r,i));
-			opts[i]=buf;
+			opts[i+1]=buf;
+
 		}else{
 
-			opts[i]=strdup(nftables_gui_rule_attr_get_str(r,i));
+			opts[i+1]=strdup(nftables_gui_rule_attr_get_str(r,i));
 		}
 	}
-	int result=print_menu(1,opts, 9,"","test");
+	int result=print_menu(1,opts, 10,"","test");
 
 
 }

@@ -24,7 +24,7 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
   clear();
   start_color();
   assume_default_colors(COLOR_WHITE,COLOR_BLUE);
-  menu_win=newwin(HEIGHT,WIDTH+n_choices,startx, starty);
+  menu_win=newwin(HEIGHT+n_choices, WIDTH+n_choices, startx, starty);
  
   mvprintw(0,0,title);
   refresh();
