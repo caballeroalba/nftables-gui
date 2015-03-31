@@ -61,8 +61,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_nftables_gui_OBJECTS = main.$(OBJEXT) table.$(OBJEXT) \
-	chain.$(OBJEXT) rule.$(OBJEXT)
+am_nftables_gui_OBJECTS = main.$(OBJEXT) prototypes.$(OBJEXT) \
+	table.$(OBJEXT) chain.$(OBJEXT) rule.$(OBJEXT)
 nftables_gui_OBJECTS = $(am_nftables_gui_OBJECTS)
 nftables_gui_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I.@am__isrc@
@@ -169,7 +169,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-nftables_gui_SOURCES = main.c table.c chain.c rule.c screen_work_flow.h
+nftables_gui_SOURCES = main.c prototypes.c table.c chain.c rule.c screen_work_flow.h
 all: all-am
 
 .SUFFIXES:
@@ -256,6 +256,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chain.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prototypes.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rule.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/table.Po@am__quote@
 
