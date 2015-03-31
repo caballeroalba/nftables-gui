@@ -430,7 +430,10 @@ void list_rule_details(struct chain *ch, int nrule)
 
 	if(result == 10)
 		nftables_gui_chain_attr_unset_rule(ch, nrule-1);
-
+	
+	if(result == 11)
+		return;
+		
 
 }
 
