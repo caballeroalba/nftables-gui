@@ -29,8 +29,8 @@ struct rule {
 	const char  *rule_name;
 	const char	*action;
   const char  *proto;
-  int         srcport;
-  int         dstport;
+  uint32_t     srcport;
+  uint32_t     dstport;
   const char *ipsrc;
   const char *ipdst;
   const char *srcnetwork;

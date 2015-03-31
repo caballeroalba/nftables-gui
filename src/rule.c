@@ -154,13 +154,13 @@ void nftables_gui_rule_set_data(struct rule *r, uint16_t attr, const void *data,
 		if (r->srcport)
 			//xfree(r->srcport);
 
-		r->srcport = *((int *)data);
+		r->srcport = *((uint32_t *)data);
 		break;
 	case NFTABLES_GUI_RULE_ATTR_DSTPORT:
 		if (r->dstport)
 			//xfree(r->dstport);
 
-		r->dstport = *((int *)data);
+		r->dstport = *((uint32_t *)data);
 		break;
 	case NFTABLES_GUI_RULE_ATTR_IPSRC:
 		if (r->ipsrc)
