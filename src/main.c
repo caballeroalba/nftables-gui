@@ -296,9 +296,20 @@ void delete_table(int ntable, struct table_list *list){
 	struct table *c;
 
 	c=get_table(ntable, list);
+
+	char buf[1024];
+	int result=0;
+
+	snprintf(buf, sizeof(buf), "nft delete table %s", c->table_name );
+	result=system(buf);
+	if( result < 0 )
+		perror("can't delete this table");
 	list_del(&c->head);
 	list->elements--;
 	nftables_gui_table_free(c);
+
+	
+
 }
 
 void list_chain_details(int ntable, int nchain, struct table_list *list)
