@@ -400,7 +400,7 @@ void list_rule_details(struct chain *ch, int nrule)
 	const char *dstnet = nftables_gui_rule_attr_get_str(r,
 												NFTABLES_GUI_RULE_ATTR_DSTNETWORK);
 
-	char *opts[9];
+	char *opts[11];
 	
 	opts[0]=strdup(rule_name);
 	opts[1]=strdup(action);
@@ -419,8 +419,17 @@ void list_rule_details(struct chain *ch, int nrule)
 	opts[6]=strdup(ipdst);
 	opts[7]=strdup(srcnet);
 	opts[8]=strdup(dstnet);
+	opts[9]="Delete this table";
+	opts[10]="Back";
 
-	int result=print_menu(1,opts, 9,"","test");
+
+	int result=print_menu(1,opts, 11,"","test");
+	printf("el result  es: %d\n", result);
+	if(result == 0)
+		return;
+
+	if(result == 10)
+		nftables_gui_chain_attr_unset_rule(ch, nrule-1);
 
 
 }
