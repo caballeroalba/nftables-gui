@@ -12,7 +12,7 @@ struct table_list {
 	struct list_head list;
 	int elements;
 };
-
+void delete_all_tables();
 void list_tables(struct table_list *list);
 void list_table_details(int ntable, struct table_list *list);
 void list_chain_details(int ntable, int nchain, struct table_list *list);
@@ -36,7 +36,11 @@ int main(void)
 		return -1;
 
 	INIT_LIST_HEAD(&lista->list);
-	
+		
+	/* Sanity tables already created */
+	delete_all_tables();
+
+		
 	lista->elements=0;
 	char *choices[2]={
 		"Create table",
@@ -70,6 +74,14 @@ int main(void)
 
 }
 
+
+void delete_all_tables()
+{
+	int result=0;
+	result = system("sh deleteTables.sh");
+	if( result < 0)
+		perror("error al borrar las tablas previas");
+}
 void list_tables(struct table_list *list){
 
 	struct table *cur,*tmp;
