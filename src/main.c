@@ -407,7 +407,7 @@ void list_rule_details(struct chain *ch, int nrule)
 	opts[2]=strdup(proto);
 	char buf[1024];
 	printf("el puerto es %d\n", srcport);
-	snprintf(buf, sizeof(buf), "%d", srcport);
+	snprintf(buf, sizeof(buf), "%d", r->srcport);
 
 	opts[3]=buf;
 	char buf2[1024];
@@ -472,9 +472,9 @@ void create_rule(struct chain *ch)
 		return;
 	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_RULE_NAME, opts_value[0]);
 	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_ACTION, opts_value[1]);
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_PROTO, opts_value[2]);
-	nftables_gui_rule_attr_set_port(r,NFTABLES_GUI_RULE_ATTR_SRCPORT, *( int *) opts_value[3]);
-	nftables_gui_rule_attr_set_port(r,NFTABLES_GUI_RULE_ATTR_DSTPORT, *( int *) opts_value[4]);	
+	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_PROTO, opts_value[2]);	
+	nftables_gui_rule_attr_set_port(r,NFTABLES_GUI_RULE_ATTR_SRCPORT, atoi(opts_value[3]));
+	nftables_gui_rule_attr_set_port(r,NFTABLES_GUI_RULE_ATTR_DSTPORT, atoi(opts_value[4]));	
 	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_IPSRC, opts_value[5]);
 	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_IPDST, opts_value[6]);
 	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_SRCNETWORK, opts_value[7]);
