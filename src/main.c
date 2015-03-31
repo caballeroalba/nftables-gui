@@ -404,7 +404,7 @@ void list_rule_details(struct chain *ch, int nrule)
 												NFTABLES_GUI_RULE_ATTR_PROTO);
 	uint32_t srcport = nftables_gui_rule_attr_get_u32(r,
 												NFTABLES_GUI_RULE_ATTR_SRCPORT);
-	int dstport = nftables_gui_rule_attr_get_u32(r,
+	uint32_t dstport = nftables_gui_rule_attr_get_u32(r,
 												NFTABLES_GUI_RULE_ATTR_DSTPORT);
 	const char *ipsrc = nftables_gui_rule_attr_get_str(r,
 												NFTABLES_GUI_RULE_ATTR_IPSRC);
@@ -422,7 +422,7 @@ void list_rule_details(struct chain *ch, int nrule)
 	opts[2]=strdup(proto);
 	char buf[1024];
 	printf("el puerto es %d\n", srcport);
-	snprintf(buf, sizeof(buf), "%d", r->srcport);
+	snprintf(buf, sizeof(buf), "%d", srcport);
 
 	opts[3]=buf;
 	char buf2[1024];
