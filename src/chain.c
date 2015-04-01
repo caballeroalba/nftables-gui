@@ -13,7 +13,7 @@ struct chain *nftables_gui_chain_alloc(void)
 		return NULL;
 
 	INIT_LIST_HEAD(&c->rules);
-    c->flags |= (1 << NFTABLES_GUI_CHAIN_ATTR_NUM_RULES);
+    c->flags |= (1 << NFTGUI_CHAIN_NUM_RULES);
 	return c;
 }
 
@@ -22,10 +22,10 @@ void nftables_gui_chain_free(struct chain *c)
 
 	struct rule *r, *tmp;
 
-	if (c->flags & (1 << NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME))
+	if (c->flags & (1 << NFTGUI_CHAIN_CHAIN_NAME))
 		xfree(c->chain_name);
   
-  if(c->flags & ( 1 << NFTABLES_GUI_CHAIN_ATTR_HOOK))
+  if(c->flags & ( 1 << NFTGUI_CHAIN_HOOK))
     xfree(c->hook);
 
 	list_for_each_entry_safe(r, tmp, &c->rules, head) {
@@ -36,7 +36,7 @@ void nftables_gui_chain_free(struct chain *c)
 	xfree(c);
 }
 
-void nftables_gui_chain_attr_unset_rule(struct chain *c,
+void nftgui_chain_unset_rule(struct chain *c,
 					  uint32_t pos)
 {
 	int i = 0;
@@ -63,25 +63,25 @@ static void nftables_gui_chain_set_data(struct chain *c,
 {
 	struct rule *r;
 
-	if (attr > NFTABLES_GUI_CHAIN_ATTR_MAX)
+	if (attr > NFTGUI_CHAIN_MAX)
 		return;
 
 	switch (attr) {
-	case NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME:
+	case NFTGUI_CHAIN_CHAIN_NAME:
 		if (c->chain_name)
 			xfree(c->chain_name);
 
 		c->chain_name = strdup(data);
 		break;
 
-  case NFTABLES_GUI_CHAIN_ATTR_HOOK:
+  case NFTGUI_CHAIN_HOOK:
     if(c->hook)
       xfree(c->hook);
     
     c->hook=strdup(data);
     break;
 
-	case NFTABLES_GUI_CHAIN_ATTR_RULE:
+	case NFTGUI_CHAIN_RULE:
 		if (c->num_rules > 99) {
 			printf("too much rules\n");
 			break;
@@ -95,19 +95,19 @@ static void nftables_gui_chain_set_data(struct chain *c,
 	c->flags |= (1 << attr);
 }
 
-void nftables_gui_chain_attr_set_str(struct chain *con,
+void nftgui_chain_set_str(struct chain *con,
 					uint16_t attr, const char *data)
 {
 	nftables_gui_chain_set_data(con, attr, data);
 }
 
-void nftables_gui_chain_attr_set_rule(struct chain *con,
+void nftgui_chain_set_rule(struct chain *con,
 					  uint16_t attr, struct rule *r)
 {
 	nftables_gui_chain_set_data(con, attr, r);
 }
 
-const void *nftables_gui_chain_attr_get_data(struct chain *c,
+const void *nftgui_chain_get_data(struct chain *c,
 					      uint16_t attr, uint32_t pos)
 {
 	int i = 0;
@@ -117,14 +117,14 @@ const void *nftables_gui_chain_attr_get_data(struct chain *c,
 		return NULL;
 
 	switch(attr) {
-	case NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME:
+	case NFTGUI_CHAIN_CHAIN_NAME:
 		return c->chain_name;
-	case NFTABLES_GUI_CHAIN_ATTR_NUM_RULES:
+	case NFTGUI_CHAIN_NUM_RULES:
 		return &c->num_rules;
 
-  case NFTABLES_GUI_CHAIN_ATTR_HOOK:
+  case NFTGUI_CHAIN_HOOK:
     return c->hook;
-	case NFTABLES_GUI_CHAIN_ATTR_RULE:
+	case NFTGUI_CHAIN_RULE:
 		list_for_each_entry(rule, &c->rules, head) {
 			if (i == pos)
 				break;
@@ -137,23 +137,23 @@ const void *nftables_gui_chain_attr_get_data(struct chain *c,
 	return NULL;
 }
 
-uint32_t nftables_gui_chain_attr_get_u32(struct chain *con,
+uint32_t nftgui_chain_get_u32(struct chain *con,
 					  uint16_t attr)
 {
-	const void *ret = nftables_gui_chain_attr_get_data(con, attr, 0);
+	const void *ret = nftgui_chain_get_data(con, attr, 0);
 	return ret == NULL ? 0 : *((uint32_t *)ret);
 }
 
-const char *nftables_gui_chain_attr_get_str(struct chain *con,
+const char *nftgui_chain_get_str(struct chain *con,
 					     uint16_t attr)
 {
-	return nftables_gui_chain_attr_get_data(con, attr, 0);
+	return nftgui_chain_get_data(con, attr, 0);
 }
 
-struct rule *nftables_gui_chain_attr_get_rule(struct chain *con,
+struct rule *nftgui_chain_get_rule(struct chain *con,
 					         uint16_t attr, uint32_t pos)
 {
-	return (struct rule *)nftables_gui_chain_attr_get_data(con, attr,
+	return (struct rule *)nftgui_chain_get_data(con, attr,
 								 pos);
 }
 

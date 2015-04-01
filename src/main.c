@@ -28,12 +28,12 @@ int main(void)
 	
 	while (1)
 	 {
-			int result=print_menu(1,choices,2,"prueba","Welcome to nftables-gui,"
+			int result=print_menu(1,choices,2,"","Welcome to nftables-gui,"
 						"please select a option");
 
 			if( result == 1){
 
-							t1=nftables_gui_table_alloc();
+							t1=nftgui_table_alloc();
 							create_table(t1);
 
 							if( t1!= NULL){

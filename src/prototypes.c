@@ -19,7 +19,7 @@ void list_tables(struct table_list *list){
 
 	list_for_each_entry_safe(cur,tmp,&list->list,head)
 	{			 
-	    opts[i]=strdup(nftables_gui_table_attr_get_str(cur,NFTABLES_GUI_TABLE_ATTR_TABLE_NAME));	
+	    opts[i]=strdup(nftgui_table_get_str(cur,NFTGUI_TABLE_TABLE_NAME));	
 		i++;
 	}
 
@@ -81,7 +81,7 @@ void list_table_details(int ntable,struct table_list *list)
 	 
 	
 	const char *table_name;
-	table_name=nftables_gui_table_attr_get_str(c, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME);
+	table_name=nftgui_table_get_str(c, NFTGUI_TABLE_TABLE_NAME);
 	
 	char buf[1024];
 
@@ -151,9 +151,9 @@ void create_chain(int ntable, struct table_list *list)
 	 struct chain *chain;
 	 
    chain=nftables_gui_chain_alloc();
-   nftables_gui_chain_attr_set_str(chain, NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME, opts_value[0]);
-   nftables_gui_chain_attr_set_str(chain, NFTABLES_GUI_CHAIN_ATTR_HOOK, opts_value[1]);
-   nftables_gui_table_attr_set_chain(cur, NFTABLES_GUI_TABLE_ATTR_CHAIN, chain);
+   nftgui_chain_set_str(chain, NFTGUI_CHAIN_CHAIN_NAME, opts_value[0]);
+   nftgui_chain_set_str(chain, NFTGUI_CHAIN_HOOK, opts_value[1]);
+   nftgui_table_set_chain(cur, NFTGUI_TABLE_CHAIN, chain);
 
 	 /* making the chain */
 	 int system_result=0;
@@ -191,16 +191,16 @@ void list_chains(int ntable, struct table_list *list)
 	
 		
 
-		chain=nftables_gui_table_attr_get_chain(cur, NFTABLES_GUI_TABLE_ATTR_CHAIN, b);
+		chain=nftgui_table_get_chain(cur, NFTGUI_TABLE_CHAIN, b);
 
 		if( chain == NULL)
 		 return;
 
-		opts[b]=strdup(nftables_gui_chain_attr_get_str( chain, NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME));
+		opts[b]=strdup(nftgui_chain_get_str( chain, NFTGUI_CHAIN_CHAIN_NAME));
 		
 	}
 
-	const char *table_name=nftables_gui_table_attr_get_str(cur, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME);
+	const char *table_name=nftgui_table_get_str(cur, NFTGUI_TABLE_TABLE_NAME);
 	char buf[1024];
 
 	snprintf(buf, sizeof(buf), " You are in %s table chain list,\n"
@@ -232,7 +232,7 @@ void delete_table(int ntable, struct table_list *list){
 		perror("can't delete this table");
 	list_del(&c->head);
 	list->elements--;
-	nftables_gui_table_free(c);
+	nftgui_table_free(c);
 
 	
 
@@ -256,10 +256,10 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 	if( ch == NULL)
 		return;
 
-	const char *chain_name=nftables_gui_chain_attr_get_str(ch,
-							NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME);
-	const char *hook=nftables_gui_chain_attr_get_str(ch,
-							NFTABLES_GUI_CHAIN_ATTR_HOOK);
+	const char *chain_name=nftgui_chain_get_str(ch,
+							NFTGUI_CHAIN_CHAIN_NAME);
+	const char *hook=nftgui_chain_get_str(ch,
+							NFTGUI_CHAIN_HOOK);
 
 	char *opts[6];
 
@@ -271,8 +271,8 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 	opts[6]="Back";
 	
 
-	const char* table_name=nftables_gui_table_attr_get_str(t,
-							NFTABLES_GUI_TABLE_ATTR_TABLE_NAME);
+	const char* table_name=nftgui_table_get_str(t,
+							NFTGUI_TABLE_TABLE_NAME);
 	char buf[1024];
 
 	snprintf(buf, sizeof(buf), "You are in %s table, in "
@@ -304,7 +304,7 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 			test=system(buf);
 			if ( test < 0 )
 				perror("Can't delete this chain");
-			nftables_gui_table_attr_unset_chain(t, nchain);
+			nftgui_table_unset_chain(t, nchain);
 			break;
 
 		case 6:
@@ -326,8 +326,8 @@ void list_rules(struct chain *ch)
 	
 	list_for_each_entry_safe(cur, tmp, &ch->rules, head){
 
-		opts[i]=strdup(nftables_gui_rule_attr_get_str(cur,
-					NFTABLES_GUI_RULE_ATTR_RULE_NAME));
+		opts[i]=strdup(nftgui_rule_get_str(cur,
+					NFTGUI_RULE_NAME));
 		i++;
 	}
 
@@ -353,25 +353,25 @@ void list_rule_details(struct chain *ch, int nrule)
 
 	r=get_rule(ch, nrule);
 		
-	const char *rule_name= nftables_gui_rule_attr_get_str(r,
-										 		NFTABLES_GUI_RULE_ATTR_RULE_NAME);
-	const char *action = nftables_gui_rule_attr_get_str(r,
-												NFTABLES_GUI_RULE_ATTR_ACTION);
-	const char *proto = nftables_gui_rule_attr_get_str(r,
-												NFTABLES_GUI_RULE_ATTR_PROTO);
-	uint32_t srcport = nftables_gui_rule_attr_get_u32(r,
-												NFTABLES_GUI_RULE_ATTR_SRCPORT);
-	uint32_t dstport = nftables_gui_rule_attr_get_u32(r,
-												NFTABLES_GUI_RULE_ATTR_DSTPORT);
+	const char *rule_name= nftgui_rule_get_str(r,
+										 		NFTGUI_RULE_NAME);
+	const char *action = nftgui_rule_get_str(r,
+												NFTGUI_RULE_ACTION);
+	const char *proto = nftgui_rule_get_str(r,
+												NFTGUI_RULE_PROTO);
+	uint32_t srcport = nftgui_rule_get_u32(r,
+												NFTGUI_RULE_SRCPORT);
+	uint32_t dstport = nftgui_rule_get_u32(r,
+												NFTGUI_RULE_DSTPORT);
 	/* to develop in the future 
-	const char *ipsrc = nftables_gui_rule_attr_get_str(r,
-												NFTABLES_GUI_RULE_ATTR_IPSRC);
-	const char *ipdst = nftables_gui_rule_attr_get_str(r,
-												NFTABLES_GUI_RULE_ATTR_IPDST);
-	const char *srcnet = nftables_gui_rule_attr_get_str(r,
-												NFTABLES_GUI_RULE_ATTR_SRCNETWORK);
-	const char *dstnet = nftables_gui_rule_attr_get_str(r,
-												NFTABLES_GUI_RULE_ATTR_DSTNETWORK);
+	const char *ipsrc = nftgui_rule_get_str(r,
+												NFTGUI_RULE_IPSRC);
+	const char *ipdst = nftgui_rule_get_str(r,
+												NFTGUI_RULE_IPDST);
+	const char *srcnet = nftgui_rule_get_str(r,
+												NFTGUI_RULE_SRCNETWORK);
+	const char *dstnet = nftgui_rule_get_str(r,
+												NFTGUI_RULE_DSTNETWORK);
  */
 	char *opts[7];
 	
@@ -406,7 +406,7 @@ void list_rule_details(struct chain *ch, int nrule)
 	if(result == 10)
 		
 		
-		nftables_gui_chain_attr_unset_rule(ch, nrule-1);
+		nftgui_chain_unset_rule(ch, nrule-1);
 	
 	if(result == 11)
 		return;
@@ -479,20 +479,20 @@ void create_rule(struct table *t, struct chain *ch)
 	r=nftables_gui_rule_alloc();
 	if( r == NULL)
 		return;
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_RULE_NAME, opts_value[0]);
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_ACTION, opts_value[1]);
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_PROTO, opts_value[2]);	
-	nftables_gui_rule_attr_set_port(r,NFTABLES_GUI_RULE_ATTR_SRCPORT, atoi(opts_value[3]));
-	nftables_gui_rule_attr_set_port(r,NFTABLES_GUI_RULE_ATTR_DSTPORT, atoi(opts_value[4]));	
+	nftgui_rule_set_str(r,NFTGUI_RULE_NAME, opts_value[0]);
+	nftgui_rule_set_str(r,NFTGUI_RULE_ACTION, opts_value[1]);
+	nftgui_rule_set_str(r,NFTGUI_RULE_PROTO, opts_value[2]);	
+	nftgui_rule_set_port(r,NFTGUI_RULE_SRCPORT, atoi(opts_value[3]));
+	nftgui_rule_set_port(r,NFTGUI_RULE_DSTPORT, atoi(opts_value[4]));	
 	
 	/* to develop in the future 
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_IPSRC, opts_value[5]);
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_IPDST, opts_value[6]);
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_SRCNETWORK, opts_value[7]);
-	nftables_gui_rule_attr_set_str(r,NFTABLES_GUI_RULE_ATTR_DSTNETWORK, opts_value[8]);
+	nftgui_rule_set_str(r,NFTGUI_RULE_IPSRC, opts_value[5]);
+	nftgui_rule_set_str(r,NFTGUI_RULE_IPDST, opts_value[6]);
+	nftgui_rule_set_str(r,NFTGUI_RULE_SRCNETWORK, opts_value[7]);
+	nftgui_rule_set_str(r,NFTGUI_RULE_DSTNETWORK, opts_value[8]);
 	*/
 
-	nftables_gui_chain_attr_set_rule(ch, NFTABLES_GUI_CHAIN_ATTR_RULE, r);
+	nftgui_chain_set_rule(ch, NFTGUI_CHAIN_RULE, r);
 	/* making the rule */
 	
 	char *proto=trim(strdup(r->proto));
@@ -585,7 +585,7 @@ void create_table(struct table *t1)
 			
 			case 1:
 
-			nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "ip");
+			nftgui_table_set_str(t1, NFTGUI_TABLE_FAMILY, "ip");
 			//create the table with family ip and get the name of table
 			opts[0]="Table name";
 			int test=0;
@@ -596,13 +596,13 @@ void create_table(struct table *t1)
 				if( strcmp(name, "") !=0)
 					test=1;
 			}
-			nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
+			nftgui_table_set_str(t1, NFTGUI_TABLE_TABLE_NAME,
 						opts_value[0]);
 			
 			break;
 
 			case 2:  /* arp family */
-			   nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "arp");
+			   nftgui_table_set_str(t1, NFTGUI_TABLE_FAMILY, "arp");
 			  //create the table with family arp and get the name of table
 			  opts[0]="Table name";
 				int test1=0;
@@ -614,13 +614,13 @@ void create_table(struct table *t1)
 						test1=1;
 				}
 			  
-			  nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
+			  nftgui_table_set_str(t1, NFTGUI_TABLE_TABLE_NAME,
 							opts_value[0]);
 
 			  break;
 
 		case 3:  /* ip6 family */
-			   nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "ip6");
+			   nftgui_table_set_str(t1, NFTGUI_TABLE_FAMILY, "ip6");
 			  //create the table with family arp and get the name of table
 			  opts[0]="Table name";
 			  int test2=0;
@@ -631,13 +631,13 @@ void create_table(struct table *t1)
 					if( strcmp(name, "") !=0)
 						test2=1;
 				}
-			  nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
+			  nftgui_table_set_str(t1, NFTGUI_TABLE_TABLE_NAME,
 							opts_value[0]);
 
 			  break;
 
 			case 4:  /* bridge	family */
-			   nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_FAMILY, "bridge");
+			   nftgui_table_set_str(t1, NFTGUI_TABLE_FAMILY, "bridge");
 			  //create the table with family arp and get the name of table
 			  opts[0]="Table name";
 			  int test3=0;
@@ -648,7 +648,7 @@ void create_table(struct table *t1)
 					if( strcmp(name, "") !=0)
 						test3=1;
 				}
-			  nftables_gui_table_attr_set_str(t1, NFTABLES_GUI_TABLE_ATTR_TABLE_NAME,
+			  nftgui_table_set_str(t1, NFTGUI_TABLE_TABLE_NAME,
 							opts_value[0]);
 
 			  break;

@@ -2,16 +2,16 @@
 
 
 enum {
-  NFTABLES_GUI_CHAIN_ATTR_CHAIN_NAME,
-  NFTABLES_GUI_CHAIN_ATTR_HOOK,
-  NFTABLES_GUI_CHAIN_ATTR_RULE,
-  NFTABLES_GUI_CHAIN_ATTR_NUM_RULES,
-  __NFTABLES_GUI_CHAIN_ATTR_MAX
+  NFTGUI_CHAIN_CHAIN_NAME,
+  NFTGUI_CHAIN_HOOK,
+  NFTGUI_CHAIN_RULE,
+  NFTGUI_CHAIN_NUM_RULES,
+  __NFTGUI_CHAIN_MAX
 
 
 };
 
-#define NFTABLES_GUI_CHAIN_ATTR_MAX (__NFTABLES_GUI_CHAIN_ATTR_MAX -1)
+#define NFTGUI_CHAIN_MAX (__NFTGUI_CHAIN_MAX -1)
 
 #define xfree(ptr)    free((void *)ptr);
 
@@ -29,25 +29,25 @@ struct chain {
 struct chain *nftables_gui_chain_alloc(void);
 void nftables_gui_chain_free(struct chain *);
 
-void nftables_gui_chain_attr_unset_rule(struct chain *c,
+void nftgui_chain_unset_rule(struct chain *c,
                                               uint32_t pos);
 
 //void nftables_gui_chain_set_data(struct chain *c, uint16_t attr, 
 //                                  const void *data);
-void nftables_gui_chain_attr_set_str(struct chain *c, uint16_t attr,
+void nftgui_chain_set_str(struct chain *c, uint16_t attr,
                                           const char *data);
-void nftables_gui_chain_attr_set_rule(struct chain *con,
+void nftgui_chain_set_rule(struct chain *con,
                                             uint16_t attr, struct rule *r);
 
 
 const void *nftables_gui_attr_get_data(struct chain *c, uint16_t attr,
                                         uint32_t pos);
 
-uint32_t nftables_gui_chain_attr_get_u32(struct chain *c,
+uint32_t nftgui_chain_get_u32(struct chain *c,
                                               uint16_t attr);
-const char *nftables_gui_chain_attr_get_str(struct chain *con,
+const char *nftgui_chain_get_str(struct chain *con,
                                                  uint16_t attr);
-struct rule *nftables_gui_chain_attr_get_rule(struct chain *c,
+struct rule *nftgui_chain_get_rule(struct chain *c,
                                                      uint16_t attr, uint32_t pos);
 
 int nftables_gui_chain_snprintf(char *buf, size_t size, struct chain *c);

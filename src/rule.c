@@ -11,105 +11,105 @@ struct rule *nftables_gui_rule_alloc(void)
 
 void nftables_gui_rule_free(struct rule *r)
 {
-	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_RULE_NAME))
+	if (r->flags & (1 << NFTGUI_RULE_NAME))
 		xfree(r->rule_name);
 
-	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_ACTION))
+	if (r->flags & (1 << NFTGUI_RULE_ACTION))
 		xfree(r->action);
 		
-	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_PROTO))
+	if (r->flags & (1 << NFTGUI_RULE_PROTO))
 		xfree(r->proto);	
 	
-	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_SRCPORT))
+	if (r->flags & (1 << NFTGUI_RULE_SRCPORT))
 		//xfree(r->srcport);
-	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_DSTPORT))
+	if (r->flags & (1 << NFTGUI_RULE_DSTPORT))
 	//	xfree(r->dstport);
 		
-	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_IPSRC))
+	if (r->flags & (1 << NFTGUI_RULE_IPSRC))
 		xfree(r->ipsrc);
 		
-	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_IPDST))
+	if (r->flags & (1 << NFTGUI_RULE_IPDST))
 		xfree(r->ipdst);
 		
-	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_SRCNETWORK))
+	if (r->flags & (1 << NFTGUI_RULE_SRCNETWORK))
 		xfree(r->srcnetwork);
 		
-	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_DSTNETWORK))
+	if (r->flags & (1 << NFTGUI_RULE_DSTNETWORK))
 		xfree(r->dstnetwork);
 		
-	if (r->flags & (1 << NFTABLES_GUI_RULE_ATTR_INTERFACE))
+	if (r->flags & (1 << NFTGUI_RULE_INTERFACE))
 		xfree(r->interface);
 		
 
 	xfree(r);
 }
 
-bool nftables_gui_rule_attr_is_set(const struct rule *r, uint16_t attr)
+bool nftgui_rule_is_set(const struct rule *r, uint16_t attr)
 {
 	return r->flags & (1 << attr);
 }
 
-void nftables_gui_rule_attr_unset(struct rule *r, uint16_t attr)
+void nftgui_rule_unset(struct rule *r, uint16_t attr)
 {
 	if (!(r->flags & (1 << attr)))
 		return;
 
 	switch (attr) {
-	case NFTABLES_GUI_RULE_ATTR_RULE_NAME:
+	case NFTGUI_RULE_NAME:
 		if (r->rule_name) {
 			xfree(r->rule_name);
 			r->rule_name = NULL;
 		}
 		break;
-	case NFTABLES_GUI_RULE_ATTR_ACTION:
+	case NFTGUI_RULE_ACTION:
 		if (r->action) {
 			xfree(r->action);
 			r->action = NULL;
 		}
 		break;
-        case NFTABLES_GUI_RULE_ATTR_PROTO:
+        case NFTGUI_RULE_PROTO:
 		if (r->proto) {
 			xfree(r->proto);
 			r->proto = NULL;
 		}
 		break;
-	case NFTABLES_GUI_RULE_ATTR_SRCPORT:
+	case NFTGUI_RULE_SRCPORT:
 		if (r->srcport) {
 			//xfree(r->srcport);
 			r->srcport = 0;
 		}
 		break;
-	case NFTABLES_GUI_RULE_ATTR_DSTPORT:
+	case NFTGUI_RULE_DSTPORT:
 		if (r->dstport) {
 			//xfree(r->dstport);
 			r->dstport = 0;
 		}
 		break;
-	case NFTABLES_GUI_RULE_ATTR_IPSRC:
+	case NFTGUI_RULE_IPSRC:
 		if (r->ipsrc) {
 			xfree(r->ipsrc);
 			r->ipsrc = NULL;
 		}
 		break;
-	case NFTABLES_GUI_RULE_ATTR_IPDST:
+	case NFTGUI_RULE_IPDST:
 		if (r->ipdst) {
 			xfree(r->ipdst);
 			r->ipdst = NULL;
 		}
 		break;
-	case NFTABLES_GUI_RULE_ATTR_SRCNETWORK:
+	case NFTGUI_RULE_SRCNETWORK:
 		if (r->srcnetwork) {
 			xfree(r->srcnetwork);
 			r->srcnetwork = NULL;
 		}
 		break;
-	case NFTABLES_GUI_RULE_ATTR_DSTNETWORK:
+	case NFTGUI_RULE_DSTNETWORK:
 		if (r->dstnetwork) {
 			xfree(r->dstnetwork);
 			r->dstnetwork = NULL;
 		}
 		break;
-	case NFTABLES_GUI_RULE_ATTR_INTERFACE:
+	case NFTGUI_RULE_INTERFACE:
 		if (r->interface) {
 			xfree(r->interface);
 			r->action = NULL;
@@ -117,7 +117,7 @@ void nftables_gui_rule_attr_unset(struct rule *r, uint16_t attr)
 		break;
 		
 		
-	case NFTABLES_GUI_RULE_ATTR_ID:
+	case NFTGUI_RULE_ID:
 		break;
 	}
 
@@ -127,65 +127,65 @@ void nftables_gui_rule_attr_unset(struct rule *r, uint16_t attr)
 void nftables_gui_rule_set_data(struct rule *r, uint16_t attr, const void *data,
 			  uint32_t data_len)
 {
-	if (attr > NFTABLES_GUI_RULE_ATTR_MAX)
+	if (attr > NFTGUI_RULE_MAX)
 		return;
 
 	switch (attr) {
-	case NFTABLES_GUI_RULE_ATTR_RULE_NAME:
+	case NFTGUI_RULE_NAME:
 		if (r->rule_name)
 			xfree(r->rule_name);
 
 		r->rule_name = strdup(data);
 		break;
-	case NFTABLES_GUI_RULE_ATTR_ACTION:
+	case NFTGUI_RULE_ACTION:
 		if (r->action)
 			xfree(r->action);
 
 		r->action = strdup(data);
 		break;
-	case NFTABLES_GUI_RULE_ATTR_PROTO:
+	case NFTGUI_RULE_PROTO:
 		if (r->proto)
 			xfree(r->proto);
 
 		r->proto = strdup(data);
 		break;
-	case NFTABLES_GUI_RULE_ATTR_SRCPORT:
+	case NFTGUI_RULE_SRCPORT:
 		r->srcport = *((uint32_t *)data);
 		break;
-	case NFTABLES_GUI_RULE_ATTR_DSTPORT:
+	case NFTGUI_RULE_DSTPORT:
 		r->dstport = *((uint32_t *)data);
 		break;
-	case NFTABLES_GUI_RULE_ATTR_IPSRC:
+	case NFTGUI_RULE_IPSRC:
 		if (r->ipsrc)
 			xfree(r->ipsrc);
 
 		r->ipsrc = strdup(data);
 		break;
-	case NFTABLES_GUI_RULE_ATTR_IPDST:
+	case NFTGUI_RULE_IPDST:
 		if (r->ipdst)
 			xfree(r->ipdst);
 
 		r->ipdst = strdup(data);
 		break;
-	case NFTABLES_GUI_RULE_ATTR_SRCNETWORK:
+	case NFTGUI_RULE_SRCNETWORK:
 		if (r->srcnetwork)
 			xfree(r->srcnetwork);
 
 		r->srcnetwork = strdup(data);
 		break;
-	case NFTABLES_GUI_RULE_ATTR_DSTNETWORK:
+	case NFTGUI_RULE_DSTNETWORK:
 		if (r->dstnetwork)
 			xfree(r->dstnetwork);
 
 		r->dstnetwork = strdup(data);
 		break;
-	case NFTABLES_GUI_RULE_ATTR_INTERFACE:
+	case NFTGUI_RULE_INTERFACE:
 		if (r->interface)
 			xfree(r->interface);
 
 		r->interface = strdup(data);
 		break;
-	case NFTABLES_GUI_RULE_ATTR_ID:
+	case NFTGUI_RULE_ID:
 		r->id = *((uint32_t *)data);
 		break;
 	}
@@ -193,62 +193,62 @@ void nftables_gui_rule_set_data(struct rule *r, uint16_t attr, const void *data,
 	r->flags |= (1 << attr);
 }
 
-void nftables_gui_rule_attr_set_u32(struct rule *r, uint16_t attr, uint32_t data)
+void nftgui_rule_set_u32(struct rule *r, uint16_t attr, uint32_t data)
 {
 	nftables_gui_rule_set_data(r, attr, &data, sizeof(uint32_t));
 }
 
-void nftables_gui_rule_attr_set_port(struct rule *r, uint16_t attr, uint32_t data)
+void nftgui_rule_set_port(struct rule *r, uint16_t attr, uint32_t data)
 {
   nftables_gui_rule_set_data(r, attr, &data, sizeof(uint32_t));
 }
 
-void nftables_gui_rule_attr_set_str(struct rule *r, uint16_t attr, const char *data)
+void nftgui_rule_set_str(struct rule *r, uint16_t attr, const char *data)
 {
 	nftables_gui_rule_set_data(r, attr, data, 0);
 }
 
-const void *nftables_gui_rule_attr_get_data(struct rule *r, uint16_t attr)
+const void *nftgui_rule_get_data(struct rule *r, uint16_t attr)
 {
 	if (!(r->flags & (1 << attr)))
 		return NULL;
 
 	switch(attr) {
-	case NFTABLES_GUI_RULE_ATTR_RULE_NAME:
+	case NFTGUI_RULE_NAME:
 		return r->rule_name;
-	case NFTABLES_GUI_RULE_ATTR_ACTION:
+	case NFTGUI_RULE_ACTION:
 		return r->action;
-	case NFTABLES_GUI_RULE_ATTR_PROTO:
+	case NFTGUI_RULE_PROTO:
 		return r->proto;
-	case NFTABLES_GUI_RULE_ATTR_SRCPORT:
+	case NFTGUI_RULE_SRCPORT:
 		return &r->srcport;
-	case NFTABLES_GUI_RULE_ATTR_DSTPORT:
+	case NFTGUI_RULE_DSTPORT:
 		return &r->dstport;
-	case NFTABLES_GUI_RULE_ATTR_IPSRC:
+	case NFTGUI_RULE_IPSRC:
 		return r->ipsrc;
-	case NFTABLES_GUI_RULE_ATTR_IPDST:
+	case NFTGUI_RULE_IPDST:
 		return r->ipdst;
-	case NFTABLES_GUI_RULE_ATTR_SRCNETWORK:
+	case NFTGUI_RULE_SRCNETWORK:
 		return r->srcnetwork;
-	case NFTABLES_GUI_RULE_ATTR_DSTNETWORK:
+	case NFTGUI_RULE_DSTNETWORK:
 		return r->dstnetwork;
-	case NFTABLES_GUI_RULE_ATTR_INTERFACE:
+	case NFTGUI_RULE_INTERFACE:
 		return r->interface;
-	case NFTABLES_GUI_RULE_ATTR_ID:
+	case NFTGUI_RULE_ID:
 		return &r->id;
 	}
 	return NULL;
 }
 
-uint32_t nftables_gui_rule_attr_get_u32(struct rule *r, uint16_t attr)
+uint32_t nftgui_rule_get_u32(struct rule *r, uint16_t attr)
 {
-	const void *ret = nftables_gui_rule_attr_get_data(r, attr);
+	const void *ret = nftgui_rule_get_data(r, attr);
 	return ret == NULL ? 0 : *((uint32_t *)ret);
 }
 
-const char *nftables_gui_rule_attr_get_str(struct rule *r, uint16_t attr)
+const char *nftgui_rule_get_str(struct rule *r, uint16_t attr)
 {
-	return nftables_gui_rule_attr_get_data(r, attr);
+	return nftgui_rule_get_data(r, attr);
 }
 
 int nftables_gui_rule_snprintf(char *buf, size_t size, struct rule *r)
