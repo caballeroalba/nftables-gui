@@ -510,7 +510,7 @@ void create_rule(struct table *t, struct chain *ch)
 		
 	}else if(atoi(opts_value[3]) != 0 ){
 		
-		snprintf(buf, sizeof(buf), " nft add rule %s %s %s sport %d  %s",t->table_name, ch->chain_name, r->proto, r->srcport, r->action );
+		snprintf(buf, sizeof(buf), " nft add rule %s %s %s sport %d  %s", t->table_name, ch->chain_name, r->proto, r->srcport, r->action );
 		int result= system(buf);
 
 		if( result < 0 )
