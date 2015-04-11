@@ -11,6 +11,10 @@ Para poder compilar es necesario tener los siguientes requisitos :
 
 La librería de ncurses (disponible desde los repositorios de tu distribución)
 
+Puedes instalarla de la siguiente manera:
+
+	apt-get install ncurses-base libncurses5 libncurses5-dev
+
 
 linux kernel superior al 3.13
 
