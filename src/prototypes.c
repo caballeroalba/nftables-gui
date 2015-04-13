@@ -516,9 +516,7 @@ void create_rule(struct table *t, struct chain *ch)
 		if( result < 0 )
 			perror("Can't add the rule");
 
-	}
-	
-	if (atoi(opts_value[4]) !=0 ){
+	}else if (atoi(opts_value[4]) !=0 ){
 		
 		snprintf(buf, sizeof(buf), " nft add rule %s %s %s dport %d %s", 
 				t->table_name, ch->chain_name, r->proto, r->dstport,
@@ -529,8 +527,7 @@ void create_rule(struct table *t, struct chain *ch)
 			perror("Can't add the rule");
 
 	
-	}
-	if (atoi(opts_value[3]) !=0 && atoi(opts_value[4]) != 0 ){
+	}else if (atoi(opts_value[3]) !=0 && atoi(opts_value[4]) != 0 ){
 
 		snprintf(buf, sizeof(buf), "nft add rule %s %s %s sport %d %s dport %d %s",
 				t->table_name, ch->chain_name, r->proto, r->srcport, r->proto,
