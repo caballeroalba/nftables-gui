@@ -32,6 +32,15 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 	int choice = 0;
 	int c=0;
 	
+
+	/* window for text information about objects created */
+
+	WINDOW *information;
+	
+	information=newwin(HEIGHT, WIDTH, startx + 30, starty);
+	box(information, 0, 0);
+	
+	wrefresh(information);
 	while(1) //infinito para vovler a el desde los ficheros de funciones
 	{	
 
