@@ -41,8 +41,10 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 			y = 2;
 			box(menu_win, 0, 0);
 			for(i = 0; i < n_choices; ++i)
-			{	if(highlight == i + 1) /* High light the present choice */
-				{	wattron(menu_win, A_REVERSE); 
+			{	
+				if(highlight == i + 1) /* High light the present choice */
+				{	
+					wattron(menu_win, A_REVERSE); 
 					mvwprintw(menu_win, y, x, "%s", choices[i]);
 					wattroff(menu_win, A_REVERSE);
 				}
@@ -58,7 +60,8 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 		
 				c = wgetch(menu_win); // obtenemos las pulsaciones del teclado
 				switch(c)
-				{	case KEY_UP: //flecha arriba
+				{	
+					case KEY_UP: //flecha arriba
 						if(highlight == 1) // comprobamos que si highlight es 1 (primera posicion) lo dejamos igual (es decirlo, lo seleccionamos como high)
 							highlight = n_choices; // lo dejamos a 1 (n_choices era 0)
 						else
@@ -127,7 +130,7 @@ void form_create(int n, char *opts[], char *opts_values[])
   for(i=0; i<n; i++){
 	  set_field_back(field[i], A_UNDERLINE);	/* Print a line for the option	*/
 	  field_opts_off(field[i], O_AUTOSKIP);		/* Don't go to next field when this */
-	field_opts_on(field[i], O_EDIT);
+		field_opts_on(field[i], O_EDIT);
   }
 	
 	/* Field is filled up		*/
@@ -143,10 +146,12 @@ void form_create(int n, char *opts[], char *opts_values[])
 
 	/* Loop through to get user requests */
 	while((ch = getch()) != KEY_F(2))
-	{	switch(ch)
-		{	case KEY_DOWN:
+	{	
+		switch(ch)
+		{	
+			case KEY_DOWN:
 				/* Go to next field */
-		form_driver(my_form, REQ_VALIDATION);
+				form_driver(my_form, REQ_VALIDATION);
 				form_driver(my_form, REQ_NEXT_FIELD);
 				/* Go to the end of the present buffer */
 				/* Leaves nicely at the last character */
@@ -154,16 +159,16 @@ void form_create(int n, char *opts[], char *opts_values[])
 				break;
 			case KEY_UP:
 				/* Go to previous field */
-		form_driver(my_form,REQ_VALIDATION);
+				form_driver(my_form,REQ_VALIDATION);
 				form_driver(my_form, REQ_PREV_FIELD);
 				form_driver(my_form, REQ_END_LINE);
 				break;
-	  case KEY_BACKSPACE:
-		form_driver(my_form,REQ_DEL_PREV);
+	  	case KEY_BACKSPACE:
+				form_driver(my_form,REQ_DEL_PREV);
 			default:
 				/* If this is a normal character, it gets */
 				/* Printed				  */	
-		form_driver(my_form,REQ_VALIDATION);
+				form_driver(my_form,REQ_VALIDATION);
 				form_driver(my_form, ch);
 				break;
 		}
@@ -174,14 +179,15 @@ void form_create(int n, char *opts[], char *opts_values[])
   endwin();
   /* copy all values of form to opts_values passed by function */
   for(i=0; i<n; i++){
-	opts_values[i]=strdup(field_buffer(field[i],0));
+		opts_values[i]=strdup(field_buffer(field[i],0));
   }
 	/* Un post form and free the memory */
 	unpost_form(my_form);
 	free_form(my_form);
+
 	for(i=0; i<n; i++){
   
-	free_field(field[i]);
+		free_field(field[i]);
 	
   }
  
