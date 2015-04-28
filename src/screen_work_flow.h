@@ -37,9 +37,11 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 
 	WINDOW *information;
 	
-	information=newwin(HEIGHT, WIDTH, startx + 30, starty);
+	information=newwin(HEIGHT, WIDTH, startx, starty+35);
 	box(information, 0, 0);
-	
+	y = 2;
+	x = 2;
+	mvwprintw(information, y, x, "%s", "test");	
 	wrefresh(information);
 	while(1) //infinito para vovler a el desde los ficheros de funciones
 	{	
