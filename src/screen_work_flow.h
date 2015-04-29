@@ -43,6 +43,7 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 	x = 2;
 	mvwprintw(information, y, x, "%s", "test");	
 	wrefresh(information);
+
 	while(1) //infinito para vovler a el desde los ficheros de funciones
 	{	
 

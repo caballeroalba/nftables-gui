@@ -8,6 +8,9 @@ int main(void)
 {
 	struct table_list *lista;
 	lista=calloc(1, sizeof(struct table_list));
+	int buffer_size[1024];
+	
+	char buffer[buffer_size];
 
 	if( lista == NULL)
 		return -1;
@@ -26,6 +29,8 @@ int main(void)
 
 	struct table *t1;
 	
+	
+
 	while (1)
 	 {
 			int result=print_menu(1,choices,2,"","Welcome to nftables-gui,"
