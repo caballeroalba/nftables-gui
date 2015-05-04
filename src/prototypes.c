@@ -262,7 +262,8 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 							NFTGUI_CHAIN_HOOK);
 
 	char *opts[6];
-
+	
+	opts[0]="";
 	opts[1]=strdup(chain_name);
 	opts[2]=strdup(hook);
 	opts[3]="Create rule";
@@ -278,7 +279,7 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 	snprintf(buf, sizeof(buf), "You are in %s table, in "
 			"%s chain, \n please select a option", table_name,
 															ch->chain_name);
-	int result=print_menu(1, opts, 7, "", buf);
+	int result=print_menu(1, opts, 5, "", buf);
 	
 	result--;
 	int test=0;
