@@ -44,6 +44,7 @@ int main(void)
 
 								list_add(&t1->head, &lista->list);
 								lista->elements++;
+								concat_strings_buffer("test2");
 
 							}
 							

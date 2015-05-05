@@ -280,3 +280,9 @@ int scroll_menu(WINDOW **items,int count,int menu_start_col){
 	        }
 	}
 }
+
+void concat_strings_buffer(char *message)
+{
+	snprintf(buf_screen, MAX_BUFFER_SIZE, "%s %s", buf_screen, message); 	
+	
+}
