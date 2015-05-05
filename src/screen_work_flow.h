@@ -35,14 +35,14 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 
 	/* window for text information about objects created */
 
-//	WINDOW *information;
+	WINDOW *information;
 	
-//	information=newwin(HEIGHT, WIDTH, startx, starty+35);
-//	box(information, 0, 0);
-//	y = 2;
-//	x = 2;
-//	mvwprintw(information, y+35, x+35, "%s", message);	
-//	wrefresh(information);
+	information=newwin(HEIGHT+n_choices, WIDTH+n_choices, startx, starty+35);
+	box(information, 0, 0);
+	y = 2;
+	x = 2;
+	mvwprintw(information, y+35, x+35, "%s", message);	
+	wrefresh(information);
 
 	while(1) //infinito para vovler a el desde los ficheros de funciones
 	{	
