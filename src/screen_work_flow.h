@@ -6,9 +6,9 @@
 
 #define WIDTH 30
 #define HEIGHT 10
+#define MAX_BUF 4096
 
-
-
+char buf[MAX_BUF];
 
 
 int print_menu(int highlight, char *choices[],int n_choices, char *message, char *title)
