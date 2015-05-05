@@ -6,6 +6,15 @@
 
 int main(void)
 {
+
+	/* check is root user */
+	if (getuid())
+	{
+		printf("%s", "You must be root!\n");	
+		return -1;
+	}
+	/* root user */
+
 	struct table_list *lista;
 	lista=calloc(1, sizeof(struct table_list));
 	int buffer_size= 1024;
