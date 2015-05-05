@@ -28,7 +28,7 @@ int main(void)
 
 	struct table *t1;
 	
-	
+	snprintf(buf_screen, MAX_BUFFER_SIZE, "test variable global");	
 
 	while (1)
 	 {

@@ -1,6 +1,8 @@
 #include "table.h"
 
+#define MAX_BUFFER_SIZE 4096
 
+extern char buf_screen[MAX_BUFFER_SIZE];
 /* prototipes*/
 void create_table(struct table *t);
 //void list_tables(struct table_list *list);

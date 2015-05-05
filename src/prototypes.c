@@ -1,6 +1,10 @@
 #include "prototypes.h"
 #include "screen_work_flow.h"
 
+
+
+char buf_screen[MAX_BUFFER_SIZE];
+
 void delete_all_tables()
 {
 	int result=0;

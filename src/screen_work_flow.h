@@ -3,12 +3,11 @@
 #include <menu.h>
 #include <string.h>
 
-
 #define WIDTH 30
 #define HEIGHT 10
-#define MAX_BUF 4096
 
-char buf[MAX_BUF];
+
+
 
 
 int print_menu(int highlight, char *choices[],int n_choices, char *message, char *title)
@@ -41,7 +40,8 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 	box(information, 0, 0);
 	y = 2;
 	x = 2;
-	mvwprintw(information, y+35, x+35, "%s", message);	
+	/* concat the messages for information */
+	mvwprintw(information, y+35, x+35, "%s", buf_screen);	
 	wrefresh(information);
 
 	while(1) //infinito para vovler a el desde los ficheros de funciones
