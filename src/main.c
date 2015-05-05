@@ -29,7 +29,7 @@ int main(void)
 	struct table *t1;
 	
 	snprintf(buf_screen, MAX_BUFFER_SIZE, "test variable global");	
-
+	printf("%s\n", buf_screen);
 	while (1)
 	 {
 			int result=print_menu(1, choices, 2, messages, "Welcome to nftables-gui,"

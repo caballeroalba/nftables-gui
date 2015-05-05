@@ -41,8 +41,9 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 	y = 2;
 	x = 2;
 	/* concat the messages for information */
-	mvwprintw(information, y+35, x+35, "%s", buf_screen);	
+	mvwprintw(information, y, x, "%s", buf_screen);	
 	wrefresh(information);
+	refresh();	
 
 	while(1) //infinito para vovler a el desde los ficheros de funciones
 	{	
