@@ -2,11 +2,13 @@
 #include <form.h>
 #include <menu.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define WIDTH 30
 #define HEIGHT 10
 #define ENTER 10
 #define ESCAPE 27
+
 
 int print_menu(int highlight, char *choices[],int n_choices, char *message, char *title)
 {
@@ -23,13 +25,24 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
   assume_default_colors(COLOR_WHITE,COLOR_BLUE);
   menu_win=newwin(HEIGHT+n_choices, WIDTH+n_choices, startx, starty);
  
-  mvprintw(0,0,title);
+  mvprintw(1,0,title);
   refresh();
   keypad(menu_win,TRUE);
 	int choice = 0;
 	int c=0;
 	
-
+	/* menubar */
+	/*
+	int key;
+	WINDOW *menubar, *messagebar;
+	
+	menubar=subwin(stdscr, 3, 80, 0, 0);
+	messagebar=subwin(stdscr, 4, 79, 23, 1);
+	draw_menubar(menubar);
+	move(2,1);
+	print_menubar(menubar, messagebar);
+	refresh();	
+	*/
 	/* window for text information about objects created */
 
 	WINDOW *information;
@@ -43,6 +56,7 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 	wrefresh(information);
 	refresh();	
 
+	
 	while(1) //infinito para vovler a el desde los ficheros de funciones
 	{	
 
@@ -92,7 +106,8 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 						break;
 
 					case KEY_F(4):
-						
+							
+
 					default:
 						mvprintw(24, 0, "Charcter pressed is = %3d Hopefully it can be printed as '%c'", c, c);
 						refresh();
@@ -205,84 +220,9 @@ void form_create(int n, char *opts[], char *opts_values[])
 	
   }
 }
-void draw_menubar(WINDOW *menubar)
+char *concat_strings_buffer(char *message)
 {
-  wbkgd(menubar,COLOR_PAIR(2));
-  waddstr(menubar,"Menu1");
- 	wattron(menubar,COLOR_PAIR(3));
- 	waddstr(menubar,"(F1)");
- 	wattroff(menubar,COLOR_PAIR(3));
- 	wmove(menubar,0,20);
- 	waddstr(menubar,"Menu2");
- 	wattron(menubar,COLOR_PAIR(3));
-	waddstr(menubar,"(F2)");
-	wattroff(menubar,COLOR_PAIR(3));
-}	
-
-WINDOW **draw_menu(int start_col)
-{
-	int i;
-	WINDOW **items;
-	items=(WINDOW **)malloc(9*sizeof(WINDOW *));
-
-	items[0]=newwin(10,19,1,start_col);
-	wbkgd(items[0],COLOR_PAIR(2));
-	box(items[0],ACS_VLINE,ACS_HLINE);
-	items[1]=subwin(items[0],1,17,2,start_col+1);
-	items[2]=subwin(items[0],1,17,3,start_col+1);
-	items[3]=subwin(items[0],1,17,4,start_col+1);
-	items[4]=subwin(items[0],1,17,5,start_col+1);
-	items[5]=subwin(items[0],1,17,6,start_col+1);
-	items[6]=subwin(items[0],1,17,7,start_col+1);
-	items[7]=subwin(items[0],1,17,8,start_col+1);
-	items[8]=subwin(items[0],1,17,9,start_col+1);
-	for (i=1;i<9;i++)
-		wprintw(items[i],"Item%d",i);
-	wbkgd(items[1],COLOR_PAIR(1));
-	wrefresh(items[0]);
-        return items;
+	snprintf(buf_screen, MAX_BUFFER_SIZE, "%s %s", buf_screen, message);    
+      
 }
 
-void delete_menu(WINDOW **items,int count)
-{
-	int i;
-	for (i=0;i<count;i++)
-	        delwin(items[i]);
-	free(items);
-}
-
-int scroll_menu(WINDOW **items,int count,int menu_start_col){
-	int key;
-	int selected=0;
-	while (1) {
-	        key=getch();
-	        if (key==KEY_DOWN || key==KEY_UP) {
-	                wbkgd(items[selected+1],COLOR_PAIR(2));
-	                wnoutrefresh(items[selected+1]);
-	                if (key==KEY_DOWN) {
-	                        selected=(selected+1) % count;
-	                } else {
-	                        selected=(selected+count-1) % count;
-	                }
-	                wbkgd(items[selected+1],COLOR_PAIR(1));
-	                wnoutrefresh(items[selected+1]);
-	                doupdate();
-	        } else if (key==KEY_LEFT || key==KEY_RIGHT) {
-	                delete_menu(items,count+1);
-	                touchwin(stdscr);
-	                refresh();
-	                items=draw_menu(20-menu_start_col);
-	                return scroll_menu(items,8,20-menu_start_col);
-	        } else if (key==ESCAPE) {
-	                return -1;
-	        } else if (key==ENTER) {
-	                return selected;
-	        }
-	}
-}
-
-void concat_strings_buffer(char *message)
-{
-	snprintf(buf_screen, MAX_BUFFER_SIZE, "%s %s", buf_screen, message); 	
-	
-}
