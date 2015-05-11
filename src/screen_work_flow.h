@@ -1,6 +1,6 @@
 #include <ncurses.h>
 #include <form.h>
-#include <menu.h>
+#include "menu.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -11,8 +11,8 @@
 
 
 int print_menu(int highlight, char *choices[],int n_choices, char *message, char *title)
-{
-	//tarea: modificar metodo para que solo necesite el array de las opciones, que el solo imprima y detecte el menu
+{	
+		
   int x,y,i;
   int startx,starty=0;
   WINDOW *menu_win;
@@ -31,20 +31,7 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 	int choice = 0;
 	int c=0;
 	
-	/* menubar */
-	/*
-	int key;
-	WINDOW *menubar, *messagebar;
 	
-	menubar=subwin(stdscr, 3, 80, 0, 0);
-	messagebar=subwin(stdscr, 4, 79, 23, 1);
-	draw_menubar(menubar);
-	move(2,1);
-	print_menubar(menubar, messagebar);
-	refresh();	
-	*/
-	/* window for text information about objects created */
-
 	WINDOW *information;
 	
 	information=newwin(HEIGHT+n_choices, WIDTH+n_choices, startx, starty+35);
@@ -55,8 +42,18 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 	mvwprintw(information, y, x, "%s", buf_screen);	
 	wrefresh(information);
 	refresh();	
-
 	
+	refresh();
+	/* menubar */
+
+	WINDOW *menubar, *messagebar;
+	init_curses();
+	bkgd(COLOR_PAIR(1));
+	menubar=subwin(stdscr, 1, 80, 0, 0);
+	messagebar=subwin(stdscr, 1, 79, 23, 1);
+	draw_menubar(menubar);
+	refresh();
+	/* /menubar */
 	while(1) //infinito para vovler a el desde los ficheros de funciones
 	{	
 
@@ -106,6 +103,7 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 						break;
 
 					case KEY_F(4):
+						print_menubar(menubar, messagebar);
 							
 
 					default:
