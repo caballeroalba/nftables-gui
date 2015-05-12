@@ -683,3 +683,5 @@ char *trim(char *s)
 	 *end = 0;
 	 return start;
 }
+
+void menubar_controller(int ntable, struct table_list *list);

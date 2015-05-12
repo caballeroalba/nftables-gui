@@ -26,5 +26,5 @@ void create_rule(struct table *t, struct chain *ch);
 struct chain * get_chain(struct table *t, int nchain);
 struct table * get_table(int ntable, struct table_list *list);
 char *trim (char *s);
-
+void menubar_controller(int ntable, struct table_list *list);
 
