@@ -113,7 +113,8 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 						wrefresh(messagebar);
 						menu_items=draw_menu(0);
 						selected_item=scroll_menu(menu_items, 8, 0);
-						printf("el item seleccionado es: %d\n", selected_item);
+						delete_menu(menu_items,9);
+						touchwin(stdscr);	
 						refresh();
 						break;
 
