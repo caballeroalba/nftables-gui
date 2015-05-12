@@ -112,7 +112,7 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 						werase(messagebar);
 						wrefresh(messagebar);
 						menu_items=draw_menu(0);
-						selected_item=scroll_menu(menu_items, 8, 0);
+						choice=scroll_menu(menu_items, 8, 0);
 						delete_menu(menu_items,9);
 						touchwin(stdscr);	
 						refresh();
@@ -123,7 +123,7 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 						werase(messagebar);
 						wrefresh(messagebar);
 						menu_items=draw_menu(20);
-						selected_item=scroll_menu(menu_items, 8, 0);
+						choice=scroll_menu(menu_items, 8, 0);
 						delete_menu(menu_items,9);
 						touchwin(stdscr);
 						refresh();
