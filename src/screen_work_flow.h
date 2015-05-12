@@ -118,6 +118,17 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 						refresh();
 						break;
 
+					case KEY_F(5):
+
+						werase(messagebar);
+						wrefresh(messagebar);
+						menu_items=draw_menu(20);
+						selected_item=scroll_menu(menu_items, 8, 0);
+						delete_menu(menu_items,9);
+						touchwin(stdscr);
+						refresh();
+						break;
+
 					default:
 						mvprintw(24, 0, "Charcter pressed is = %3d Hopefully it can be printed as '%c'", c, c);
 						continue;
