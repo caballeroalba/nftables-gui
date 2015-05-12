@@ -41,9 +41,9 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 	/* concat the messages for information */
 	mvwprintw(information, y, x, "%s", buf_screen);	
 	wrefresh(information);
-	refresh();	
+		
 	
-	refresh();
+
 	/* menubar */
 
 	WINDOW *menubar, *messagebar;
@@ -53,6 +53,9 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 	messagebar=subwin(stdscr, 1, 79, 23, 1);
 	draw_menubar(menubar);
 	refresh();
+
+	int selected_item;
+	WINDOW **menu_items;
 	/* /menubar */
 	while(1) //infinito para vovler a el desde los ficheros de funciones
 	{	
@@ -75,7 +78,7 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 				++y;
 			}
 			wrefresh(menu_win);
-
+			refresh();
 
 
 		
@@ -103,13 +106,21 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 						break;
 
 					case KEY_F(4):
-						print_menubar(menubar, messagebar);
-							
+						//print_menubar(menubar, messagebar);
+						
+					//	choice = getch();
+						werase(messagebar);
+						wrefresh(messagebar);
+						menu_items=draw_menu(0);
+						selected_item=scroll_menu(menu_items, 8, 0);
+						printf("el item seleccionado es: %d\n", selected_item);
+						refresh();
+						break;
 
 					default:
 						mvprintw(24, 0, "Charcter pressed is = %3d Hopefully it can be printed as '%c'", c, c);
-						refresh();
-						break;
+						continue;
+						
 				}
 		
 
