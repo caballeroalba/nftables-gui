@@ -142,7 +142,7 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 					continue;
 		
 	}	
-	mvprintw(23, 0, "You chose choice %d with choice string %s\n", choice, choices[choice - 1]);
+	mvprintw(23, 0, "You chose choice %d with choice string ", choice );
 	
 	clrtoeol();
 	refresh();// aqui en funcion de la choice hacemos las cosas necesarias
