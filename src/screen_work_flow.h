@@ -32,16 +32,7 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 	int c=0;
 	
 	
-	WINDOW *information;
 	
-	information=newwin(HEIGHT+n_choices, WIDTH+n_choices, startx, starty+35);
-	box(information, 0, 0);
-	y = 2;
-	x = 2;
-	/* concat the messages for information */
-	mvwprintw(information, y, x, "%s", buf_screen);	
-	wrefresh(information);
-		
 	
 
 	/* menubar */
@@ -59,7 +50,16 @@ int print_menu(int highlight, char *choices[],int n_choices, char *message, char
 	/* /menubar */
 	while(1) //infinito para vovler a el desde los ficheros de funciones
 	{	
-
+		WINDOW *information;
+	
+		information=newwin(HEIGHT+n_choices, WIDTH+n_choices, startx, starty+35);
+		box(information, 0, 0);
+		y = 2;
+		x = 2;
+		/* concat the messages for information */
+		mvwprintw(information, y, x, "%s", buf_screen);	
+		wrefresh(information);
+	
 	
 
 			x = 2;
