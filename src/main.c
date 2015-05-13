@@ -60,10 +60,10 @@ int main(void)
 			}else if( result == 2){
 				
 				list_tables(lista);
-			}else if( result >2){ /* aqui las opciones del menu */
+			}else if( result == 7){ /* aqui las opciones del menu */
 				
 				printf("la opción seleccionada es: %d\n", result);
-
+				list_tables(lista);
 				/* y apagamos curses */
 			}
 
