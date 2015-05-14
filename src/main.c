@@ -3,6 +3,7 @@
 #include <string.h>
 #include <inttypes.h>
 #include "prototypes.h"
+#include "nft-table-add.h"
 
 int main(void)
 {
@@ -64,6 +65,11 @@ int main(void)
 				
 				printf("la opción seleccionada es: %d\n", result);
 				list_tables(lista);
+				char *table[3];
+				table[0]="nft";
+				table[1]="ip";
+				table[2]="test";
+				create_table_nft(3, table);
 				/* y apagamos curses */
 			}
 
