@@ -16,9 +16,8 @@ int main(void)
   c=nftables_gui_chain_alloc();
   nftables_gui_chain_attr_set_rule(c,NFTABLES_GUI_CHAIN_ATTR_RULE,r1);
   nftables_gui_chain_snprintf(info,sizeof(info),c);
-  printf("%s\n",info);
- 
-  struct table *t;
+  printf("%s\n",info);	
+	struct table *t;
   t=nftables_gui_table_alloc();
   nftables_gui_table_attr_set_chain(t,NFTABLES_GUI_TABLE_ATTR_CHAIN,c);
   nftables_gui_table_snprintf(info,sizeof(info),t);

@@ -657,10 +657,14 @@ void create_table(struct table *t1)
   }
 	 /*Making the table */
 	 int system_result=0;
-	 char buf[1024];
-	 snprintf(buf, sizeof(buf), "nft add table %s %s", t1->family, t1->table_name);
-	 system_result= system(buf);
+	 char *table[3];
 
+	 table[0]="nft"; 
+	 table[1]= trim(strdup(t1->family));
+	 
+	 
+	 system_result=create_table_nft( 3, table);
+	
 }
 
 char *trim(char *s)
