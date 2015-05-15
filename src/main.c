@@ -4,6 +4,7 @@
 #include <inttypes.h>
 #include "prototypes.h"
 #include "nft-table-add.h"
+#include "nft-chain-add.h"
 
 int main(void)
 {

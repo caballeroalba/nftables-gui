@@ -159,12 +159,23 @@ void create_chain(int ntable, struct table_list *list)
    nftgui_chain_set_str(chain, NFTGUI_CHAIN_HOOK, opts_value[1]);
    nftgui_table_set_chain(cur, NFTGUI_TABLE_CHAIN, chain);
 
-	 /* making the chain */
+	 /* making the chain 
 	 int system_result=0;
 	 char buf[1024];
 	 snprintf(buf, sizeof(buf), "nft add chain %s %s { type filter hook %s priority 0 \\; }", cur->table_name, opts_value[0], opts_value[1]);
 	 system_result= system(buf);
-   /* return to details of table */
+   * return to details of table */
+	
+	 char *chain_nft[6];
+		
+	 chain_nft[0] = "nft";
+	 chain_nft[1] = trim(strdup(cur->family));
+	 chain_nft[2] = trim(strdup(cur->table_name));
+	 chain_nft[3] = trim(strdup(chain->chain_name));
+	 chain_nft[4] = "NF_INET_LOCAL_IN";
+	 chain_nft[5] = "0";
+	
+	 create_chain_nft(4, chain_nft);
    list_table_details(ntable, list);
 
 }
@@ -661,7 +672,7 @@ void create_table(struct table *t1)
 
 	 table[0]="nft"; 
 	 table[1]= trim(strdup(t1->family));
-	 
+	 table[2]= trim(strdup(t1->table_name)); 
 	 
 	 system_result=create_table_nft( 3, table);
 	
