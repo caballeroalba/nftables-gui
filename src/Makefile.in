@@ -91,7 +91,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_nftables_gui_OBJECTS = main.$(OBJEXT) prototypes.$(OBJEXT) \
 	table.$(OBJEXT) chain.$(OBJEXT) rule.$(OBJEXT) menu.$(OBJEXT) \
-	nft-table-add.$(OBJEXT) nft-chain-add.$(OBJEXT)
+	nft-table-add.$(OBJEXT) nft-chain-add.$(OBJEXT) \
+	nft-table-del.$(OBJEXT)
 nftables_gui_OBJECTS = $(am_nftables_gui_OBJECTS)
 nftables_gui_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -236,7 +237,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-nftables_gui_SOURCES = main.c prototypes.c table.c chain.c rule.c screen_work_flow.h menu.c nft-table-add.c nft-chain-add.c 
+nftables_gui_SOURCES = main.c prototypes.c table.c chain.c rule.c screen_work_flow.h menu.c nft-table-add.c nft-chain-add.c nft-table-del.c 
 all: all-am
 
 .SUFFIXES:
@@ -329,6 +330,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/menu.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nft-chain-add.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nft-table-add.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nft-table-del.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prototypes.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rule.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/table.Po@am__quote@

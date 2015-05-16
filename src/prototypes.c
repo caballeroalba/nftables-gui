@@ -240,9 +240,17 @@ void delete_table(int ntable, struct table_list *list){
 
 	char buf[1024];
 	int result=0;
-
+	/*
 	snprintf(buf, sizeof(buf), "nft delete table %s", c->table_name );
 	result=system(buf);
+	*/
+
+	char *table_nft[3];
+	
+	table_nft[0]="nft";
+	table_nft[1]= trim(strdup(c->family));
+	table_nft[2]= trim(strdup(c->table_name));
+	result = delete_table_nft(3, table_nft);
 	if( result < 0 )
 		perror("can't delete this table");
 	list_del(&c->head);
