@@ -284,7 +284,7 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 	const char *hook=nftgui_chain_get_str(ch,
 							NFTGUI_CHAIN_HOOK);
 
-	char *opts[6];
+	char *opts[7];
 	
 	opts[0]="";
 	opts[1]=strdup(chain_name);
@@ -298,11 +298,11 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 	const char* table_name=nftgui_table_get_str(t,
 							NFTGUI_TABLE_TABLE_NAME);
 	char buf[1024];
-
+	char *chain_nft[4];
 	snprintf(buf, sizeof(buf), "You are in %s table, in "
 			"%s chain, \n please select a option", table_name,
 															ch->chain_name);
-	int result=print_menu(1, opts, 5, "", buf);
+	int result=print_menu(1, opts, 7, "", buf);
 	
 	result--;
 	int test=0;
@@ -322,10 +322,16 @@ void list_chain_details(int ntable, int nchain, struct table_list *list)
 
 		case 5:
 			
-			
+			/*	
 			snprintf(buf, sizeof(buf), "nft delete chain %s %s",t->table_name, ch->chain_name);	
-
-			test=system(buf);
+			*/
+			
+		
+			chain_nft[0] = "nft";
+			chain_nft[1] = trim(strdup(t->family));
+			chain_nft[2] = trim(strdup(t->table_name));
+			chain_nft[3] = trim(strdup(ch->chain_name));
+			test=nft_chain_del(4, chain_nft);
 			if ( test < 0 )
 				perror("Can't delete this chain");
 			nftgui_table_unset_chain(t, nchain);
