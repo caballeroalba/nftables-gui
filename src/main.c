@@ -5,7 +5,7 @@
 #include "prototypes.h"
 #include "nft-table-add.h"
 #include "nft-chain-add.h"
-
+#include "nft-table-del.h"
 int main(void)
 {
 
