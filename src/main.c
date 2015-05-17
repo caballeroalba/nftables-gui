@@ -60,7 +60,7 @@ int main(void)
 	json_error_t err;
 	int tam = strlen(json);
 	//json[tam+1]= '\0';
-	printf("%s\n  ", json);
+	
 	root = json_loadb(json, sizeof(json), JSON_DISABLE_EOF_CHECK, &err); 
 			
 		
@@ -87,8 +87,8 @@ int main(void)
 		
 			key = json_object_iter_key(iter);
 			value = json_object_iter_value(iter);
-		
-			printf("key del objeto %s y valor %s\n", key, json_string_value(value));
+			if(strcmp(key, "name" ) == 0)	
+				printf("key del objeto %s y valor %s\n", key, json_string_value(value));
 			iter = json_object_iter_next(info, iter);
 		}
 	}
