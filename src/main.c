@@ -75,22 +75,23 @@ int main(void)
 		perror("error al obtener el objeto");
 	json_t *t2=json_object_get(tabla, "table");
 //	iter = json_object_iter(tabla);
-	json_t *table2 = json_array_get(tabla, 0);
-	json_t *info= json_object_get(table2, "table");
-	iter = json_object_iter(info);
-	if(iter == NULL)
-		perror("error al iterar el objeto");
-
-
-	while (iter) {
+	int i=0;
+	for (i=0; i< json_array_size(tabla); i++){
+		json_t *table2 = json_array_get(tabla, i);
+		json_t *info= json_object_get(table2, "table");
+		iter = json_object_iter(info);
+		if(iter == NULL)
+			perror("error al iterar el objeto");
 	
-		key = json_object_iter_key(iter);
-		value = json_object_iter_value(iter);
-	
-		printf("key del objeto %s y valor %s\n", key, json_string_value(value));
-		iter = json_object_iter_next(info, iter);
+		while (iter) {
+		
+			key = json_object_iter_key(iter);
+			value = json_object_iter_value(iter);
+		
+			printf("key del objeto %s y valor %s\n", key, json_string_value(value));
+			iter = json_object_iter_next(info, iter);
+		}
 	}
-	
 
 	/* check for tables already created */
 	struct table_list *lista;
