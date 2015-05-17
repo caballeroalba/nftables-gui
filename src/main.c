@@ -40,7 +40,21 @@ int main(void)
 	
 	if(json_data == NULL)
 		perror("fallo al leer por json");
-
+	
+	/* recorremos el fichero y creamos las tablas si es necesario */
+	json_t *value;
+	void *iter, *root, *tabla;
+	const char *key;
+	json_error_t err;
+	root = json_load_file("prueba.json", 0 , &err); 
+	tabla = json_object_get(root, "table"); 
+	iter = json_object_iter(tabla);
+	while (iter) {
+		key = json_object_iter_key(iter);
+		value = json_object_iter_value(iter);
+		printf("key del objeto %s\n y valor %s\n", key, value);
+		iter = json_object_iter_next(tabla, iter);
+	}
 	
 
 	/* check for tables already created */
