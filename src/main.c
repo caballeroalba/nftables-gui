@@ -9,6 +9,8 @@
 #include "nft-chain-del.h"
 #include "nft-table-get.h"
 #include "nft-rule-get.h"
+#include <jansson.h>
+
 
 char json[4096];
 
@@ -33,8 +35,13 @@ int main(void)
 	tables[2] = "json";
 	
 	get_tables_from_lib(3, tables);	
-	printf("el resultado del json es : %s  ", json);		
+	json_t *json_data;
+ 	json_data	= json_string(json);		
+	
+	if(json_data == NULL)
+		perror("fallo al leer por json");
 
+	
 
 	/* check for tables already created */
 	struct table_list *lista;
