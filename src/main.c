@@ -7,6 +7,8 @@
 #include "nft-chain-add.h"
 #include "nft-table-del.h"
 #include "nft-chain-del.h"
+#include "nft-table-get.h"
+#include "nft-rule-get.h"
 
 int main(void)
 {
