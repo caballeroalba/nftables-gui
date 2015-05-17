@@ -34,33 +34,61 @@ int main(void)
 	tables[1] = "ip";
 	tables[2] = "json";
 	
-	get_tables_from_lib(3, tables);	
-	json_t *json_data;
- 	json_data	= json_string(json);		
+//	get_tables_from_lib(3, tables);	
+//	json_t *json_data;
+// 	json_data	= json_string(json);		
 	
-	if(json_data == NULL)
+	/* get json from nft export */
+	FILE *pipe;
+	int len;
+
+	pipe = popen ("nft export json", "r");
+
+	if( pipe == NULL)
+			perror("pipe");
+
+	fgets(json, sizeof(json), pipe);
+	pclose(pipe);
+		
+	if(json == NULL)
 		perror("fallo al leer por json");
 	
 	/* recorremos el fichero y creamos las tablas si es necesario */
-	json_t *value;
-	void *iter, *root, *tabla;
+	json_t *value, *root, *tabla;
+	void *iter;
 	const char *key;
 	json_error_t err;
-	 
-	root = json_loadb(json, sizeof(json), JSON_REJECT_DUPLICATES , &err); 
+	int tam = strlen(json);
+	//json[tam+1]= '\0';
+	printf("%s\n  ", json);
+	root = json_loadb(json, sizeof(json), JSON_DISABLE_EOF_CHECK, &err); 
+			
+		
 	if(root == NULL){
 		perror("Error: ");
 		fprintf(stderr, "Jansson error: %s %d %d\n", err.text, 
 				err.column, err.line);
 	}
 	
-	tabla = json_object_get(root, "table"); 
-	iter = json_object_iter(tabla);
+	tabla = json_object_get(root, "nftables"); 
+	if( tabla == NULL)
+		perror("error al obtener el objeto");
+	json_t *t2=json_object_get(tabla, "table");
+//	iter = json_object_iter(tabla);
+	json_t *table2 = json_array_get(tabla, 0);
+	json_t *info= json_object_get(table2, "table");
+	iter = json_object_iter(info);
+	if(iter == NULL)
+		perror("error al iterar el objeto");
+
+
 	while (iter) {
+	
 		key = json_object_iter_key(iter);
 		value = json_object_iter_value(iter);
+	
 		printf("key del objeto %s y valor %s\n", key, json_string_value(value));
-		iter = json_object_iter_next(tabla, iter);
+		iter = json_object_iter_next(info, iter);
 	}
 	
 
