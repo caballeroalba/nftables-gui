@@ -46,13 +46,20 @@ int main(void)
 	void *iter, *root, *tabla;
 	const char *key;
 	json_error_t err;
-	root = json_load_file("prueba.json", 0 , &err); 
+	 
+	root = json_loadb(json, sizeof(json), JSON_REJECT_DUPLICATES , &err); 
+	if(root == NULL){
+		perror("Error: ");
+		fprintf(stderr, "Jansson error: %s %d %d\n", err.text, 
+				err.column, err.line);
+	}
+	
 	tabla = json_object_get(root, "table"); 
 	iter = json_object_iter(tabla);
 	while (iter) {
 		key = json_object_iter_key(iter);
 		value = json_object_iter_value(iter);
-		printf("key del objeto %s\n y valor %s\n", key, value);
+		printf("key del objeto %s y valor %s\n", key, json_string_value(value));
 		iter = json_object_iter_next(tabla, iter);
 	}
 	
