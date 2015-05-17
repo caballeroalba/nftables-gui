@@ -10,6 +10,9 @@
 #include "nft-table-get.h"
 #include "nft-rule-get.h"
 
+char json[4096];
+
+
 int main(void)
 {
 
@@ -20,7 +23,20 @@ int main(void)
 		return -1;
 	}
 	/* root user */
+	
+	/* check for tables already created */
 
+	char *tables[4];
+
+	tables[0] = "nft";
+	tables[1] = "ip";
+	tables[2] = "json";
+	
+	get_tables_from_lib(3, tables);	
+	printf("el resultado del json es : %s  ", json);		
+
+
+	/* check for tables already created */
 	struct table_list *lista;
 	lista=calloc(1, sizeof(struct table_list));
 	int buffer_size= 1024;
@@ -32,7 +48,7 @@ int main(void)
 	INIT_LIST_HEAD(&lista->list);
 		
 	/* Sanity tables already created */
-	delete_all_tables();
+	//delete_all_tables();
 
 		
 	lista->elements=0;
