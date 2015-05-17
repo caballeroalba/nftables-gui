@@ -1,7 +1,8 @@
 #include "prototypes.h"
 #include "screen_work_flow.h"
 
-
+/* extern variable for json input from lib jasson */
+char json[4096];
 
 char buf_screen[MAX_BUFFER_SIZE];
 
