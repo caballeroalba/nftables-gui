@@ -18,7 +18,7 @@ void list_tables(struct table_list *list){
 	struct table *cur,*tmp;
 	char *opts[99];
 	int i=0;
-
+	
 	if( list->elements == 0)
 		return;
 

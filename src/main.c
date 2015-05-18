@@ -26,7 +26,76 @@ int main(void)
 	}
 	/* root user */
 	
+	
+	struct table_list *lista;
+	lista=calloc(1, sizeof(struct table_list));
+	int buffer_size= 1024;
+	char messages[buffer_size];
+
+	if( lista == NULL)
+		return -1;
+
+	INIT_LIST_HEAD(&lista->list);
+		
+	/* Sanity tables already created */
+	//delete_all_tables();
+
 	/* check for tables already created */
+
+	load_tables_from_json(lista);	
+	printf("el numero de elementos en la lista es %d\n  ", lista->elements);	
+
+	//lista->elements=0;
+	char *choices[2]={
+		"Create table",
+		"List tables"
+	};
+
+	struct table *t1;
+	
+	snprintf(buf_screen, MAX_BUFFER_SIZE, "Welcome to nftables gui \n, please select");	
+	printf("%s\n", buf_screen);
+	while (1)
+	 {
+			int result=print_menu(1, choices, 2, messages, "Welcome to nftables-gui,"
+						"please select a option");
+
+			if( result == 1){
+
+							t1=nftgui_table_alloc();
+							create_table(t1);
+
+							if( t1!= NULL){
+
+								list_add(&t1->head, &lista->list);
+								lista->elements++;
+								concat_strings_buffer("test2");
+
+							}
+							
+			}else if( result == 2){
+				
+				list_tables(lista);
+			}else if( result == 7){ /* aqui las opciones del menu */
+				/*
+				printf("la opción seleccionada es: %d\n", result);
+				list_tables(lista);
+				char *table[3];
+				table[0]="nft";
+				table[1]="ip";
+				table[2]="test";
+				create_table_nft(3, table);
+				/* y apagamos curses */
+			}
+
+	 }
+
+}
+
+
+int load_tables_from_json (struct table_list *list)
+{
+	
 
 	char *tables[4];
 
@@ -74,86 +143,43 @@ int main(void)
 	if( tabla == NULL)
 		perror("error al obtener el objeto");
 	json_t *t2=json_object_get(tabla, "table");
-//	iter = json_object_iter(tabla);
+	printf(" tamaño del array = %d\n ", json_array_size(tabla));		
 	int i=0;
-	for (i=0; i< json_array_size(tabla); i++){
+	for (i=0; i < json_array_size(tabla); i++){
 		json_t *table2 = json_array_get(tabla, i);
 		json_t *info= json_object_get(table2, "table");
 		iter = json_object_iter(info);
 		if(iter == NULL)
 			perror("error al iterar el objeto");
-	
+		struct table *t1;
+		t1=nftgui_table_alloc();
+
 		while (iter) {
-		
+		printf("%d\n", i);
 			key = json_object_iter_key(iter);
 			value = json_object_iter_value(iter);
-			if(strcmp(key, "name" ) == 0)	
-				printf("key del objeto %s y valor %s\n", key, json_string_value(value));
-			iter = json_object_iter_next(info, iter);
-		}
-	}
-
-	/* check for tables already created */
-	struct table_list *lista;
-	lista=calloc(1, sizeof(struct table_list));
-	int buffer_size= 1024;
-	char messages[buffer_size];
-
-	if( lista == NULL)
-		return -1;
-
-	INIT_LIST_HEAD(&lista->list);
-		
-	/* Sanity tables already created */
-	//delete_all_tables();
-
-		
-	lista->elements=0;
-	char *choices[2]={
-		"Create table",
-		"List tables"
-	};
-
-	struct table *t1;
-	
-	snprintf(buf_screen, MAX_BUFFER_SIZE, "Welcome to nftables gui \n, please select");	
-	printf("%s\n", buf_screen);
-	while (1)
-	 {
-			int result=print_menu(1, choices, 2, messages, "Welcome to nftables-gui,"
-						"please select a option");
-
-			if( result == 1){
-
-							t1=nftgui_table_alloc();
-							create_table(t1);
-
-							if( t1!= NULL){
-
-								list_add(&t1->head, &lista->list);
-								lista->elements++;
-								concat_strings_buffer("test2");
-
-							}
-							
-			}else if( result == 2){
+			if(strcmp(key, "name") == 0 || strcmp(key, "family") == 0){	
+			
+				if( t1 == NULL){
+					perror("error creating table");
+					exit(EXIT_FAILURE);
+				}
+				if(strcmp(key, "name" ) == 0 )
+					nftgui_table_set_str(t1, NFTGUI_TABLE_TABLE_NAME, json_string_value(value));
 				
-				list_tables(lista);
-			}else if( result == 7){ /* aqui las opciones del menu */
-				/*
-				printf("la opción seleccionada es: %d\n", result);
-				list_tables(lista);
-				char *table[3];
-				table[0]="nft";
-				table[1]="ip";
-				table[2]="test";
-				create_table_nft(3, table);
-				/* y apagamos curses */
+				if(strcmp(key, "family") == 0 ) 	
+					nftgui_table_set_str(t1, NFTGUI_TABLE_FAMILY, json_string_value(value));				
 			}
+			
+				iter = json_object_iter_next(info, iter);
+			}
+			list_add(&t1->head, &list->list);
+			list->elements++;
 
-	 }
-
+		
+	}
 }
+
 
 
 
