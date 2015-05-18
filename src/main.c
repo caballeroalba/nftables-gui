@@ -45,7 +45,7 @@ int main(void)
 	load_tables_from_json(lista);	
 	printf("el numero de elementos en la lista es %d\n  ", lista->elements);	
 
-	//lista->elements=0;
+	
 	char *choices[2]={
 		"Create table",
 		"List tables"
@@ -149,13 +149,15 @@ int load_tables_from_json (struct table_list *list)
 		json_t *table2 = json_array_get(tabla, i);
 		json_t *info= json_object_get(table2, "table");
 		iter = json_object_iter(info);
-		if(iter == NULL)
+		if(iter == NULL){
 			perror("error al iterar el objeto");
+			continue;
+		}
 		struct table *t1;
 		t1=nftgui_table_alloc();
-
+		
 		while (iter) {
-		printf("%d\n", i);
+		printf("clave %s valor %s iteracion %d\n",json_object_iter_key(iter), json_string_value(json_object_iter_value(iter)), i);
 			key = json_object_iter_key(iter);
 			value = json_object_iter_value(iter);
 			if(strcmp(key, "name") == 0 || strcmp(key, "family") == 0){	
@@ -175,8 +177,11 @@ int load_tables_from_json (struct table_list *list)
 			}
 			list_add(&t1->head, &list->list);
 			list->elements++;
+			/* Ahora iteramos sobre las cadenas */
 
-		
+
+			
+		 /* iterado de cadenas */
 	}
 }
 
