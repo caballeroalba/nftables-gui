@@ -69,23 +69,18 @@ int main(void)
 
 								list_add(&t1->head, &lista->list);
 								lista->elements++;
-								concat_strings_buffer("test2");
+								concat_strings_buffer(" ");
 
 							}
 							
 			}else if( result == 2){
 				
 				list_tables(lista);
-			}else if( result == 7){ /* aqui las opciones del menu */
-				/*
-				printf("la opción seleccionada es: %d\n", result);
-				list_tables(lista);
-				char *table[3];
-				table[0]="nft";
-				table[1]="ip";
-				table[2]="test";
-				create_table_nft(3, table);
-				/* y apagamos curses */
+
+			}else if( result > 7){ /*  opciones del menu */
+				
+			
+
 			}
 
 	 }
